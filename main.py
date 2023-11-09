@@ -30,7 +30,7 @@ class mainView():
         self.label = tk.Label( text="Welcome to \nStock Dividends Retriever App",bg='#1D1D20', font= ("Roboto", 20, "bold"), fg="#2BABE2")
         self.label.pack(side="top", pady=10 )
    
-        self.mainFrame = tk.Frame(self.root, width=300, height=200)
+        self.mainFrame = tk.Frame(self.root, width=300, height=200, bg="#1D1D20")
         self.mainFrame.pack()
         
 
@@ -38,9 +38,9 @@ class mainView():
         
         
                 # logo image
-        self.logo = tk.PhotoImage(file="img\logo-finance-adjusted.ppm" )
-        self.limg = tk.Label(self.mainFrame, image=self.logo,)
-        self.limg.pack(side="right")
+        self.logo = tk.PhotoImage(file="img\logo.ppm" )
+        self.limg = tk.Label(self.mainFrame, image=self.logo, bg="#1D1D20")
+        self.limg.pack(side="right", padx=(40,0))
         
         self.guide_frame = tk.Frame(self.mainFrame, bg='#1D1D20' )
         self.guide_frame.pack()
@@ -52,8 +52,18 @@ class mainView():
         self.guide_text = tk.Label(self.guide_frame,text="Here in the app you can make these actions:\n\n1- Search Dividends\t\t\n2- Save Dividends\t\t\t\n3- Generate Excel Table of Dividends\n",bg="#1D1D20",  font= ("Roboto", 13, "bold"),  fg="white")
         self.guide_text.pack()
         
-        self.buttons_frame = tk.Label(width=self.root_width, height=5, bg="blue")
-        self.buttons_frame.pack()
+        self.buttons_frame = tk.Label(self.root,bg="#1D1D20", height=10)
+        self.buttons_frame.pack(fill="x", pady=40)
+        
+        self.search_button = tk.Button(self.buttons_frame, text="Search Dividends", width=20, bg="#90EE90", font= ("Roboto", 11, "bold"))
+        self.search_button.pack(side="left",padx=(40,0))
+        
+        self.save_button = tk.Button(self.buttons_frame, text="Save Dividends", width=20, bg="#089A4F", font= ("Roboto", 11, "bold"))
+        self.save_button.pack(side="left", padx=(50 ,50))
+        
+        self.generate_button = tk.Button(self.buttons_frame, text="Generate Table", width=20, bg="#08FF08", font= ("Roboto", 11, "bold"))
+        self.generate_button.pack(side="right",padx=(0,40))
+
         
 
 
