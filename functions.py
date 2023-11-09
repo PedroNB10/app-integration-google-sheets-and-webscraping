@@ -1,5 +1,5 @@
 import os.path
-
+import pandas as pd
 # libraries to get and update google sheets
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -13,6 +13,24 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+def generate_exel_file(list1, list2, output_file='dividends.xlsx'):
+   # Check if the lists have the same length
+    if len(list1) != len(list2):
+        raise ValueError("The two lists must have the same length.")
+
+    # Create a DataFrame from the lists
+    data = {'stock': list1, 'dividends': list2}
+    df = pd.DataFrame(data)
+
+
+    
+      # Get the path to the "Downloads" directory
+    downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+
+    # Set the full path for the output file in the "Downloads" directory
+    output_path = os.path.join(downloads_dir, output_file)
+    df.to_excel(output_path, index=False)
+    print(f"Excel file '{output_path}' created successfully.")  
 
 def get_dividends(list_names):
     if (list_names == []):

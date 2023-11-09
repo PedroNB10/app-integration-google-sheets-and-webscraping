@@ -49,7 +49,7 @@ class mainView():
         self.guide_title = tk.Label(self.guide_frame, text="Guide", bg="#1D1D20", font= ("Roboto", 15, "bold"),  fg="#FF3333")
         self.guide_title.pack(side="top", padx=90)
 
-        self.guide_text = tk.Label(self.guide_frame,text="Here in the app you can make these actions:\n\n1- Search Dividends\t\t\n2- Save Dividends\t\t\t\n3- Generate Excel Table of Dividends\n",bg="#1D1D20",  font= ("Roboto", 13, "bold"),  fg="white")
+        self.guide_text = tk.Label(self.guide_frame,text="Here in the app you can make these actions:\n\n1- Search Dividends\t\t\n2- Save Dividends\t\t\t\n3- Generate Excel Table of Dividends\n4 - Get the last dividends search\t",bg="#1D1D20",  font= ("Roboto", 13, "bold"),  fg="white")
         self.guide_text.pack()
         
         self.buttons_frame = tk.Label(self.root,bg="#1D1D20", height=10)
@@ -65,7 +65,7 @@ class mainView():
         
         self.generate_button = tk.Button(self.buttons_frame, text="Generate Table", width=20, bg="#08FF08", font= ("Roboto", 11, "bold"))
         self.generate_button.pack(side="right",padx=(0,40))
-
+        self.generate_button.bind("<Button>", controller.generate_exel_table)
 
         
         self.last_search_button = tk.Button(self.root, text="Results of last search", width=20, bg="yellow", font= ("Roboto", 11, "bold"))
@@ -93,21 +93,24 @@ class Controller():
 
         
     def search_dividends(self, event):
-        messagebox.showinfo("Searching...","Click OK to continue")
-        self.stock_names = func.get_stock_names()
-        self.dividends_list = func.get_dividends(self.stock_names)
-        print(self.dividends_list)
+        result = messagebox.askquestion("Form", "Are you sure you want to search dividends ?")
         
+        if result == 'yes':
+            self.stock_names = func.get_stock_names()
+            self.dividends_list = func.get_dividends(self.stock_names)
+    
+            
+            
+            message = ''
+            
+            
+            if len(self.dividends_list) > 0:
+                for i in range(len(self.dividends_list)):
+                    message += f'{i + 1} - {self.stock_names[i]} : {self.dividends_list[i]}\n'
+                messagebox.showinfo("List of dividends",message)   
+            else:
+                messagebox.showerror("Error","There is no dividends !")   
         
-        message = ''
-        
-        
-        if len(self.dividends_list) > 0:
-            for i in range(len(self.dividends_list)):
-                message += f'{i + 1} - {self.stock_names[i]} : {self.dividends_list[i]}\n'
-            messagebox.showinfo("List of dividends",message)   
-        else:
-            messagebox.showerror("Error","There is no dividends !")   
         
     def save_dividends(self, event):
         post_success = False
@@ -128,6 +131,13 @@ class Controller():
             for i in range(len(self.dividends_list)):
                 message += f'{i + 1} - {self.stock_names[i]} : {self.dividends_list[i]}\n'
             messagebox.showinfo("Dividends List", message)
+            
+    def generate_exel_table(self, event):
+        if len(self.dividends_list) == 0:
+            messagebox.showinfo("Empty List", "You need to search for at least one time to get the last results!")
+        else:
+            func.generate_exel_file(self.stock_names, self.dividends_list)
+            messagebox.showinfo("Success", "The file was created on your downloads !")
             
         
     def exit_window(self, event):
