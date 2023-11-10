@@ -26,6 +26,7 @@ class mainView():
         y_cordinate = int((self.screen_height/2) - (self.root_height/2))
         self.root.geometry("{}x{}+{}+{}".format(self.root_width, self.root_height, x_cordinate, y_cordinate))
 
+        
 
         self.label = tk.Label( text="Welcome to \nStock Dividends Retriever App",bg='#1D1D20', font= ("Roboto", 20, "bold"), fg="#2BABE2")
         self.label.pack(side="top", pady=10 )
@@ -38,10 +39,12 @@ class mainView():
         
         
         # logo image
-        self.logo = tk.PhotoImage(file="img\logo.ppm" )
+        self.logo = tk.PhotoImage(file="./img/logo.ppm" )
         self.limg = tk.Label(self.mainFrame, image=self.logo, bg="#1D1D20")
         self.limg.pack(side="right", padx=(40,0))
         
+        self.root.wm_iconphoto(False, self.logo)
+
         self.guide_frame = tk.Frame(self.mainFrame, bg='#1D1D20' )
         self.guide_frame.pack()
         
