@@ -49,7 +49,7 @@ class mainView():
         self.guide_title = tk.Label(self.guide_frame, text="Guide", bg="#1D1D20", font= ("Roboto", 15, "bold"),  fg="#FF3333")
         self.guide_title.pack(side="top", padx=90)
 
-        self.guide_text = tk.Label(self.guide_frame,text="Here in the app you can make these actions:\n\n1- Search Dividends\t\t\n2- Save Dividends\t\t\t\n3- Generate Excel Table of Dividends\n4 - Get the last dividends search\t",bg="#1D1D20",  font= ("Roboto", 13, "bold"),  fg="white")
+        self.guide_text = tk.Label(self.guide_frame,text="Here in the app you can make these actions:\n\n1- Search Dividends\t\t\n2- Save Dividends\t\t\t\n3- Generate Excel Table of Dividends\n4- Get the last dividends search\t",bg="#1D1D20",  font= ("Roboto", 13, "bold"),  fg="white")
         self.guide_text.pack()
         
         self.buttons_frame = tk.Label(self.root,bg="#1D1D20", height=10)
@@ -95,8 +95,15 @@ class Controller():
     def search_dividends(self, event):
         result = messagebox.askquestion("Form", "Are you sure you want to search dividends ?")
         
+
         if result == 'yes':
-            self.stock_names = func.get_stock_names()
+            self.stock_names.clear()
+            self.dividends_list.clear()
+            success = func.get_stock_names(self.stock_names)
+            if not success:
+                messagebox.showerror("Error","The token.json file is missing!")
+                return
+            
             self.dividends_list = func.get_dividends(self.stock_names)
     
             
@@ -134,7 +141,7 @@ class Controller():
             
     def generate_exel_table(self, event):
         if len(self.dividends_list) == 0:
-            messagebox.showinfo("Empty List", "You need to search for at least one time to get the last results!")
+            messagebox.showinfo("Empty List", "You need to search for at least one time to create a table!")
         else:
             func.generate_exel_file(self.stock_names, self.dividends_list)
             messagebox.showinfo("Success", "The file was created on your downloads !")

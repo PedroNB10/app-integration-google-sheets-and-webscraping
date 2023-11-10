@@ -34,7 +34,7 @@ def generate_exel_file(list1, list2, output_file='dividends.xlsx'):
 
 def get_dividends(list_names):
     if (list_names == []):
-      return []
+      return list_names
   
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
@@ -65,29 +65,22 @@ def get_dividends(list_names):
     driver.quit()
     return dividends
 
-def get_stock_names():
+def get_stock_names(list_names):
 # If modifying these scopes, delete the file token.json.
   SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
-  SAMPLE_SPREADSHEET_ID = "1s1-S5w9shzTjul6Zosl2tNbv0w1fvEb8H0qq7MoFKkk"
+  SAMPLE_SPREADSHEET_ID = "1limODVbEf9Tpa2fu_YcJ0T7vzfG1E6Ukmw00InzwaUw"
   SAMPLE_RANGE_NAME = "Página1!P3:P22"
   creds = None
 
   if os.path.exists("token.json"):
     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-  # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          'client_secret.json', SCOPES
-      )
-      creds = flow.run_local_server(port=0)
-    # Save the credentials for the next run
-    with open("token.json", "w") as token:
-      token.write(creds.to_json())
+  else:
+    return False
+
+  with open("token.json", "w") as token:
+    token.write(creds.to_json())
 
   try:
     service = build("sheets", "v4", credentials=creds)
@@ -108,14 +101,14 @@ def get_stock_names():
 
 
       # Print columns A and E, which correspond to indices 0 and 4.
-    list_names = []
     for value in values:
       list_names.append(value[0])
       
-    return list_names
+    return True
       
   except HttpError as err:
     print(err)
+    return False
 
 
 def post_diviends(list_dividends):
@@ -134,7 +127,7 @@ def post_diviends(list_dividends):
   SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
-  SAMPLE_SPREADSHEET_ID = "1s1-S5w9shzTjul6Zosl2tNbv0w1fvEb8H0qq7MoFKkk"
+  SAMPLE_SPREADSHEET_ID = "1limODVbEf9Tpa2fu_YcJ0T7vzfG1E6Ukmw00InzwaUw"
   SAMPLE_RANGE_NAME = "Página1!Q3:Q22"
   creds = None
 
