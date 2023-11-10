@@ -51,7 +51,7 @@ def get_dividends(list_names):
         dividend = '0%'
         
         try:
-            element = driver.find_element(By.CLASS_NAME, "YhEN7")
+            element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
             dividend = element.text
 
         except:
@@ -59,6 +59,7 @@ def get_dividends(list_names):
 
             
         # print(f'Dividendo da ação {name}: {dividend}')
+
         dividends.append(dividend)
         
     driver.quit()

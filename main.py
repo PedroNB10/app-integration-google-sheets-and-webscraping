@@ -8,7 +8,7 @@ class Model():
     def __init__(self):
         self.dividens_list = []
         self.stock_names_list = []
-        pass
+      
 
  
     
