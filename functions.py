@@ -13,6 +13,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+COLUMN_GET_DATA = "Página1!P3:P"
+
+# The ID and range of a sample spreadsheet.
+SAMPLE_SPREADSHEET_ID = "1limODVbEf9Tpa2fu_YcJ0T7vzfG1E6Ukmw00InzwaUw"
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+
 def generate_exel_file(list1, list2, output_file='dividends.xlsx'):
    # Check if the lists have the same length
     if len(list1) != len(list2):
@@ -47,18 +53,29 @@ def get_dividends(list_names):
 
         driver.get(url)
 
-        
-        dividend = '0%'
+
         
         try:
             element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
             dividend = element.text
-
+            
+            if '%' not in dividend:
+              print(f"falha ao buscar dividendo da {name}")
+              dividends.append("0%")
+              continue
+            
+            dividend_float = float(dividend.replace("%","").replace(",","."))
+            
+            
         except:
             print(f"falha ao buscar dividendo da {name}")
+            dividends.append("0%")
+            continue
+          
+
 
             
-        # print(f'Dividendo da ação {name}: {dividend}')
+        print(f'Dividendo da ação {name}: {dividend}')
 
         dividends.append(dividend)
         
@@ -67,11 +84,11 @@ def get_dividends(list_names):
 
 def get_stock_names(list_names):
 # If modifying these scopes, delete the file token.json.
-  SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+  
 
-# The ID and range of a sample spreadsheet.
-  SAMPLE_SPREADSHEET_ID = "1limODVbEf9Tpa2fu_YcJ0T7vzfG1E6Ukmw00InzwaUw"
-  SAMPLE_RANGE_NAME = "Página1!P3:P22"
+
+
+  
   creds = None
 
   if os.path.exists("token.json"):
@@ -89,7 +106,7 @@ def get_stock_names(list_names):
     sheet = service.spreadsheets()
     result = (
         sheet.values()
-        .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME)
+        .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=COLUMN_GET_DATA)
         .execute()
     )
     
@@ -111,67 +128,112 @@ def get_stock_names(list_names):
     return False
 
 
-def post_diviends(list_dividends):
-  if (list_dividends == []):
-    return False
-    
-  formated_list_dividends = []
-  
-  for dividend in list_dividends:
-      new_dividend = []
+def get_last_row(service, spreadsheet_id, column_letter):
+    # Helper function to get the last row with data in a specific column
 
-      new_dividend.append(dividend)
-      formated_list_dividends.append(new_dividend)
-        
-    # If modifying these scopes, delete the file token.json.
-  SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-
-# The ID and range of a sample spreadsheet.
-  SAMPLE_SPREADSHEET_ID = "1limODVbEf9Tpa2fu_YcJ0T7vzfG1E6Ukmw00InzwaUw"
-  SAMPLE_RANGE_NAME = "Página1!Q3:Q22"
-  creds = None
-
-  if os.path.exists("token.json"):
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-  # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          'client_secret.json', SCOPES
-      )
-      creds = flow.run_local_server(port=0)
-    # Save the credentials for the next run
-    with open("token.json", "w") as token:
-      token.write(creds.to_json())
-
-  try:
-    service = build("sheets", "v4", credentials=creds)
-
-    # Call the Sheets API
-    sheet = service.spreadsheets()
+    range_name = f"Página1!{column_letter}1:{column_letter}"
     result = (
-        sheet.values()
-        .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME, valueInputOption="USER_ENTERED",
-                body={"values":formated_list_dividends}).execute()
+        service.spreadsheets()
+        .values()
+        .get(spreadsheetId=spreadsheet_id, range=range_name)
+        .execute()
     )
+
+    values = result.get("values", [])
+
+    if not values:
+        return None
+
+    last_row = len(values)
+    return last_row
+  
+
+
+
+
+def post_diviends(list_dividends):
+    if not list_dividends:
+        return False
+
+    formated_list_dividends = [[dividend] for dividend in list_dividends]
+
+    last_row = str(len(list_dividends) + 3)  # 2 for the space between the header and the first row and 1 to return the average
+    SAMPLE_RANGE_NAME = f"Página1!Q3:Q" + last_row
+
+    creds = None
+
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build("sheets", "v4", credentials=creds)
+        sheet = service.spreadsheets()
+
+        # Update the dividends
+        result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,
+                                       valueInputOption="USER_ENTERED", body={"values": formated_list_dividends}).execute()
+
+        # Calculate the average and update the last value
+        range_name = f"Página1!Q3:Q{last_row}"
+        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=range_name).execute()
+        values = result.get("values", [])
+
+        if values:
+
+            sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f"Página1!Q{int(last_row) + 1}",
+                                  valueInputOption="USER_ENTERED", body={"values": [[f'=TEXT(AVERAGE(Q3:Q{int(last_row) -1});"0.00%")']]}).execute()
+
+            # Insert an empty row after the average
+            # sheet.batchUpdate(
+            #     spreadsheetId=SAMPLE_SPREADSHEET_ID,
+            #     body={
+            #         "requests": [
+            #             {
+            #                 "insertDimension": {
+            #                     "range": {
+            #                         "sheetId": 0,
+            #                         "dimension": "ROWS",
+            #                         "startIndex": int(last_row) -1,
+            #                         "endIndex": int(last_row) 
+            #                     },
+            #                     "inheritFromBefore": False
+            #                 }
+            #             }
+            #         ]
+            #     }
+            # ).execute()
+
+    except HttpError as err:
+        print(err)
+        return False
+
+    return True
     
-
-  except HttpError as err:
-    print(err)
-    return False
-
-  return True
     
 
 
 
 if __name__ == "__main__":
+    
+    stock_symbols = [
+        "BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
 
-    list_names = get_stock_names()
-    print(list_names)
-    list_dividends = get_dividends(list_names)
+# Print the list
+    print(stock_symbols)
+
+    # list_names = get_stock_names()
+    # print(list_names)
+    list_dividends = get_dividends(stock_symbols)
     print(list_dividends)
     if post_diviends(list_dividends):
         print("Dividendos registrados com sucesso feito com sucesso!")

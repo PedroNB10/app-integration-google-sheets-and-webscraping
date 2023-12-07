@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "***************************************"
+SAMPLE_SPREADSHEET_ID = "*************************"
 SAMPLE_RANGE_NAME = "Página1!P3:P22"
 
 
