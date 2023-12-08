@@ -68,6 +68,59 @@ def get_price_per_profit(list_names):
                
     driver.quit()
     return prices
+
+
+def get_pvp_from_invest10(list_names):
+    if (list_names == []):
+      return list_names
+  
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    prices = []
+    driver.maximize_window()
+
+    for  name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+        
+      
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
+        parent_element = element.find_element(By.XPATH, "..")
+        grand_parent_element = parent_element.find_element(By.XPATH, "..")
+        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+        price = other_parent_element.text
+        prices.append(price)
+               
+    driver.quit()
+    return prices
+
+def get_dividends_from_invest10(list_names):
+    if (list_names == []):
+      return list_names
+  
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    prices = []
+    driver.maximize_window()
+
+    for  name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+        
+      
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
+        parent_element = element.find_element(By.XPATH, "..")
+        grand_parent_element = parent_element.find_element(By.XPATH, "..")
+        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+        price = other_parent_element.text
+        prices.append(price)
+               
+    driver.quit()
+    return prices
   
 
     
@@ -143,9 +196,10 @@ def get_stock_names(list_names):
       print(f"{value[0]}")
       list_names.append(value[0])
       
-    update_stock_names_coluns_google_sheets(list_names, "T")
-    update_stock_names_coluns_google_sheets(list_names, "R")
-    update_stock_names_coluns_google_sheets(list_names, "W")
+    update_stock_names_columns_google_sheets(list_names, "T")
+    update_stock_names_columns_google_sheets(list_names, "R")
+    update_stock_names_columns_google_sheets(list_names, "W")
+    update_stock_names_columns_google_sheets(list_names, "AC")
     
     
     return True
@@ -180,7 +234,7 @@ def get_last_row(service, spreadsheet_id, column_letter):
     return last_row
   
 
-def update_stock_names_coluns_google_sheets(list_names, update_column_letter):
+def update_stock_names_columns_google_sheets(list_names, update_column_letter):
     if not list_names:
       return False
 
@@ -303,7 +357,7 @@ if __name__ == "__main__":
     
     stock_symbols = ["BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
 
-    lista=get_price_per_profit(stock_symbols)
+    lista=get_pvp_from_invest10(stock_symbols)
 
     print(lista)
 # # Print the list
