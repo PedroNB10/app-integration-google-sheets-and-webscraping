@@ -172,7 +172,7 @@ class Controller():
 
         if result == 'yes':
             self.show_loading_bar()
-            self.stock_names.clear()
+            self.stock_names.clear() 
             self.dividends_list.clear()
             success = func.get_stock_names(self.stock_names)
             if not success:
@@ -184,7 +184,7 @@ class Controller():
             self.root.after(100, self.check_completion)
 
     def save_dividends(self, event):
-        post_success = func.post_diviends(self.dividends_list)
+        post_success = func.post_dividends_google_data(self.dividends_list)
 
         if post_success:
             messagebox.showinfo("Success", "Dividends Registered Successfully ")
