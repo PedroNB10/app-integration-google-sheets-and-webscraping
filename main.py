@@ -26,9 +26,7 @@ class SearchResult:
         self.stocks = stocks
         self.date_of_search = datetime.now()
         print(f"date: {self.date_of_search}")
-        # self.dividends_google_list = []
-        # self.dividends_invest10_list = []
-        # self.price_to_earnings_list = []
+
         
 
 class LoadingView(tk.Toplevel):
@@ -371,7 +369,7 @@ class mainView():
         
         # teste
         self.search_all_data_button = tk.Button(self.frame_02, text="Search All Data", width=20, bg="yellow",activebackground="yellow",
-                                            font=("Roboto", 11, "bold"), command="")
+                                            font=("Roboto", 11, "bold"), command=controller.search_all_data_from_all_stocks)
         self.search_all_data_button.pack()
         
         
@@ -435,7 +433,7 @@ class Controller():
             with open('results.pickle', 'rb') as f:
                 self.search_results = pickle.load(f)
                 
-        self.temporary_stocks = []
+        self.temporary_stocks = [] # instances of Stock, used to store the stocks that has other attributes
         
         self.dividends_google_list = []
         self.dividends_invest10_list = []
@@ -443,6 +441,8 @@ class Controller():
         self.price_to_earnings_list = []
         
         self.stock_names_temp = []
+        
+        self.all_data_list = []
         
         
         
@@ -500,6 +500,9 @@ class Controller():
     def get_data_from_a_stock(self, stock_name):
         return func.get_data_from_a_stock(stock_name)
     
+    def get_all_data_from_all_stocks(self, stock_names):
+        return func.get_all_data_from_all_stocks(stock_names)
+    
     
     def create_search_view(self):
         self.choose_search_data_view = ChooseSearchDataView(self.root, self)
@@ -512,6 +515,103 @@ class Controller():
         self.search_results_view = SearchResultsView(self.root, self)
         
         
+        
+    def search_all_data_thread(self):
+        self.all_data_list.clear()
+        self.all_data_list = self.get_all_data_from_all_stocks(self.stock_names_temp) # it will append the stocks thats why it starts empty
+   
+        
+        
+        if len(self.all_data_list) > 0:
+
+            if len(self.temporary_stocks) == 0:
+                for i in range(len(self.stock_names_temp)):
+                    self.temporary_stocks.append(Stock(self.stock_names_temp[i], dividend_google=self.all_data_list[0][i], dividend_invest10=self.all_data_list[1][i], price_to_earnings=self.all_data_list[2][i], price_to_book=self.all_data_list[3][i]))
+            
+
+            self.search_results.insert(0, SearchResult(self.temporary_stocks))
+            self.save_search_results()    
+            # self.search_results.append(SearchResult(self.temporary_stocks))
+            self.show_results_view = ShowResultsView(self.root, self)
+            self.show_results_view.show_all_data(self.search_results[0])
+        
+        else:
+            messagebox.showerror("Error", "There is no dividends !")
+
+        self.hide_loading_bar()
+        
+        
+    def search_all_data_from_all_stocks(self):
+        self.temporary_stocks = [] 
+        result = messagebox.askquestion("Form", "Are you sure you want to search all data ?")
+
+        if result == 'yes':
+            print("mostra barra de carregamento")
+            self.show_loading_bar()
+            
+            if os.path.exists('token.json'):
+                self.stock_names_temp.clear()
+
+            
+            success = self.get_stock_names(self.stock_names_temp) # it will append the stocks thats why it starts empty
+            if not success:
+                self.hide_loading_bar()
+                answer = messagebox.askyesno("Input", "There is no token.json file, but you can still search for a stock. Do you want to continue?", parent=self.root)
+                if answer == True:
+                    
+                    if len(self.stock_names_temp) == 0:
+                        while True:
+                            stock_name = simpledialog.askstring("Input", "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'", parent=self.root)
+                            
+                            if stock_name == "stop":
+                                self.show_loading_bar()
+                                threading.Thread(target=self.search_all_data_thread).start()
+                                self.root.after(100, self.check_completion)
+                                break
+                            
+                            if stock_name == "" or stock_name ==  None:
+                                messagebox.showerror("Error", "You need to input a stock name!")
+                                continue
+                            else:
+                                self.stock_names_temp.append(stock_name)
+                            
+                    else:
+            
+                        
+                        search_last_stocks = messagebox.askyesno("Input", "There is a temporary list of stocks, do you want to search by that?", parent=self.root)
+                        
+                        if search_last_stocks == True: 
+                            # it is used to empty the stocks that has other attributes
+                            self.show_loading_bar()
+                            threading.Thread(target=self.search_all_data_thread).start()
+                            self.root.after(100, self.check_completion)
+                            
+                            
+                        else:
+                    
+                            
+                            
+                            while True:
+                                stock_name = simpledialog.askstring("Input", "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'", parent=self.root)
+                                
+                                if stock_name == "stop":
+                                    self.show_loading_bar()
+                                    threading.Thread(target=self.search_all_data_thread).start()
+                                    self.root.after(100, self.check_completion)
+                                    break
+                                
+                                if stock_name == "" or stock_name ==  None:
+                                    messagebox.showerror("Error", "You need to input a stock name!")
+                                    continue
+                                else:
+                                    self.stock_names_temp.append(stock_name)
+                        
+
+                
+                return
+
+            threading.Thread(target=self.search_all_data_thread).start()
+            self.root.after(100, self.check_completion)
     
     
     
@@ -531,6 +631,8 @@ class Controller():
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data(self.search_results[0])
         # messagebox.showinfo("Stock Data", result_str)
+        
+    
     
     
     def search_a_stock(self):
@@ -543,10 +645,13 @@ class Controller():
 
         # Start a new thread for stock search
         threading.Thread(target=self.search_a_stock_thread, args=(answer,)).start()
+        
+    
     
     
     
     def get_price_to_earnings_thread(self):
+        
         self.price_to_earnings_list.clear()
         self.price_to_earnings_list = self.get_price_to_earnings_data(self.stock_names_temp)
           
@@ -556,8 +661,6 @@ class Controller():
                 for i in range(len(self.stock_names_temp)):
                     self.temporary_stocks.append(Stock(self.stock_names_temp[i], price_to_earnings=self.price_to_earnings_list[i]))
             
-            for i in range(len(self.stock_names_temp)):
-                self.temporary_stocks[i].price_to_earnings = self.price_to_earnings_list[i]
                 
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
@@ -571,7 +674,7 @@ class Controller():
         self.hide_loading_bar()
         
     def search_prices_to_earnings(self):
-        
+        self.temporary_stocks = []
         result = messagebox.askquestion("Form", "Are you sure you want to search prices to earnings ?")
 
         if result == 'yes':
@@ -609,7 +712,7 @@ class Controller():
                         search_last_stocks = messagebox.askyesno("Input", "There is a temporary list of stocks, do you want to search by that?", parent=self.root)
                         
                         if search_last_stocks == True: 
-                            self.temporary_stocks = [] # it is used to empty the stocks that has other attributes
+                             # it is used to empty the stocks that has other attributes
                             self.show_loading_bar()
                             threading.Thread(target=self.get_price_to_earnings_thread).start()
                             self.root.after(100, self.check_completion)
@@ -655,9 +758,6 @@ class Controller():
                 for i in range(len(self.stock_names_temp)):
                     self.temporary_stocks.append(Stock(self.stock_names_temp[i], price_to_book=self.prices_to_book_list[i]))
             
-            for i in range(len(self.stock_names_temp)):
-                self.temporary_stocks[i].price_to_book = self.prices_to_book_list[i]
-            
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()    
             # self.search_results.append(SearchResult(self.temporary_stocks))
@@ -671,6 +771,7 @@ class Controller():
         
         
     def search_price_to_book(self):
+        self.temporary_stocks = []
    
         result = messagebox.askquestion("Form", "Are you sure you want to search prices to book ?")
 
@@ -709,7 +810,7 @@ class Controller():
                         search_last_stocks = messagebox.askyesno("Input", "There is a temporary list of stocks, do you want to search by that?", parent=self.root)
                         
                         if search_last_stocks == True:
-                            self.temporary_stocks = []
+                            
                             self.show_loading_bar()
                             threading.Thread(target=self.get_price_to_book_thread).start()
                             self.root.after(100, self.check_completion)
@@ -755,9 +856,6 @@ class Controller():
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
                     self.temporary_stocks.append(Stock(self.stock_names_temp[i], dividend_invest10=self.dividends_invest10_list[i]))
-            
-            for i in range(len(self.stock_names_temp)):
-                self.temporary_stocks[i].dividend_invest10 = self.dividends_invest10_list[i]
                 
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
@@ -772,6 +870,7 @@ class Controller():
         
         
     def search_dividends_from_invest10(self):
+        self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion("Form", "Are you sure you want to search dividends ?")
 
@@ -810,7 +909,7 @@ class Controller():
                         search_last_stocks = messagebox.askyesno("Input", "There is a temporary list of stocks, do you want to search by that?", parent=self.root)
                         
                         if search_last_stocks == True:
-                            self.temporary_stocks = []
+                            
                             self.show_loading_bar()
                             threading.Thread(target=self.get_invest10_dividends_thread).start()
                             self.root.after(100, self.check_completion)
@@ -857,9 +956,6 @@ class Controller():
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
                     self.temporary_stocks.append(Stock(self.stock_names_temp[i], dividend_google=self.dividends_google_list[i]))
-            
-            for i in range(len(self.stock_names_temp)):
-                self.temporary_stocks[i].dividend_google = self.dividends_google_list[i]
                 
             # self.search_results.append(SearchResult(self.temporary_stocks))
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
@@ -873,6 +969,7 @@ class Controller():
         self.hide_loading_bar()
 
     def search_dividends_from_google(self):
+        self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion("Form", "Are you sure you want to search dividends ?")
 
@@ -911,7 +1008,7 @@ class Controller():
                         search_last_stocks = messagebox.askyesno("Input", "There is a temporary list of stocks, do you want to search by that?", parent=self.root)
                         
                         if search_last_stocks == True:
-                            self.temporary_stocks = []
+                            
                             self.show_loading_bar()
                             threading.Thread(target=self.get_google_dividends_thread).start()
                             self.root.after(100, self.check_completion)

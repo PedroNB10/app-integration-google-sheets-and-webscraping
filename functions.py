@@ -26,7 +26,122 @@ SAMPLE_SPREADSHEET_ID = "1fIzQZevwQ9UB6ynmRNvGddYf9ITDEuhp5lgM34-VDNs"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 
+
+
+def get_all_data_from_all_stocks(stock_list):
+
+    list_all_data = []
+    list_google_dividends = []
+    list_invest10_dividends = []
+    list_price_to_earnings = []
+    list_price_to_book = []
+    
+    
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    driver.maximize_window()
+    
+    for stock in stock_list:
+        
+    
+
+        # getting the dividend
+        url = f'https://www.google.com/search?q=dividendos+{stock}'
+        driver.get(url)
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
+
+            dividend = element.text
+            if '%' not in dividend:
+              print(f"Failed to find the dividend from {stock}")
+              dividend = "0%"
+            
+            if len(dividend) > 6:
+                dividend = "0%"    
+            
+            
+            print(f'Google Dividend from {stock}: {dividend}')
+        except:
+            print(f"Failed to find the dividend from {stock}")
+            dividend = "0%"
+            print(f'Google Dividend from {stock}: {dividend}')
+        list_google_dividends.append(dividend)
+        
+        
+        # getting the didivend yield from invest10
+        url = f'https://investidor10.com.br/acoes/{stock}/'
+        driver.get(url)
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            dividend_yield = other_parent_element.text
+            
+            if '%' not in dividend_yield:
+              print(f"Failed to find the dividend from {stock}")
+              dividend_yield = "0%"
+            
+            
+            print(f'Invest10 Dividend from {stock}: {dividend_yield}')
+        except:
+            print(f"Failed to find the dividend from {stock}")
+            dividend_yield = "0%"
+            print(f'Invest10 Dividend from {stock}: {dividend_yield}')
+            
+        list_invest10_dividends.append(dividend_yield)
+        
+        
+        # getting the price per profit
+        url = f'https://investidor10.com.br/acoes/{stock}/'
+    
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            price = other_parent_element.text
+            print(f'Price to earnings from {stock}: {price}')
+        except:
+            print(f"Failed to get the Price to Earnings from {stock}")
+            price = "0"
+            
+        list_price_to_earnings.append(price)
+            
+        # getting the price per value
+        url = f'https://investidor10.com.br/acoes/{stock}/'
+    
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            price_vp = other_parent_element.text
+            print(f"Price to Book from: {stock}: {price_vp}")
+        except:
+            print(f"Failed to get the Price to Book from {stock}")
+            price_vp = "0"
+            
+            
+            
+        list_price_to_book.append(price_vp)
+        print("\n")
+  
+    
+    list_all_data.append(list_google_dividends)
+    list_all_data.append(list_invest10_dividends)
+    list_all_data.append(list_price_to_earnings)
+    list_all_data.append(list_price_to_book)
+    
+    
+    driver.quit()     
+    return list_all_data
+
+
+
 def get_data_from_a_stock(stock_symbol):
+    
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     driver = webdriver.Chrome(options=options)
@@ -97,6 +212,7 @@ def get_data_from_a_stock(stock_symbol):
         
     list_data.append(price_vp)
         
+
     driver.quit()
     
     return list_data
@@ -174,32 +290,6 @@ def get_price_to_book_from_invest10(list_names):
     driver.quit()
     return prices
 
-# def get_dividends_from_invest10(list_names):
-#     if (list_names == []):
-#       return list_names
-  
-  
-#     options = webdriver.ChromeOptions()
-#     options.add_experimental_option("detach", True)
-#     driver = webdriver.Chrome(options=options)
-#     prices = []
-#     driver.maximize_window()
-
-#     for  name in list_names:
-#         url = f'https://investidor10.com.br/acoes/{name}/'
-#         driver.get(url)
-        
-      
-#         element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
-#         parent_element = element.find_element(By.XPATH, "..")
-#         grand_parent_element = parent_element.find_element(By.XPATH, "..")
-#         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-#         price = other_parent_element.text
-#         prices.append(price)
-               
-#     driver.quit()
-#     return prices
-  
 def get_price_to_earnings(list_names):
     if (list_names == []):
       return list_names
@@ -292,7 +382,7 @@ def get_dividends_from_invest10(list_names):
         except:
             if '%' not in dividend:
               print(f"falha ao buscar dividendo da {name}")
-              dividends.append("Failed to get dividend")
+              dividends.append("0%")
               continue
           
             dividends.append("0%")
@@ -327,7 +417,7 @@ def get_dividends_google_data(list_names):
         except:
             if '%' not in dividend:
               print(f"falha ao buscar dividendo da {name}")
-              dividends.append("Failed to get dividend")
+              dividends.append("0%")
               continue
           
             dividends.append("0%")
@@ -374,10 +464,10 @@ def get_stock_names(list_names):
       print(f"{value[0]}")
       list_names.append(value[0])
       
-    update_stock_names_columns_google_sheets(list_names, "T")
-    update_stock_names_columns_google_sheets(list_names, "R")
-    update_stock_names_columns_google_sheets(list_names, "W")
-    update_stock_names_columns_google_sheets(list_names, "AC")
+    # update_stock_names_columns_google_sheets(list_names, "T")
+    # update_stock_names_columns_google_sheets(list_names, "R")
+    # update_stock_names_columns_google_sheets(list_names, "W")
+    # update_stock_names_columns_google_sheets(list_names, "AC")
     
     
     return True
@@ -536,7 +626,7 @@ if __name__ == "__main__":
     stock_symbols = ["BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
 
     # lista=get_price_to_book_from_invest10(stock_symbols)
-    get_price_to_earnings(stock_symbols)
+    print(get_all_data_from_all_stocks(stock_symbols))
 
     # print(lista)
 # # Print the list
