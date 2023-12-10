@@ -25,6 +25,84 @@ COLUMN_GET_DATA = f"{SHEET_NAME}!A3:A"
 SAMPLE_SPREADSHEET_ID = "1fIzQZevwQ9UB6ynmRNvGddYf9ITDEuhp5lgM34-VDNs"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
+
+def get_data_from_a_stock(stock_symbol):
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    driver.maximize_window()
+    list_data = []
+    
+    # getting the dividend
+    url = f'https://www.google.com/search?q=dividendos+{stock_symbol}'
+    driver.get(url)
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
+
+        dividend = element.text
+        print(f'Dividendo da ação {stock_symbol}: {dividend}')
+    except:
+        print(f"falha ao buscar dividendo da {stock_symbol}")
+        dividend = "0%"
+        
+    list_data.append(dividend)
+    
+    
+    # getting the didivend yield from invest10
+    url = f'https://investidor10.com.br/acoes/{stock_symbol}/'
+    driver.get(url)
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
+        parent_element = element.find_element(By.XPATH, "..")
+        grand_parent_element = parent_element.find_element(By.XPATH, "..")
+        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+        dividend_yield = other_parent_element.text
+        print(f'Dividend Yield da ação {stock_symbol}: {dividend_yield}')
+    except:
+        print(f"falha ao buscar Dividend Yield da {stock_symbol}")
+        dividend_yield = "0%"
+        
+    list_data.append(dividend_yield)
+    
+    
+    # getting the price per profit
+    url = f'https://investidor10.com.br/acoes/{stock_symbol}/'
+ 
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
+        parent_element = element.find_element(By.XPATH, "..")
+        grand_parent_element = parent_element.find_element(By.XPATH, "..")
+        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+        price = other_parent_element.text
+        print(f'P/L da ação {stock_symbol}: {price}')
+    except:
+        print(f"falha ao buscar P/L da {stock_symbol}")
+        price = "0"
+        
+    list_data.append(price)
+        
+    # getting the price per value
+    url = f'https://investidor10.com.br/acoes/{stock_symbol}/'
+   
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
+        parent_element = element.find_element(By.XPATH, "..")
+        grand_parent_element = parent_element.find_element(By.XPATH, "..")
+        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+        price_vp = other_parent_element.text
+        print(f'P/VP da ação {stock_symbol}: {price_vp}')
+    except:
+        print(f"falha ao buscar P/VP da {stock_symbol}")
+        price_vp = "0"
+        
+    list_data.append(price_vp)
+        
+    driver.quit()
+    
+    return list_data
+    
+
+
 def generate_excel_file(list1, list2, output_file='dividends.xlsx'):
    # Check if the lists have the same length
     if len(list1) != len(list2):
@@ -43,34 +121,34 @@ def generate_excel_file(list1, list2, output_file='dividends.xlsx'):
     print(f"Excel file '{output_path}' created successfully.")  
     
 
-def get_price_per_profit(list_names):
-    if (list_names == []):
-      return list_names
+# def get_price_to_earnings(list_names):
+#     if (list_names == []):
+#       return list_names
   
   
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)
-    driver = webdriver.Chrome(options=options)
-    prices = []
-    driver.maximize_window()
+#     options = webdriver.ChromeOptions()
+#     options.add_experimental_option("detach", True)
+#     driver = webdriver.Chrome(options=options)
+#     prices = []
+#     driver.maximize_window()
 
-    for  name in list_names:
-        url = f'https://investidor10.com.br/acoes/{name}/'
-        driver.get(url)
+#     for  name in list_names:
+#         url = f'https://investidor10.com.br/acoes/{name}/'
+#         driver.get(url)
         
       
-        element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
-        parent_element = element.find_element(By.XPATH, "..")
-        grand_parent_element = parent_element.find_element(By.XPATH, "..")
-        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-        price = other_parent_element.text
-        prices.append(price)
+#         element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
+#         parent_element = element.find_element(By.XPATH, "..")
+#         grand_parent_element = parent_element.find_element(By.XPATH, "..")
+#         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+#         price = other_parent_element.text
+#         prices.append(price)
                
-    driver.quit()
-    return prices
+#     driver.quit()
+#     return prices
 
 
-def get_pvp_from_invest10(list_names):
+def get_price_to_book_from_invest10(list_names):
     if (list_names == []):
       return list_names
   
@@ -96,34 +174,136 @@ def get_pvp_from_invest10(list_names):
     driver.quit()
     return prices
 
-def get_dividends_from_invest10(list_names):
+# def get_dividends_from_invest10(list_names):
+#     if (list_names == []):
+#       return list_names
+  
+  
+#     options = webdriver.ChromeOptions()
+#     options.add_experimental_option("detach", True)
+#     driver = webdriver.Chrome(options=options)
+#     prices = []
+#     driver.maximize_window()
+
+#     for  name in list_names:
+#         url = f'https://investidor10.com.br/acoes/{name}/'
+#         driver.get(url)
+        
+      
+#         element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
+#         parent_element = element.find_element(By.XPATH, "..")
+#         grand_parent_element = parent_element.find_element(By.XPATH, "..")
+#         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+#         price = other_parent_element.text
+#         prices.append(price)
+               
+#     driver.quit()
+#     return prices
+  
+def get_price_to_earnings(list_names):
     if (list_names == []):
       return list_names
-  
   
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     driver = webdriver.Chrome(options=options)
     prices = []
     driver.maximize_window()
-
     for  name in list_names:
         url = f'https://investidor10.com.br/acoes/{name}/'
         driver.get(url)
-        
-      
-        element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
-        parent_element = element.find_element(By.XPATH, "..")
-        grand_parent_element = parent_element.find_element(By.XPATH, "..")
-        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-        price = other_parent_element.text
+
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            price = other_parent_element.text
+
+            
+            
+        except:
+            prices.append("0")
+            continue
+          
+        print(f'Preço P/L da ação {name}: {price}')
+
         prices.append(price)
-               
+        
     driver.quit()
     return prices
-  
 
+  
+def get_price_to_book(list_names):
+    if (list_names == []):
+      return list_names
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    prices = []
+    driver.maximize_window()
+    for  name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            price = other_parent_element.text
+
+            
+            
+        except:
+            prices.append("0")
+            continue
+          
+        print(f'Preço P/VP da ação {name}: {price}')
+
+        prices.append(price)
+        
+    driver.quit()
+    return prices
     
+def get_dividends_from_invest10(list_names):
+    if (list_names == []):
+      return list_names
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    dividends = []
+    driver.maximize_window()
+    for  name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'DY')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            dividend = other_parent_element.text
+            dividend_float = float(dividend.replace("%","").replace(",","."))
+            
+            
+        except:
+            if '%' not in dividend:
+              print(f"falha ao buscar dividendo da {name}")
+              dividends.append("Failed to get dividend")
+              continue
+          
+            dividends.append("0%")
+            continue
+          
+        print(f'Dividendo da ação {name}: {dividend}')
+
+        dividends.append(dividend)
+        
+    driver.quit()
+    return dividends
 
 def get_dividends_google_data(list_names):
     if (list_names == []):
@@ -141,17 +321,15 @@ def get_dividends_google_data(list_names):
         try:
             element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
             dividend = element.text
-            
-            if '%' not in dividend:
-              print(f"falha ao buscar dividendo da {name}")
-              dividends.append("0%")
-              continue
-            
             dividend_float = float(dividend.replace("%","").replace(",","."))
             
             
         except:
-            print(f"falha ao buscar dividendo da {name}")
+            if '%' not in dividend:
+              print(f"falha ao buscar dividendo da {name}")
+              dividends.append("Failed to get dividend")
+              continue
+          
             dividends.append("0%")
             continue
           
@@ -357,9 +535,10 @@ if __name__ == "__main__":
     
     stock_symbols = ["BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
 
-    lista=get_pvp_from_invest10(stock_symbols)
+    # lista=get_price_to_book_from_invest10(stock_symbols)
+    get_price_to_earnings(stock_symbols)
 
-    print(lista)
+    # print(lista)
 # # Print the list
 #     print(stock_symbols)
     # list_names = []
