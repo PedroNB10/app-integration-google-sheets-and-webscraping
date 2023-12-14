@@ -288,6 +288,7 @@ def get_price_to_book_from_invest10(list_names):
         prices.append(price)
                
     driver.quit()
+    print("%" in prices)
     return prices
 
 def get_price_to_earnings(list_names):
@@ -393,6 +394,7 @@ def get_dividends_from_invest10(list_names):
         dividends.append(dividend)
         
     driver.quit()
+    print("%" in dividends)
     return dividends
 
 def get_dividends_google_data(list_names):
@@ -566,7 +568,7 @@ def add_empty_column_google_sheets(sheet, last_row):
                 }
             ).execute()
 
-def post_dividends_google_data(list_dividends):
+def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
     if not list_dividends:
         return False
 
@@ -606,7 +608,7 @@ def post_dividends_google_data(list_dividends):
         if values:
 
             sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) + 1}",
-                                  valueInputOption="USER_ENTERED", body={"values": [[f'=TEXT(AVERAGE({DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) -1});"0.00%")']]}).execute()
+                                  valueInputOption="USER_ENTERED", body={"values": [[f'=ARRED(AVERAGE({DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) -1}); 2)']]}).execute()
 
             
     

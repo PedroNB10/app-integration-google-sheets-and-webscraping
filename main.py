@@ -393,7 +393,7 @@ class mainView():
         # self.save_data_locally_button.pack(padx=(50, 0), pady=(30, 0))
         
         self.save_data_sheets_button = tk.Button(self.root, text="Save All Data On Sheets", width=20, bg="#fdf0d5",activebackground="#fdf0d5",
-                                     font=("Roboto", 11, "bold"), command=self.controller.save_dividends_google)
+                                     font=("Roboto", 11, "bold"), command=self.controller.save_all_data_on_sheets)
         
         
         self.save_data_sheets_button.pack(padx=(50, 0), pady=(30, 0))
@@ -491,8 +491,8 @@ class Controller():
     def get_price_to_earnings_data(self, stock_names):
         return func.get_price_to_earnings(stock_names)
     
-    def post_dividends_google_data(self, dividends_google_list):
-        return func.post_dividends_google_data(dividends_google_list)
+    def post_data_list(self, dividends_google_list, DY_COLUMN_UPDATE_GOOGLE):
+        return func.post_data_list(dividends_google_list, DY_COLUMN_UPDATE_GOOGLE)
     
     def generate_excel_file(self, stock_names, dividends_google_list):
         func.generate_excel_file(stock_names, dividends_google_list)
@@ -1047,7 +1047,61 @@ class Controller():
             messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
             return
         
-        post_success = self.post_dividends_google_data(self.dividends_google_list)
+        post_success = self.post_data_list(self.dividends_google_list, "AF")
+
+        if post_success:
+            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+    
+        else:
+            messagebox.showerror("Error", "Dividends can't be registered before the search!")
+            
+    def save_dividends_invest10(self):
+        if not os.path.exists('token.json'):
+            messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
+            return
+        
+        post_success = self.post_data_list(self.dividends_invest10_list, "AG")
+
+        if post_success:
+            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+    
+        else:
+            messagebox.showerror("Error", "Dividends can't be registered before the search!")
+            
+    def save_prices_to_book(self):
+        if not os.path.exists('token.json'):
+            messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
+            return
+        
+        post_success = self.post_data_list(self.prices_to_book_list, "AE")
+
+        if post_success:
+            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+    
+        else:
+            messagebox.showerror("Error", "Dividends can't be registered before the search!")
+            
+            
+    def save_prices_to_earnings(self):
+        if not os.path.exists('token.json'):
+            messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
+            return
+        
+        post_success = self.post_data_list(self.price_to_earnings_list, "AD")
+
+        if post_success:
+            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+    
+        else:
+            messagebox.showerror("Error", "Dividends can't be registered before the search!")
+            
+            
+    def save_dividends_google(self):
+        if not os.path.exists('token.json'):
+            messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
+            return
+        
+        post_success = self.post_data_list(self.dividends_google_list, "AF")
 
         if post_success:
             messagebox.showinfo("Success", "Dividends Registered Successfully ")
@@ -1070,6 +1124,33 @@ class Controller():
         else:
             self.generate_excel_file(self.stock_names_temp, self.dividends_google_list)
             messagebox.showinfo("Success", "The file was created on your downloads !")
+            
+            
+    def save_all_data_on_sheets(self):
+        if not os.path.exists('token.json'):
+            messagebox.showerror("Error", "There is no token.json file, you can't save it to google sheets!")
+            return
+        print(self.all_data_list)    
+        
+        if len(self.all_data_list) == 0:
+            messagebox.showinfo("Empty List", "You need to search for at least one time to save all data!")
+            return
+        
+        # Google dividends
+        # Invest10 Dividends
+        # Price to Earnings
+        # Price to Book
+   
+        post_success = self.post_data_list(self.all_data_list[0], "AF")
+        post_success = self.post_data_list(self.all_data_list[1], "AG")
+        post_success = self.post_data_list(self.all_data_list[2], "AD")
+        post_success = self.post_data_list(self.all_data_list[3], "AE")
+
+        if post_success:
+            messagebox.showinfo("Success", "All Data was registered Successfully ")
+    
+        else:
+            messagebox.showerror("Error", "Failed to save all Data!")
 
     def exit_window(self):
         
@@ -1084,3 +1165,4 @@ class Controller():
 
 if __name__ == '__main__':
     controller = Controller()
+
