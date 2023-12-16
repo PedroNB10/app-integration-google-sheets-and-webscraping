@@ -117,15 +117,15 @@ def get_all_data_from_all_stocks(stock_list):
             parent_element = element.find_element(By.XPATH, "..")
             grand_parent_element = parent_element.find_element(By.XPATH, "..")
             other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-            price_vp = other_parent_element.text
-            print(f"Price to Book from: {stock}: {price_vp}")
+            price = other_parent_element.text
+            print(f"Price to Book from: {stock}: {price}")
         except:
             print(f"Failed to get the Price to Book from {stock}")
-            price_vp = "0"
+            price = "0"
             
             
             
-        list_price_to_book.append(price_vp)
+        list_price_to_book.append(price)
         print("\n")
   
     
@@ -155,9 +155,9 @@ def get_data_from_a_stock(stock_symbol):
         element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
 
         dividend = element.text
-        print(f'Dividendo da ação {stock_symbol}: {dividend}')
+        print(f'Google Dividend from {stock_symbol}: {dividend}')
     except:
-        print(f"falha ao buscar dividendo da {stock_symbol}")
+        print(f"Failed to find the dividend from {stock_symbol}")
         dividend = "0%"
         
     list_data.append(dividend)
@@ -172,9 +172,9 @@ def get_data_from_a_stock(stock_symbol):
         grand_parent_element = parent_element.find_element(By.XPATH, "..")
         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
         dividend_yield = other_parent_element.text
-        print(f'Dividend Yield da ação {stock_symbol}: {dividend_yield}')
+        print(f'Invest10 Dividend from {stock_symbol}: {dividend_yield}')
     except:
-        print(f"falha ao buscar Dividend Yield da {stock_symbol}")
+        print(f"Failed to find the dividend from {stock_symbol}")
         dividend_yield = "0%"
         
     list_data.append(dividend_yield)
@@ -189,9 +189,9 @@ def get_data_from_a_stock(stock_symbol):
         grand_parent_element = parent_element.find_element(By.XPATH, "..")
         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
         price = other_parent_element.text
-        print(f'P/L da ação {stock_symbol}: {price}')
+        print(f'Price to earnings from {stock_symbol}: {price}')
     except:
-        print(f"falha ao buscar P/L da {stock_symbol}")
+        print(f"Failed to get the Price to Earnings from {stock_symbol}")
         price = "0"
         
     list_data.append(price)
@@ -204,13 +204,13 @@ def get_data_from_a_stock(stock_symbol):
         parent_element = element.find_element(By.XPATH, "..")
         grand_parent_element = parent_element.find_element(By.XPATH, "..")
         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-        price_vp = other_parent_element.text
-        print(f'P/VP da ação {stock_symbol}: {price_vp}')
+        price = other_parent_element.text
+        print(f"Price to Book from: {stock_symbol}: {price}")
     except:
-        print(f"falha ao buscar P/VP da {stock_symbol}")
-        price_vp = "0"
+        print(f"Failed to get the Price to Book from {stock_symbol}")
+        price = "0"
         
-    list_data.append(price_vp)
+    list_data.append(price)
         
 
     driver.quit()
@@ -261,13 +261,13 @@ def get_colum_data_from_sheets(list_names, COLUMN_GET_DATA):
         return False
     
 
-def generate_excel_file(list1, list2, output_file='dividends.xlsx'):
-   # Check if the lists have the same length
-    if len(list1) != len(list2):
-        raise ValueError("The two lists must have the same length.")
+def generate_excel_file(list1, list2, list3, list4, list5, output_file='stockinfo.xlsx'):
+    # Check if the lists have the same length
+    if len(list1) != len(list2) != len(list3) != len(list4) != len(list5):
+        raise ValueError("All five lists must have the same length.")
 
     # Create a DataFrame from the lists
-    data = {'stock': list1, 'dividends': list2}
+    data = {'Stock': list1, 'Google Dividend': list2, 'Invest10 Dividend': list3, 'Price to Book': list4, 'Price to Earnings': list5}
     df = pd.DataFrame(data)
 
     # Get the path to the "Downloads" directory
@@ -279,31 +279,6 @@ def generate_excel_file(list1, list2, output_file='dividends.xlsx'):
     print(f"Excel file '{output_path}' created successfully.")  
     
 
-# def get_price_to_earnings(list_names):
-#     if (list_names == []):
-#       return list_names
-  
-  
-#     options = webdriver.ChromeOptions()
-#     options.add_experimental_option("detach", True)
-#     driver = webdriver.Chrome(options=options)
-#     prices = []
-#     driver.maximize_window()
-
-#     for  name in list_names:
-#         url = f'https://investidor10.com.br/acoes/{name}/'
-#         driver.get(url)
-        
-      
-#         element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
-#         parent_element = element.find_element(By.XPATH, "..")
-#         grand_parent_element = parent_element.find_element(By.XPATH, "..")
-#         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-#         price = other_parent_element.text
-#         prices.append(price)
-               
-#     driver.quit()
-#     return prices
 
 
 def get_price_to_book_from_invest10(list_names):
@@ -330,7 +305,7 @@ def get_price_to_book_from_invest10(list_names):
         prices.append(price)
                
     driver.quit()
-    print("%" in prices)
+
     return prices
 
 def get_price_to_earnings(list_names):
@@ -353,13 +328,12 @@ def get_price_to_earnings(list_names):
             other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
             price = other_parent_element.text
 
-            
-            
         except:
+            print(f"Failed to get the Price to Earnings from {name}")
             prices.append("0")
             continue
           
-        print(f'Preço P/L da ação {name}: {price}')
+        print(f'Price to earnings from {name}: {price}')
 
         prices.append(price)
         
@@ -390,10 +364,11 @@ def get_price_to_book(list_names):
             
             
         except:
+            print(f"Failed to get the Price to Book from {name}")
             prices.append("0")
             continue
           
-        print(f'Preço P/VP da ação {name}: {price}')
+        print(f"Price to Book from: {name}: {price}")
 
         prices.append(price)
         
@@ -424,14 +399,14 @@ def get_dividends_from_invest10(list_names):
             
         except:
             if '%' not in dividend:
-              print(f"falha ao buscar dividendo da {name}")
+              print(f"Failed to find the dividend from {name}")
               dividends.append("0%")
               continue
           
             dividends.append("0%")
             continue
           
-        print(f'Dividendo da ação {name}: {dividend}')
+        print(f'Invest10 Dividend from {name}: {dividend}')
 
         dividends.append(dividend)
         
@@ -460,14 +435,14 @@ def get_dividends_google_data(list_names):
             
         except:
             if '%' not in dividend:
-              print(f"falha ao buscar dividendo da {name}")
+              print(f"Failed to find the dividend from {name}")
               dividends.append("0%")
               continue
           
             dividends.append("0%")
             continue
           
-        print(f'Dividendo da ação {name}: {dividend}')
+        print(f'Google Dividend from {name}: {dividend}')
 
         dividends.append(dividend)
         
@@ -507,12 +482,6 @@ def get_stock_names(list_names):
     for value in values:
       print(f"{value[0]}")
       list_names.append(value[0])
-      
-    # update_stock_names_columns_google_sheets(list_names, "T")
-    # update_stock_names_columns_google_sheets(list_names, "R")
-    # update_stock_names_columns_google_sheets(list_names, "W")
-    # update_stock_names_columns_google_sheets(list_names, "AC")
-    
     
     return True
   
@@ -668,20 +637,9 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
 if __name__ == "__main__":
     
     stock_symbols = ["BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
-
-    # lista=get_price_to_book_from_invest10(stock_symbols)
     print(get_all_data_from_all_stocks(stock_symbols))
 
-    # print(lista)
-# # Print the list
-#     print(stock_symbols)
-    # list_names = []
-    # get_stock_names(list_names)
-    # print(list_names)
-    # list_dividends = get_dividends(stock_symbols)
-    # print(list_dividends)
-    # if post_diviends(list_dividends):
-    #     print("Dividendos registrados com sucesso feito com sucesso!")
+
   
   
   

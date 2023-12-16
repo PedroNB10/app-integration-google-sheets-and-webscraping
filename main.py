@@ -110,6 +110,8 @@ class ShowResultsView(tk.Toplevel):
             )
         )
         self.title("Results of Search")
+        self.logo = tk.PhotoImage(file="./img/logo.ppm")
+        self.wm_iconphoto(False, self.logo)
         self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=40)
         self.text_widget.pack(side=tk.LEFT, fill=tk.Y)
         self.scrollbar = tk.Scrollbar(self, command=self.text_widget.yview)
@@ -134,7 +136,7 @@ class ShowResultsView(tk.Toplevel):
             self.add_centered_text(f"Stock Name: {stock.name}\n")
 
             if stock.dividend_google != None:
-                self.add_centered_text(f"Dividend Google: {stock.dividend_google}\n")
+                self.add_centered_text(f"Dividend Google: {stock.dividend_google} \n")
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
@@ -143,11 +145,11 @@ class ShowResultsView(tk.Toplevel):
 
             if stock.price_to_earnings != None:
                 self.add_centered_text(
-                    f"Price to Earnings: {stock.price_to_earnings}\n"
+                    f"Price to Earnings: R$ {stock.price_to_earnings}\n"
                 )
 
             if stock.price_to_book != None:
-                self.add_centered_text(f"Price to Book: {stock.price_to_book}\n")
+                self.add_centered_text(f"Price to Book: R$ {stock.price_to_book}\n")
 
             self.add_centered_text(f"----------------------------------------\n")
 
@@ -181,7 +183,7 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Price to Book: {stock.price_to_book}\n")
+            self.add_centered_text(f"Price to Book: R$ {stock.price_to_book}\n")
             self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
@@ -192,7 +194,7 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Price to Earnings: {stock.price_to_earnings}\n")
+            self.add_centered_text(f"Price to Earnings: R$ {stock.price_to_earnings}\n")
             self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
@@ -531,7 +533,7 @@ class Controller:
         self.root.mainloop()
 
     def repeating_function(self):
-        print("Function executed!")
+        print("Checking time to search stock's new prices!")
         if (
             (datetime.now().minute) % 10 == 0
             and not self.exit_event.is_set()
@@ -580,9 +582,6 @@ class Controller:
         else:
             self.root.after(100, self.check_completion)
 
-    def get_stock_names(self, stock_names):
-        return func.get_stock_names(stock_names)
-
     def get_dividends_google_data(self, stock_names):
         return func.get_dividends_google_data(stock_names)
 
@@ -598,8 +597,8 @@ class Controller:
     def post_data_list(self, dividends_google_list, DY_COLUMN_UPDATE_GOOGLE):
         return func.post_data_list(dividends_google_list, DY_COLUMN_UPDATE_GOOGLE)
 
-    def generate_excel_file(self, stock_names, dividends_google_list):
-        func.generate_excel_file(stock_names, dividends_google_list)
+    def generate_excel_file(self, stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list):
+        func.generate_excel_file(stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list)
 
     def get_data_from_a_stock(self, stock_name):
         return func.get_data_from_a_stock(stock_name)
@@ -665,7 +664,7 @@ class Controller:
                 self.stock_names_temp.clear()
 
             # it will append the stocks thats why it starts empty
-            success = self.get_stock_names(self.stock_names_temp)
+            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -816,7 +815,7 @@ class Controller:
                 self.stock_names_temp.clear()
 
             # it will append the stocks thats why it starts empty
-            success = self.get_stock_names(self.stock_names_temp)
+            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -932,7 +931,7 @@ class Controller:
                 self.stock_names_temp.clear()
 
             # it will append the stocks thats why it starts empty
-            success = self.get_stock_names(self.stock_names_temp)
+            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1048,7 +1047,7 @@ class Controller:
                 self.stock_names_temp.clear()
 
             # it will append the stocks thats why it starts empty
-            success = self.get_stock_names(self.stock_names_temp)
+            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1165,7 +1164,7 @@ class Controller:
                 self.stock_names_temp.clear()
 
             # it will append the stocks thats why it starts empty
-            success = self.get_stock_names(self.stock_names_temp)
+            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1243,6 +1242,7 @@ class Controller:
 
     def compare_real_time_prices(self):
         self.stock_names_temp = []
+
         self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
 
         self.target_price_list = []
@@ -1425,14 +1425,19 @@ class Controller:
             messagebox.showinfo("Dividends List", message)
 
     def generate_excel_table(self):
-        if len(self.dividends_google_list) == 0:
-            messagebox.showinfo(
-                "Empty List",
-                "You need to search for at least one time to create a table!",
-            )
-        else:
-            self.generate_excel_file(self.stock_names_temp, self.dividends_google_list)
+        if len(self.all_data_list) != 0:
+            self.generate_excel_file(self.stock_names_temp, self.all_data_list[0],self.all_data_list[1],self.all_data_list[2],self.all_data_list[3])
             messagebox.showinfo("Success", "The file was created on your downloads !")
+            return
+        
+        elif len(self.dividends_google_list) != 0 and len(self.dividends_invest10_list) != 0 and len(self.prices_to_book_list) != 0 and len(self.price_to_earnings_list) != 0:
+            self.generate_excel_file(self.stock_names_temp, self.dividends_google_list,self.dividends_invest10_list,self.prices_to_book_list,self.price_to_earnings_list)
+            messagebox.showinfo("Success", "The file was created on your downloads !")
+            return
+        
+        else:
+            messagebox.showerror("Error", "There is no sufficient data to generate a excel file!")
+            return
 
     def save_all_data_on_sheets(self):
         if not os.path.exists("token.json"):
