@@ -216,8 +216,50 @@ def get_data_from_a_stock(stock_symbol):
     driver.quit()
     
     return list_data
-    
 
+
+def get_colum_data_from_sheets(list_names, COLUMN_GET_DATA):
+    creds = None
+
+    if os.path.exists("token.json"): #  verify if the token.json file exists, if not, return the error to the user
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    else:
+        return False
+
+    with open("token.json", "w") as token:
+        token.write(creds.to_json())
+
+    try:
+        service = build("sheets", "v4", credentials=creds)
+
+        # Call the Sheets API
+        sheet = service.spreadsheets()
+        result = (
+            sheet.values()
+            .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=COLUMN_GET_DATA)
+            .execute()
+        )
+        
+        values = result.get("values", [])
+
+        if not values:
+            print("No data found.")
+            return
+
+
+        # Print columns A and E, which correspond to indices 0 and 4.
+        for value in values:
+            list_names.append(value[0])
+        
+
+        
+        
+        return True
+    
+    except HttpError as err:
+        print(err)
+        return False
+    
 
 def generate_excel_file(list1, list2, output_file='dividends.xlsx'):
    # Check if the lists have the same length
