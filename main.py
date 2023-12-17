@@ -210,6 +210,10 @@ class SearchResultsView(tk.Toplevel):
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
         self.text_widget.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        self.logo = tk.PhotoImage(file="./img/logo.ppm")
+        self.wm_iconphoto(False, self.logo)
+        
         # Insert buttons as window widgets in the Text widget
 
         for i in range(len(self.controller.search_results)):
@@ -357,6 +361,14 @@ class mainView:
             fg="white",
         )
         self.guide_text.pack(side="left")
+        
+        self.label = tk.Label(
+            text="Welcome to \nStock Dividends Retriever App",
+            bg="#1D1D20",
+            font=("Roboto", 20, "bold"),
+            fg="#2BABE2",
+        )
+        self.label.pack(side="top", pady=20)
 
         self.limg = tk.Label(self.guide_frame, image=self.logo, bg="#1D1D20")
         self.limg.pack()
@@ -443,17 +455,6 @@ class mainView:
             command=controller.generate_excel_table,
         )
         self.generate_button.pack(padx=(50, 0), pady=(30, 0))
-
-        self.track_button = tk.Button(
-            self.root,
-            text="Track Stock Prices",
-            width=20,
-            bg="yellow",
-            activebackground="yellow",
-            font=("Roboto", 11, "bold"),
-            command=controller.run_comparison_with_loading_bar,
-        )
-        self.track_button.pack(padx=(50, 0), pady=(30, 0))
         
         self.save_data_sheets_button = tk.Button(
             self.root,
@@ -623,7 +624,7 @@ class Controller:
         self.search_results_view = SearchResultsView(self.root, self)
 
     def search_all_data_thread(self):
-        self.all_data_list.clear()
+        self.all_data_list = []
         # it will append the stocks thats why it starts empty
         self.all_data_list = self.get_all_data_from_all_stocks(self.stock_names_temp)
 
@@ -661,7 +662,7 @@ class Controller:
             self.show_loading_bar()
 
             if os.path.exists("token.json"):
-                self.stock_names_temp.clear()
+                self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
@@ -673,6 +674,7 @@ class Controller:
                     parent=self.root,
                 )
                 if answer == True:
+                    
                     if len(self.stock_names_temp) == 0:
                         while True:
                             stock_name = simpledialog.askstring(
@@ -711,6 +713,7 @@ class Controller:
                             self.root.after(100, self.check_completion)
 
                         else:
+                            self.stock_names_temp = []
                             while True:
                                 stock_name = simpledialog.askstring(
                                     "Input",
@@ -777,7 +780,7 @@ class Controller:
         threading.Thread(target=self.search_a_stock_thread, args=(answer,)).start()
 
     def get_price_to_earnings_thread(self):
-        self.price_to_earnings_list.clear()
+        self.price_to_earnings_list = []
         self.price_to_earnings_list = self.get_price_to_earnings_data(
             self.stock_names_temp
         )
@@ -812,7 +815,7 @@ class Controller:
             self.show_loading_bar()
 
             if os.path.exists("token.json"):
-                self.stock_names_temp.clear()
+                self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
@@ -864,6 +867,7 @@ class Controller:
                             self.root.after(100, self.check_completion)
 
                         else:
+                            self.stock_names_temp = []
                             while True:
                                 stock_name = simpledialog.askstring(
                                     "Input",
@@ -893,7 +897,7 @@ class Controller:
             self.root.after(100, self.check_completion)
 
     def get_price_to_book_thread(self):
-        self.prices_to_book_list.clear()
+        self.prices_to_book_list = []
         # it will append the stocks thats why it starts empty
         self.prices_to_book_list = self.get_prices_to_book_data(self.stock_names_temp)
 
@@ -928,7 +932,7 @@ class Controller:
             self.show_loading_bar()
 
             if os.path.exists("token.json"):
-                self.stock_names_temp.clear()
+                self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
@@ -979,6 +983,7 @@ class Controller:
                             self.root.after(100, self.check_completion)
 
                         else:
+                            self.stock_names_temp = []
                             while True:
                                 stock_name = simpledialog.askstring(
                                     "Input",
@@ -1008,7 +1013,7 @@ class Controller:
             self.root.after(100, self.check_completion)
 
     def get_invest10_dividends_thread(self):
-        self.dividends_invest10_list.clear()
+        self.dividends_invest10_list = []
         self.dividends_invest10_list = self.get_dividends_invest10_data(
             self.stock_names_temp
         )  # it will append the stocks thats why it starts empty
@@ -1044,7 +1049,7 @@ class Controller:
             self.show_loading_bar()
 
             if os.path.exists("token.json"):
-                self.stock_names_temp.clear()
+                self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
@@ -1095,6 +1100,7 @@ class Controller:
                             self.root.after(100, self.check_completion)
 
                         else:
+                            self.stock_names_temp = []
                             while True:
                                 stock_name = simpledialog.askstring(
                                     "Input",
@@ -1124,7 +1130,7 @@ class Controller:
             self.root.after(100, self.check_completion)
 
     def get_google_dividends_thread(self):
-        self.dividends_google_list.clear()
+        self.dividends_google_list = []
         self.dividends_google_list = self.get_dividends_google_data(
             self.stock_names_temp
         )  # it will append the stocks thats why it starts empty
@@ -1161,7 +1167,7 @@ class Controller:
             self.show_loading_bar()
 
             if os.path.exists("token.json"):
-                self.stock_names_temp.clear()
+                self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
@@ -1212,6 +1218,7 @@ class Controller:
                             self.root.after(100, self.check_completion)
 
                         else:
+                            self.stock_names_temp = []
                             while True:
                                 stock_name = simpledialog.askstring(
                                     "Input",
