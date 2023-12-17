@@ -716,14 +716,21 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
+                            
+                            if stock_name == None and len(self.stock_names_temp) == 0:
+                                return
 
-                            if stock_name == "stop":
+                            if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
                                     target=self.search_all_data_thread
                                 ).start()
                                 self.root.after(100, self.check_completion)
                                 break
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                               
+                                return
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
@@ -754,8 +761,14 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
+                                
+                                if stock_name == None and len(self.stock_names_temp) == 0:
+                                    return
+                                
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                    return
 
-                                if stock_name == "stop":
+                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
                                         target=self.search_all_data_thread
@@ -868,8 +881,14 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
+                            
+                            if stock_name == None and len(self.stock_names_temp) == 0:
+                                return
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                return
 
-                            if stock_name == "stop":
+                            if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
                                     target=self.get_price_to_earnings_thread
@@ -908,8 +927,14 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
+                                
+                                if stock_name == None and len(self.stock_names_temp) == 0:
+                                    return
+                                
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                    return
 
-                                if stock_name == "stop":
+                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
                                         target=self.get_price_to_earnings_thread
@@ -986,7 +1011,13 @@ class Controller:
                                 parent=self.root,
                             )
 
-                            if stock_name == "stop":
+                            if stock_name == None and len(self.stock_names_temp) == 0:
+                                return
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                return
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
                                     target=self.get_price_to_book_thread
@@ -1024,8 +1055,14 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-
-                                if stock_name == "stop":
+                                
+                                if stock_name == None and len(self.stock_names_temp) == 0:
+                                    return
+                                
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                    return
+                            
+                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
                                         target=self.get_price_to_book_thread
@@ -1102,8 +1139,14 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
+                            
+                            if stock_name == None and len(self.stock_names_temp) == 0:
+                                return
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                return
 
-                            if stock_name == "stop":
+                            if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
                                     target=self.get_invest10_dividends_thread
@@ -1141,8 +1184,16 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
+                                
+                                if stock_name == None and len(self.stock_names_temp) == 0:
+                                    return
 
-                                if stock_name == "stop":
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:        
+                                    return
+                                
+                                
+                                
+                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
                                         target=self.get_invest10_dividends_thread
@@ -1219,9 +1270,15 @@ class Controller:
                                 "Input",
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
-                            )
+                            )   
+                            
+                            if stock_name == None and len(self.stock_names_temp) == 0:
+                                return
+                            
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                return
 
-                            if stock_name == "stop":
+                            if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
                                     target=self.get_google_dividends_thread
@@ -1259,8 +1316,14 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
+                                
+                                if stock_name == None and len(self.stock_names_temp) == 0:
+                                    return
+                                
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                    return
 
-                                if stock_name == "stop":
+                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
                                         target=self.get_google_dividends_thread
