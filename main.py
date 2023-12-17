@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import PhotoImage
 from tkinter import ttk, messagebox, simpledialog
 import threading
 import os.path
@@ -64,13 +65,14 @@ class LoadingView(tk.Toplevel):
                 self.root_width, self.root_height, x_cordinate, y_cordinate
             )
         )
+        self.configure(bg="#1c1830")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.disable_close)
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
 
         self.loading_label = tk.Label(
-            self, text="I'm still searching, hang on", font=("Roboto", 12)
+            self, text="Searching Data...", font=("Roboto", 12), fg="white", bg="#1c1830"
         )
         self.loading_label.pack(pady=10)
 
@@ -211,50 +213,64 @@ class SearchResultsView(tk.Toplevel):
         self.text_widget.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
+
+        self.frame_height = 650
+        self.frame_width = 600
+        x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
+        y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
+        self.geometry(
+            "{}x{}+{}+{}".format(
+                self.frame_width, self.frame_height, x_cordinate, y_cordinate
+            )
+        )
+       
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
-        
-        # Insert buttons as window widgets in the Text widget
 
+        # Insert buttons as window widgets in the Text widget
+        for i in range(5):
+            self.text_widget.insert(tk.END, "\n")
+            
+            
         for i in range(len(self.controller.search_results)):
             button = ttk.Button(
                 self.text_widget,
-                text=f"{self.controller.search_results[i].date_of_search}",
+                text=f"{self.controller.search_results[i].date_of_search.strftime('%d/%m/%Y %H:%M')}",
                 command=lambda i=i: self.button_clicked(
                     self.controller.search_results[i]
                 ),
+                cursor="hand2",
             )
+            
+            
+            
+            
             self.text_widget.window_create(tk.END, window=button)
             # Add a newline after each button
-            self.text_widget.insert(tk.END, "\n")
-
+            self.text_widget.insert(tk.END, "  ")
+            if (i+1) % 5 == 0 and i != 0:
+                self.text_widget.insert(tk.END, "\n\n")
             # Center the entire line containing the button
             line_start = f"{i + 1}.0"
             self.text_widget.tag_add(f"button_{i+1}", line_start, f"{line_start}+2l")
             self.text_widget.tag_configure(f"button_{i+1}", justify="center")
+     
 
-        self.text_widget.config(state="disabled")
+        self.text_widget.config(state="disabled", background="#1c1830")
 
-        self.after(1, self.center_window)
+        
+
+        
+
+    
 
     def button_clicked(self, search_result):
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data(search_result)
 
-    def center_window(self):
-        # Update the window's geometry
-        self.update_idletasks()
 
-        # Get the screen width and height
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
-        # Calculate the position for the window to be centered
-        x_position = int((screen_width - self.winfo_reqwidth()) / 2)
-        y_position = int((screen_height - self.winfo_reqheight()) / 2)
-
-        # Set the window position
-        self.geometry(f"+{x_position}+{y_position}")
 
 
 class ChooseSearchDataView(tk.Toplevel):
@@ -275,8 +291,10 @@ class ChooseSearchDataView(tk.Toplevel):
             )
         )
         self.title("Search Data")
+        self.logo = tk.PhotoImage(file="./img/logo.ppm")
+        self.wm_iconphoto(False, self.logo)
 
-        self.main_frame = tk.Frame(self, width=600, height=650, bg="#1D1D20").place(
+        self.main_frame = tk.Frame(self, width=600, height=650, bg="#1c1830").place(
             relx=0.5, rely=0.5, anchor="center"
         )
 
@@ -284,8 +302,10 @@ class ChooseSearchDataView(tk.Toplevel):
             self,
             text="Search From Google",
             width=20,
-            bg="#90EE90",
-            activebackground="#90EE90",
+            bg="#456990",
+            fg="white",
+            cursor="hand2",
+            activebackground="#456990",
             font=("Roboto", 11, "bold"),
             command=self.controller.search_dividends_from_google,
         )
@@ -295,8 +315,10 @@ class ChooseSearchDataView(tk.Toplevel):
             self,
             text="Search From Invest10",
             width=20,
-            bg="#089A4F",
-            activebackground="#089A4F",
+            cursor="hand2",
+            fg="white",
+            bg="#9A2C5D",
+            activebackground="#9A2C5D",
             font=("Roboto", 11, "bold"),
             command=self.controller.search_dividends_from_invest10,
         )
@@ -307,8 +329,16 @@ class mainView:
     def __init__(self, root, controller):
         self.controller = controller
         self.root = root
-        self.root.configure(bg="#1D1D20")
+        self.background_image = tk.PhotoImage(file="./img/app-bg.png")
 
+        # Create a label to hold the background image
+        self.background_label = tk.Label(root, image=self.background_image)
+        self.background_label.place(relwidth=1, relheight=1)
+
+        # Raise other widgets above the background image
+        self.background_label.lower()
+       
+ 
         self.root_height = 800
         self.root_width = 900
         self.screen_width = self.root.winfo_screenwidth()
@@ -320,153 +350,158 @@ class mainView:
                 self.root_width, self.root_height, x_cordinate, y_cordinate
             )
         )
+        
+        
 
         self.label = tk.Label(
-            text="Welcome to \nStock Dividends Retriever App",
-            bg="#1D1D20",
+            text="Welcome to \nStock Data Watcher App",
+            bg="#1c1830",
+            height=0,
             font=("Roboto", 20, "bold"),
             fg="#2BABE2",
+
         )
         self.label.pack(side="top", pady=20)
 
-        self.mainFrame = tk.Frame(self.root, width=900, height=200, bg="#1D1D20").place(
+        self.mainFrame = tk.Frame(self.root, width=0, height=0, bg="orange").place(
             relx=0.5, rely=0.5, anchor="center"
         )
 
-        self.logo = tk.PhotoImage(file="./img/logo.ppm")
+        self.logo = tk.PhotoImage(file="./img/logo-new.ppm")
 
         self.root.wm_iconphoto(False, self.logo)
 
-        self.guide_frame = tk.Frame(self.mainFrame, bg="#1D1D20")
+        self.guide_frame = tk.Frame(self.mainFrame, bg="#1c1830")
         self.guide_frame.pack()
 
         self.guide_title = tk.Label(
             self.guide_frame,
             text="Guide",
-            bg="#1D1D20",
+            bg="#1c1830",
             font=("Roboto", 15, "bold"),
             fg="#FF3333",
         )
         self.guide_title.pack(side="top", padx=90)
 
         self.guide_text = tk.Label(
-            self.guide_frame,
-            text="Here in the app you can make these actions:\n\n"
-            "1- Search Dividends\t\t\n"
-            "2- Save Dividends\t\t\t\n"
-            "3- Generate Excel Table of Dividends\n"
-            "4- Get the last dividends search\t",
-            bg="#1D1D20",
+           self.guide_frame,
+            text="Here in the app you can:\n\n"
+            "1- Search Dividends\n"
+            "2- Search Price to Earnings\n"
+            "3- Search Price to Book\n"
+            "4- Search all data from a unique Stock\n"
+            "5- Search All Data from all stocks in a Google Sheet's Sheet\n\n"
+            
+            "Additional functionalities:\n"
+            "6- Save Data on a Sheet from Google Sheets\n"
+            "7- Generate an Excel file with all the searched data\n",
+            bg="#1c1830",
             font=("Roboto", 13, "bold"),
             fg="white",
+            justify="left"
         )
         self.guide_text.pack(side="left")
         
-        self.label = tk.Label(
-            text="Welcome to \nStock Dividends Retriever App",
-            bg="#1D1D20",
-            font=("Roboto", 20, "bold"),
-            fg="#2BABE2",
-        )
-        self.label.pack(side="top", pady=20)
 
-        self.limg = tk.Label(self.guide_frame, image=self.logo, bg="#1D1D20")
+        self.limg = tk.Label(self.guide_frame, image=self.logo, bg="#1c1830")
         self.limg.pack()
 
-        self.buttons_frame = tk.Frame(self.mainFrame, bg="#1D1D20")
-        self.buttons_frame.pack(pady=(50, 0))
+        self.buttons_frame = tk.Frame(self.root, bg="yellow", height=0, width=0)
+        self.buttons_frame.pack()
 
         self.search_button = tk.Button(
-            self.buttons_frame,
+            
             text="Search Dividends",
             width=20,
-            bg="#90EE90",
-            activebackground="#90EE90",
+            bg="#1c1830",
+            fg="white",
+            cursor="hand2",
+            activebackground="#1c1830",
             font=("Roboto", 11, "bold"),
             command=controller.create_search_view,
-        )
-        self.search_button.pack(side="left", padx=(95, 0))
+        ).place(relx=0.2, rely=0.5, anchor="center")
+       
 
         self.search_price_to_earnings_button = tk.Button(
-            self.buttons_frame,
             text="Search price to Earnings",
             width=20,
-            bg="#089A4F",
-            activebackground="#089A4F",
+            bg="#14182C",
+            fg="white",
+            cursor="hand2",
+            activebackground="#14182C",
             font=("Roboto", 11, "bold"),
             command=controller.search_prices_to_earnings,
-        )
-        self.search_price_to_earnings_button.pack(side="left", padx=(50, 50))
+        ).place(relx=0.5, rely=0.5, anchor="center")
 
         self.search_price_to_book_button = tk.Button(
-            self.buttons_frame,
+   
             text="Search price to Book",
             width=20,
-            bg="#08FF08",
-            activebackground="#08FF08",
+            bg="#1c1830",
+            fg="white",
+            cursor="hand2",
+            activebackground="#1c1830",
             font=("Roboto", 11, "bold"),
             command=controller.search_price_to_book,
-        )
-        self.search_price_to_book_button.pack(side="right", padx=(0, 40))
-        self.frame_02 = tk.Frame(self.mainFrame, width=900, height=200, bg="#1D1D20")
-        self.frame_02.pack(pady=(50, 0))
+        ).place(relx=0.8, rely=0.5, anchor="center")
 
         self.stock_search_button = tk.Button(
-            self.frame_02,
+          
             text="Search a Stock",
             width=20,
-            bg="#0091F7",
-            activebackground="yellow",
+            bg="#293B57",
+            fg="white",
+            cursor="hand2",
+            activebackground="#293B57",
             font=("Roboto", 11, "bold"),
             command=controller.search_a_stock,
-        )
-        self.stock_search_button.pack(side="left", padx=(50, 40))
+        ).place(relx=0.35, rely=0.6, anchor="center")
 
 
         self.search_all_data_button = tk.Button(
-            self.frame_02,
+
             text="Search All Data",
             width=20,
-            bg="yellow",
-            activebackground="yellow",
+            bg="#293B57",
+            fg="white",
+            activebackground="#293B57",
+            cursor="hand2",
             font=("Roboto", 11, "bold"),
             command=controller.search_all_data_from_all_stocks,
-        )
-        self.search_all_data_button.pack()
+        ).place(relx=0.65, rely=0.6, anchor="center")
 
         self.last_search_button = tk.Button(
-            self.root,
             text="Search Results",
             width=20,
-            bg="yellow",
-            activebackground="yellow",
+            bg="#456990",
+            fg="white",
+            cursor="hand2",
+            activebackground="#456990",
             font=("Roboto", 11, "bold"),
             command=controller.create_search_results_view,
-        )
-        self.last_search_button.pack(padx=(50, 0), pady=(30, 0))
+        ).place(relx=0.5, rely=0.7, anchor="center")
 
         self.generate_button = tk.Button(
-            self.root,
             text="Generate Excel file",
             width=20,
-            bg="yellow",
-            activebackground="yellow",
+            bg="#9A2C5D",
+            fg="white",
+            cursor="hand2",
+            activebackground="#9A2C5D",
             font=("Roboto", 11, "bold"),
             command=controller.generate_excel_table,
-        )
-        self.generate_button.pack(padx=(50, 0), pady=(30, 0))
+        ).place(relx=0.5, rely=0.8, anchor="center")
         
         self.save_data_sheets_button = tk.Button(
-            self.root,
             text="Save All Data On Sheets",
             width=20,
-            bg="#fdf0d5",
-            activebackground="#fdf0d5",
+            bg="#b6174b",
+            fg="white",
+            cursor="hand2",
+            activebackground="#b6174b",
             font=("Roboto", 11, "bold"),
             command=self.controller.save_all_data_on_sheets,
-        )
-
-        self.save_data_sheets_button.pack(padx=(50, 0), pady=(30, 0))
+        ).place(relx=0.5, rely=0.9, anchor="center")
 
         self.loading_view = LoadingView(self.root, controller)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
@@ -484,14 +519,13 @@ class mainView:
         self.loading_view.hide()
         self.controller.loading_event.clear()
 
-
 class Controller:
     def __init__(self):
         self.root = tk.Tk()
 
         self.view = mainView(self.root, self)
-        self.root.title("Stock Dividends Retriever App")
-
+        self.root.title("Stock Data Watcher App")
+        self.icon = tk.PhotoImage(file="./img/logo.ppm")
         if not os.path.exists("results.pickle"):
             # instances of SearchResult, creates one instance of SearchResult if it doesn't exist
             self.search_results = []
@@ -564,7 +598,7 @@ class Controller:
         if len(self.search_results) == 0:
             messagebox.showinfo(
                 "Empty List",
-                "You need to search for at least one time to get the last results!",
+                "You need to search for at least one time to get the last results!"
             )
             return
 
