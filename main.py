@@ -138,7 +138,8 @@ class ShowResultsView(tk.Toplevel):
             self.add_centered_text(f"Stock Name: {stock.name}\n")
 
             if stock.dividend_google != None:
-                self.add_centered_text(f"Dividend Google: {stock.dividend_google} \n")
+                self.add_centered_text(
+                    f"Dividend Google: {stock.dividend_google} \n")
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
@@ -151,9 +152,11 @@ class ShowResultsView(tk.Toplevel):
                 )
 
             if stock.price_to_book != None:
-                self.add_centered_text(f"Price to Book: R$ {stock.price_to_book}\n")
+                self.add_centered_text(
+                    f"Price to Book: R$ {stock.price_to_book}\n")
 
-            self.add_centered_text(f"----------------------------------------\n")
+            self.add_centered_text(
+                f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -164,7 +167,8 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(f"Dividend: {stock.dividend_google}\n")
-            self.add_centered_text(f"----------------------------------------\n")
+            self.add_centered_text(
+                f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -175,7 +179,8 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(f"Dividend: {stock.dividend_invest10}\n")
-            self.add_centered_text(f"----------------------------------------\n")
+            self.add_centered_text(
+                f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -185,8 +190,10 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Price to Book: R$ {stock.price_to_book}\n")
-            self.add_centered_text(f"----------------------------------------\n")
+            self.add_centered_text(
+                f"Price to Book: R$ {stock.price_to_book}\n")
+            self.add_centered_text(
+                f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -196,8 +203,10 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Price to Earnings: R$ {stock.price_to_earnings}\n")
-            self.add_centered_text(f"----------------------------------------\n")
+            self.add_centered_text(
+                f"Price to Earnings: R$ {stock.price_to_earnings}\n")
+            self.add_centered_text(
+                f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -212,7 +221,7 @@ class SearchResultsView(tk.Toplevel):
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
         self.text_widget.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        
+
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
 
@@ -225,15 +234,14 @@ class SearchResultsView(tk.Toplevel):
                 self.frame_width, self.frame_height, x_cordinate, y_cordinate
             )
         )
-       
+
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
 
         # Insert buttons as window widgets in the Text widget
         for i in range(5):
             self.text_widget.insert(tk.END, "\n")
-            
-            
+
         for i in range(len(self.controller.search_results)):
             button = ttk.Button(
                 self.text_widget,
@@ -243,10 +251,7 @@ class SearchResultsView(tk.Toplevel):
                 ),
                 cursor="hand2",
             )
-            
-            
-            
-            
+
             self.text_widget.window_create(tk.END, window=button)
             # Add a newline after each button
             self.text_widget.insert(tk.END, "  ")
@@ -254,23 +259,15 @@ class SearchResultsView(tk.Toplevel):
                 self.text_widget.insert(tk.END, "\n\n")
             # Center the entire line containing the button
             line_start = f"{i + 1}.0"
-            self.text_widget.tag_add(f"button_{i+1}", line_start, f"{line_start}+2l")
+            self.text_widget.tag_add(
+                f"button_{i+1}", line_start, f"{line_start}+2l")
             self.text_widget.tag_configure(f"button_{i+1}", justify="center")
-     
 
         self.text_widget.config(state="disabled", background="#1c1830")
-
-        
-
-        
-
-    
 
     def button_clicked(self, search_result):
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data(search_result)
-
-
 
 
 class ChooseSearchDataView(tk.Toplevel):
@@ -337,8 +334,7 @@ class mainView:
 
         # Raise other widgets above the background image
         self.background_label.lower()
-       
- 
+
         self.root_height = 800
         self.root_width = 900
         self.screen_width = self.root.winfo_screenwidth()
@@ -350,8 +346,6 @@ class mainView:
                 self.root_width, self.root_height, x_cordinate, y_cordinate
             )
         )
-        
-        
 
         self.label = tk.Label(
             text="Welcome to \nStock Data Watcher App",
@@ -384,14 +378,14 @@ class mainView:
         self.guide_title.pack(side="top", padx=90)
 
         self.guide_text = tk.Label(
-           self.guide_frame,
+            self.guide_frame,
             text="Here in the app you can:\n\n"
             "1- Search Dividends\n"
             "2- Search Price to Earnings\n"
             "3- Search Price to Book\n"
             "4- Search all data from a unique Stock\n"
             "5- Search All Data from all stocks in a Google Sheet's Sheet\n\n"
-            
+
             "Additional functionalities:\n"
             "6- Save Data on a Sheet from Google Sheets\n"
             "7- Generate an Excel file with all the searched data\n",
@@ -401,16 +395,16 @@ class mainView:
             justify="left"
         )
         self.guide_text.pack(side="left")
-        
 
         self.limg = tk.Label(self.guide_frame, image=self.logo, bg="#1c1830")
         self.limg.pack()
 
-        self.buttons_frame = tk.Frame(self.root, bg="yellow", height=0, width=0)
+        self.buttons_frame = tk.Frame(
+            self.root, bg="yellow", height=0, width=0)
         self.buttons_frame.pack()
 
         self.search_button = tk.Button(
-            
+
             text="Search Dividends",
             width=20,
             bg="#1c1830",
@@ -420,7 +414,6 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=controller.create_search_view,
         ).place(relx=0.2, rely=0.5, anchor="center")
-       
 
         self.search_price_to_earnings_button = tk.Button(
             text="Search price to Earnings",
@@ -434,7 +427,7 @@ class mainView:
         ).place(relx=0.5, rely=0.5, anchor="center")
 
         self.search_price_to_book_button = tk.Button(
-   
+
             text="Search price to Book",
             width=20,
             bg="#1c1830",
@@ -446,7 +439,7 @@ class mainView:
         ).place(relx=0.8, rely=0.5, anchor="center")
 
         self.stock_search_button = tk.Button(
-          
+
             text="Search a Stock",
             width=20,
             bg="#293B57",
@@ -456,7 +449,6 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=controller.search_a_stock,
         ).place(relx=0.35, rely=0.6, anchor="center")
-
 
         self.search_all_data_button = tk.Button(
 
@@ -491,7 +483,7 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=controller.generate_excel_table,
         ).place(relx=0.5, rely=0.8, anchor="center")
-        
+
         self.save_data_sheets_button = tk.Button(
             text="Save All Data On Sheets",
             width=20,
@@ -518,6 +510,7 @@ class mainView:
         self.loading_view.loading_bar.stop()
         self.loading_view.hide()
         self.controller.loading_event.clear()
+
 
 class Controller:
     def __init__(self):
@@ -633,7 +626,8 @@ class Controller:
         return func.post_data_list(dividends_google_list, DY_COLUMN_UPDATE_GOOGLE)
 
     def generate_excel_file(self, stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list):
-        func.generate_excel_file(stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list)
+        func.generate_excel_file(stock_names, dividends_google_list,
+                                 dividends_invest10_list, prices_to_book_list, price_to_earnings_list)
 
     def get_data_from_a_stock(self, stock_name):
         return func.get_data_from_a_stock(stock_name)
@@ -660,7 +654,8 @@ class Controller:
     def search_all_data_thread(self):
         self.all_data_list = []
         # it will append the stocks thats why it starts empty
-        self.all_data_list = self.get_all_data_from_all_stocks(self.stock_names_temp)
+        self.all_data_list = self.get_all_data_from_all_stocks(
+            self.stock_names_temp)
 
         if len(self.all_data_list) > 0:
             if len(self.temporary_stocks) == 0:
@@ -699,7 +694,8 @@ class Controller:
                 self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
-            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+            success = self.get_colum_data_from_sheets(
+                self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -708,7 +704,7 @@ class Controller:
                     parent=self.root,
                 )
                 if answer == True:
-                    
+
                     if len(self.stock_names_temp) == 0:
                         while True:
                             stock_name = simpledialog.askstring(
@@ -716,7 +712,7 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
-                            
+
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
 
@@ -727,9 +723,9 @@ class Controller:
                                 ).start()
                                 self.root.after(100, self.check_completion)
                                 break
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                               
+
                                 return
 
                             if stock_name == "" or stock_name == None:
@@ -750,7 +746,8 @@ class Controller:
                         if search_last_stocks == True:
                             # it is used to empty the stocks that has other attributes
                             self.show_loading_bar()
-                            threading.Thread(target=self.search_all_data_thread).start()
+                            threading.Thread(
+                                target=self.search_all_data_thread).start()
                             self.root.after(100, self.check_completion)
 
                         else:
@@ -761,10 +758,10 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-                                
+
                                 if stock_name == None and len(self.stock_names_temp) == 0:
                                     return
-                                
+
                                 if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                     return
 
@@ -824,7 +821,8 @@ class Controller:
         self.show_loading_bar()
 
         # Start a new thread for stock search
-        threading.Thread(target=self.search_a_stock_thread, args=(answer,)).start()
+        threading.Thread(target=self.search_a_stock_thread,
+                         args=(answer,)).start()
 
     def get_price_to_earnings_thread(self):
         self.price_to_earnings_list = []
@@ -845,7 +843,8 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_price_to_earnings(self.search_results[0])
+            self.show_results_view.show_price_to_earnings(
+                self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no dividends !")
@@ -865,7 +864,8 @@ class Controller:
                 self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
-            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+            success = self.get_colum_data_from_sheets(
+                self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -881,10 +881,10 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
-                            
+
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                 return
 
@@ -927,10 +927,10 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-                                
+
                                 if stock_name == None and len(self.stock_names_temp) == 0:
                                     return
-                                
+
                                 if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                     return
 
@@ -958,7 +958,8 @@ class Controller:
     def get_price_to_book_thread(self):
         self.prices_to_book_list = []
         # it will append the stocks thats why it starts empty
-        self.prices_to_book_list = self.get_prices_to_book_data(self.stock_names_temp)
+        self.prices_to_book_list = self.get_prices_to_book_data(
+            self.stock_names_temp)
 
         if len(self.prices_to_book_list) > 0:
             if len(self.temporary_stocks) == 0:
@@ -994,7 +995,8 @@ class Controller:
                 self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
-            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+            success = self.get_colum_data_from_sheets(
+                self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1013,10 +1015,10 @@ class Controller:
 
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                 return
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
@@ -1055,13 +1057,13 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-                                
+
                                 if stock_name == None and len(self.stock_names_temp) == 0:
                                     return
-                                
+
                                 if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                     return
-                            
+
                                 if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
@@ -1102,7 +1104,8 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_invest10_dividends(self.search_results[0])
+            self.show_results_view.show_invest10_dividends(
+                self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no dividends !")
@@ -1123,7 +1126,8 @@ class Controller:
                 self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
-            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+            success = self.get_colum_data_from_sheets(
+                self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1139,10 +1143,10 @@ class Controller:
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
                             )
-                            
+
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                 return
 
@@ -1184,15 +1188,13 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-                                
+
                                 if stock_name == None and len(self.stock_names_temp) == 0:
                                     return
 
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:        
+                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                     return
-                                
-                                
-                                
+
                                 if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                     self.show_loading_bar()
                                     threading.Thread(
@@ -1219,7 +1221,7 @@ class Controller:
         self.dividends_google_list = self.get_dividends_google_data(
             self.stock_names_temp
         )  # it will append the stocks thats why it starts empty
-        
+
         if len(self.dividends_google_list) > 0:
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
@@ -1234,7 +1236,8 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_google_dividends(self.search_results[0])
+            self.show_results_view.show_google_dividends(
+                self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no dividends !")
@@ -1255,7 +1258,8 @@ class Controller:
                 self.stock_names_temp = []
 
             # it will append the stocks thats why it starts empty
-            success = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+            success = self.get_colum_data_from_sheets(
+                self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
                 answer = messagebox.askyesno(
@@ -1270,11 +1274,11 @@ class Controller:
                                 "Input",
                                 "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                 parent=self.root,
-                            )   
-                            
+                            )
+
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
-                            
+
                             if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                 return
 
@@ -1316,10 +1320,10 @@ class Controller:
                                     "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
                                     parent=self.root,
                                 )
-                                
+
                                 if stock_name == None and len(self.stock_names_temp) == 0:
                                     return
-                                
+
                                 if stock_name == "stop" and len(self.stock_names_temp) == 0:
                                     return
 
@@ -1406,7 +1410,6 @@ class Controller:
 
         self.save_potential_stocks_to_buy()
 
-
     def get_stock(self, stock_name):
         for stock in self.potential_stocks_to_buy:
             if stock.name == stock_name:
@@ -1437,7 +1440,8 @@ class Controller:
         post_success = self.post_data_list(self.dividends_google_list, "AF")
 
         if post_success:
-            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+            messagebox.showinfo(
+                "Success", "Dividends Registered Successfully ")
 
         else:
             messagebox.showerror(
@@ -1455,7 +1459,8 @@ class Controller:
         post_success = self.post_data_list(self.dividends_invest10_list, "AG")
 
         if post_success:
-            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+            messagebox.showinfo(
+                "Success", "Dividends Registered Successfully ")
 
         else:
             messagebox.showerror(
@@ -1473,7 +1478,8 @@ class Controller:
         post_success = self.post_data_list(self.prices_to_book_list, "AE")
 
         if post_success:
-            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+            messagebox.showinfo(
+                "Success", "Dividends Registered Successfully ")
 
         else:
             messagebox.showerror(
@@ -1491,7 +1497,8 @@ class Controller:
         post_success = self.post_data_list(self.price_to_earnings_list, "AD")
 
         if post_success:
-            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+            messagebox.showinfo(
+                "Success", "Dividends Registered Successfully ")
 
         else:
             messagebox.showerror(
@@ -1509,7 +1516,8 @@ class Controller:
         post_success = self.post_data_list(self.dividends_google_list, "AF")
 
         if post_success:
-            messagebox.showinfo("Success", "Dividends Registered Successfully ")
+            messagebox.showinfo(
+                "Success", "Dividends Registered Successfully ")
 
         else:
             messagebox.showerror(
@@ -1530,17 +1538,22 @@ class Controller:
 
     def generate_excel_table(self):
         if len(self.all_data_list) != 0:
-            self.generate_excel_file(self.stock_names_temp, self.all_data_list[0],self.all_data_list[1],self.all_data_list[2],self.all_data_list[3])
-            messagebox.showinfo("Success", "The file was created on your downloads !")
+            self.generate_excel_file(
+                self.stock_names_temp, self.all_data_list[0], self.all_data_list[1], self.all_data_list[2], self.all_data_list[3])
+            messagebox.showinfo(
+                "Success", "The file was created on your downloads !")
             return
-        
+
         elif len(self.dividends_google_list) != 0 and len(self.dividends_invest10_list) != 0 and len(self.prices_to_book_list) != 0 and len(self.price_to_earnings_list) != 0:
-            self.generate_excel_file(self.stock_names_temp, self.dividends_google_list,self.dividends_invest10_list,self.prices_to_book_list,self.price_to_earnings_list)
-            messagebox.showinfo("Success", "The file was created on your downloads !")
+            self.generate_excel_file(self.stock_names_temp, self.dividends_google_list,
+                                     self.dividends_invest10_list, self.prices_to_book_list, self.price_to_earnings_list)
+            messagebox.showinfo(
+                "Success", "The file was created on your downloads !")
             return
-        
+
         else:
-            messagebox.showerror("Error", "There is no sufficient data to generate a excel file!")
+            messagebox.showerror(
+                "Error", "There is no sufficient data to generate a excel file!")
             return
 
     def save_all_data_on_sheets(self):
@@ -1550,28 +1563,32 @@ class Controller:
                 "There is no token.json file, you can't save it to google sheets!",
             )
             return
-        
+
         if (len(self.dividends_google_list) > 0 or len(self.dividends_invest10_list) > 0 or len(self.prices_to_book_list) > 0 or len(self.price_to_earnings_list) > 0) and len(self.all_data_list) == 0:
             if self.dividends_google_list:
-                post_success = self.post_data_list(self.dividends_google_list, "AA")
-                
+                post_success = self.post_data_list(
+                    self.dividends_google_list, "AA")
+
             if self.dividends_invest10_list:
-                post_success = self.post_data_list(self.dividends_invest10_list, "AB")
-                
+                post_success = self.post_data_list(
+                    self.dividends_invest10_list, "AB")
+
             if self.prices_to_book_list:
-                post_success = self.post_data_list(self.prices_to_book_list, "Z")
-            
+                post_success = self.post_data_list(
+                    self.prices_to_book_list, "Z")
+
             if self.price_to_earnings_list:
-                post_success = self.post_data_list(self.price_to_earnings_list, "Y")
-                
+                post_success = self.post_data_list(
+                    self.price_to_earnings_list, "Y")
+
             if post_success:
-                messagebox.showinfo("Success", "All Data was registered Successfully ")
-                
+                messagebox.showinfo(
+                    "Success", "All Data was registered Successfully ")
+
             else:
                 messagebox.showerror("Error", "Failed to save all Data!")
-                
+
             return
-        
 
         if len(self.all_data_list) == 0:
             messagebox.showinfo(
@@ -1591,7 +1608,8 @@ class Controller:
         post_success = self.post_data_list(self.all_data_list[3], "Y")
 
         if post_success:
-            messagebox.showinfo("Success", "All Data was registered Successfully ")
+            messagebox.showinfo(
+                "Success", "All Data was registered Successfully ")
 
         else:
             messagebox.showerror("Error", "Failed to save all Data!")
