@@ -1,13 +1,11 @@
 import tkinter as tk
-from tkinter import PhotoImage
 from tkinter import ttk, messagebox, simpledialog
 import threading
 import os.path
 import pickle
 
 import datetime
-import schedule
-import time
+
 
 from datetime import datetime
 
