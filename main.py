@@ -223,7 +223,7 @@ class SearchResultsView(tk.Toplevel):
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
 
-        self.frame_height = 650
+        self.frame_height = 400
         self.frame_width = 600
         x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
         y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
@@ -333,7 +333,7 @@ class mainView:
         # Raise other widgets above the background image
         self.background_label.lower()
 
-        self.root_height = 800
+        self.root_height = 500
         self.root_width = 900
         self.screen_width = self.root.winfo_screenwidth()
         self.screen_height = self.root.winfo_screenheight()
@@ -355,47 +355,12 @@ class mainView:
         )
         self.label.pack(side="top", pady=20)
 
-        self.mainFrame = tk.Frame(self.root, width=0, height=0, bg="orange").place(
-            relx=0.5, rely=0.5, anchor="center"
-        )
 
         self.logo = tk.PhotoImage(file="./img/logo-new.ppm")
 
         self.root.wm_iconphoto(False, self.logo)
 
-        self.guide_frame = tk.Frame(self.mainFrame, bg="#1c1830")
-        self.guide_frame.pack()
-
-        self.guide_title = tk.Label(
-            self.guide_frame,
-            text="Guide",
-            bg="#1c1830",
-            font=("Roboto", 15, "bold"),
-            fg="#FF3333",
-        )
-        self.guide_title.pack(side="top", padx=90)
-
-        self.guide_text = tk.Label(
-            self.guide_frame,
-            text="Here in the app you can:\n\n"
-            "1- Search Dividends\n"
-            "2- Search Price to Earnings\n"
-            "3- Search Price to Book\n"
-            "4- Search all data from a unique Stock\n"
-            "5- Search All Data from all stocks in a Google Sheet's Sheet\n\n"
-
-            "Additional functionalities:\n"
-            "6- Save Data on a Sheet from Google Sheets\n"
-            "7- Generate an Excel file with all the searched data\n",
-            bg="#1c1830",
-            font=("Roboto", 13, "bold"),
-            fg="white",
-            justify="left"
-        )
-        self.guide_text.pack(side="left")
-
-        self.limg = tk.Label(self.guide_frame, image=self.logo, bg="#1c1830")
-        self.limg.pack()
+    
 
         self.buttons_frame = tk.Frame(
             self.root, bg="yellow", height=0, width=0)
@@ -411,7 +376,7 @@ class mainView:
             activebackground="#1c1830",
             font=("Roboto", 11, "bold"),
             command=controller.create_search_view,
-        ).place(relx=0.2, rely=0.5, anchor="center")
+        ).place(relx=0.2, rely=0.25, anchor="center")
 
         self.search_price_to_earnings_button = tk.Button(
             text="Search price to Earnings",
@@ -422,7 +387,7 @@ class mainView:
             activebackground="#14182C",
             font=("Roboto", 11, "bold"),
             command=controller.search_prices_to_earnings,
-        ).place(relx=0.5, rely=0.5, anchor="center")
+        ).place(relx=0.5, rely=0.25, anchor="center")
 
         self.search_price_to_book_button = tk.Button(
 
@@ -434,7 +399,7 @@ class mainView:
             activebackground="#1c1830",
             font=("Roboto", 11, "bold"),
             command=controller.search_price_to_book,
-        ).place(relx=0.8, rely=0.5, anchor="center")
+        ).place(relx=0.8, rely=0.25, anchor="center")
 
         self.stock_search_button = tk.Button(
 
@@ -446,7 +411,7 @@ class mainView:
             activebackground="#293B57",
             font=("Roboto", 11, "bold"),
             command=controller.search_a_stock,
-        ).place(relx=0.35, rely=0.6, anchor="center")
+        ).place(relx=0.35, rely=0.4, anchor="center")
 
         self.search_all_data_button = tk.Button(
 
@@ -458,7 +423,7 @@ class mainView:
             cursor="hand2",
             font=("Roboto", 11, "bold"),
             command=controller.search_all_data_from_all_stocks,
-        ).place(relx=0.65, rely=0.6, anchor="center")
+        ).place(relx=0.65, rely=0.4, anchor="center")
 
         self.last_search_button = tk.Button(
             text="Search Results",
@@ -469,7 +434,7 @@ class mainView:
             activebackground="#456990",
             font=("Roboto", 11, "bold"),
             command=controller.create_search_results_view,
-        ).place(relx=0.5, rely=0.7, anchor="center")
+        ).place(relx=0.5, rely=0.55, anchor="center")
 
         self.generate_button = tk.Button(
             text="Generate Excel file",
@@ -480,7 +445,7 @@ class mainView:
             activebackground="#9A2C5D",
             font=("Roboto", 11, "bold"),
             command=controller.generate_excel_table,
-        ).place(relx=0.5, rely=0.8, anchor="center")
+        ).place(relx=0.5, rely=0.65, anchor="center")
 
         self.save_data_sheets_button = tk.Button(
             text="Save All Data On Sheets",
@@ -491,7 +456,7 @@ class mainView:
             activebackground="#b6174b",
             font=("Roboto", 11, "bold"),
             command=self.controller.save_all_data_on_sheets,
-        ).place(relx=0.5, rely=0.9, anchor="center")
+        ).place(relx=0.5, rely=0.75, anchor="center")
 
         self.loading_view = LoadingView(self.root, controller)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
@@ -812,8 +777,11 @@ class Controller:
             "What's the name of the stock you want to search?",
             parent=self.root,
         )
+        
+        if answer == None:
+            return
 
-        if answer == "" or answer == None:
+        if answer == "":
             messagebox.showerror("Error", "You need to input a stock name!")
             return
         self.show_loading_bar()
