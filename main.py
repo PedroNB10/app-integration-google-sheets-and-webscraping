@@ -100,7 +100,7 @@ class ShowResultsView(tk.Toplevel):
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
 
-        self.frame_height = 650
+        self.frame_height = 400
         self.frame_width = 600
         x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
         y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
@@ -112,12 +112,12 @@ class ShowResultsView(tk.Toplevel):
         self.title("Results of Search")
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
-        self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=40)
-        self.text_widget.pack(side=tk.LEFT, fill=tk.Y)
+        self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=22)
+        self.text_widget.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.scrollbar = tk.Scrollbar(self, command=self.text_widget.yview)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
-        self.text_widget.place(relx=0.5, rely=0.5, anchor="center")
+
 
     def add_centered_text(self, text):
         # Configure a tag for centering
@@ -137,21 +137,21 @@ class ShowResultsView(tk.Toplevel):
 
             if stock.dividend_google != None:
                 self.add_centered_text(
-                    f"Dividend Google: {stock.dividend_google} \n")
+                    f"Dividend Data From Google: {stock.dividend_google} \n")
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
-                    f"Dividend Invest10: {stock.dividend_invest10}\n"
+                    f"Dividend Data from Invest10: {stock.dividend_invest10}\n"
                 )
 
             if stock.price_to_earnings != None:
                 self.add_centered_text(
-                    f"Price to Earnings: R$ {stock.price_to_earnings}\n"
+                    f"Price to Earnings:  {stock.price_to_earnings}\n"
                 )
 
             if stock.price_to_book != None:
                 self.add_centered_text(
-                    f"Price to Book: R$ {stock.price_to_book}\n")
+                    f"Price to Book:  {stock.price_to_book}\n")
 
             self.add_centered_text(
                 f"----------------------------------------\n")
@@ -189,7 +189,7 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(
-                f"Price to Book: R$ {stock.price_to_book}\n")
+                f"Price to Book:  {stock.price_to_book}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -202,7 +202,7 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(
-                f"Price to Earnings: R$ {stock.price_to_earnings}\n")
+                f"Price to Earnings:  {stock.price_to_earnings}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -214,24 +214,16 @@ class SearchResultsView(tk.Toplevel):
         self.root = root
         self.controller = controller
         tk.Toplevel.__init__(self, root)
+        
+   
+        
         self.text_widget = tk.Text(self, wrap=tk.WORD)
         self.scrollbar = tk.Scrollbar(self, command=self.text_widget.yview)
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
         self.text_widget.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.screen_width = self.winfo_screenwidth()
-        self.screen_height = self.winfo_screenheight()
-
-        self.frame_height = 400
-        self.frame_width = 600
-        x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
-        y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
-        self.geometry(
-            "{}x{}+{}+{}".format(
-                self.frame_width, self.frame_height, x_cordinate, y_cordinate
-            )
-        )
+        
 
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
@@ -263,6 +255,19 @@ class SearchResultsView(tk.Toplevel):
 
         self.text_widget.config(state="disabled", background="#1c1830")
 
+
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
+
+        self.frame_height = 400
+        self.frame_width = 600
+        x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
+        y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
+        self.geometry(
+            "{}x{}+{}+{}".format(
+                self.frame_width, self.frame_height, x_cordinate, y_cordinate
+            )
+        )
     def button_clicked(self, search_result):
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data(search_result)
@@ -276,7 +281,7 @@ class ChooseSearchDataView(tk.Toplevel):
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
 
-        self.frame_height = 650
+        self.frame_height = 400
         self.frame_width = 600
         x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
         y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
@@ -457,12 +462,26 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=self.controller.save_all_data_on_sheets,
         ).place(relx=0.5, rely=0.75, anchor="center")
+        
+        
+        self.create_a_stock_list_button = tk.Button(
+            text="Create a Stock List",
+            width=20,
+            bg="#b6174b",
+            fg="white",
+            cursor="hand2",
+            activebackground="#b6174b",
+            font=("Roboto", 11, "bold"),
+            command=self.controller.create_stock_list,
+        ).place(relx=0.5, rely=0.85, anchor="center")
 
         self.loading_view = LoadingView(self.root, controller)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def on_close(self):
         self.controller.exit_window()
+        
+        
 
     def show_loading_bar(self):
         self.loading_view.show()
@@ -489,6 +508,7 @@ class Controller:
         else:
             with open("results.pickle", "rb") as f:
                 self.search_results = pickle.load(f)
+                
 
         if not os.path.exists("potential-stocks-to-buy.pickle"):
             self.potential_stocks_to_buy = []
@@ -496,6 +516,14 @@ class Controller:
         else:
             with open("potential-stocks-to-buy.pickle", "rb") as f:
                 self.potential_stocks_to_buy = pickle.load(f)
+                
+        if not os.path.exists("stocks-list.pickle"):
+            self.stock_names_temp = []
+            
+        else:
+            if not os.path.exists("token.json"):
+                with open("stocks-list.pickle", "rb") as f:
+                    self.stock_names_temp = pickle.load(f)
 
         # instances of Stock, used to store the stocks that has other attributes
         self.temporary_stocks = []
@@ -505,7 +533,7 @@ class Controller:
         self.prices_to_book_list = []
         self.price_to_earnings_list = []
 
-        self.stock_names_temp = []
+       
 
         self.all_data_list = []
 
@@ -518,7 +546,7 @@ class Controller:
         self.already_check_stock_prices = False
 
         # # Periodically check for the exit condition in the main thread
-        self.root.after(0, self.repeating_function)
+        self.root.after(1000, self.repeating_function)
         self.check_exit_condition()
 
         self.root.mainloop()
@@ -539,6 +567,11 @@ class Controller:
             self.already_check_stock_prices = False
         # Schedule the function to run again in 10 seconds
         self.root.after(10000, self.repeating_function)
+        
+    def save_stock_list(self): # only is called in case the user doesnt have a token.json file
+        if len(self.stock_names_temp) != 0:
+            with open("stocks-list.pickle", "wb") as f:
+                pickle.dump(self.stock_names_temp, f)
 
     def save_search_results(self):
         if len(self.search_results) != 0:
@@ -560,6 +593,62 @@ class Controller:
 
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data()
+        
+    def create_stock_list(self):
+        print(self.stock_names_temp)
+        if len(self.stock_names_temp) > 0 :
+            answer = messagebox.askyesno(
+                "Existent List",
+                "You already have a stock list, if you want to create a new one, the last stock list will be deleted!"
+            )
+            
+            if answer == True:
+                self.stock_names_temp = []
+                while True:
+                    stock = simpledialog.askstring(
+                    "Input",
+                    "What's the name of the stock you want to add?\n If you don't wanna add more stocks just type 'stop'",
+                    parent=self.root,
+                )
+                    if stock == None and len(self.stock_names_temp) == 0:
+                        return
+                    if stock == "stop" and len(self.stock_names_temp) == 0:
+                        return
+                    
+                    if stock == "stop" and len(self.stock_names_temp) > 0:
+                        return
+                    
+                    if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
+                        messagebox.showerror("Error", "You need to input a stock name!")
+                        continue
+                    
+                    if stock != "stop" and stock != None and stock != "":
+                        self.stock_names_temp.append(stock)
+                        
+                
+        else:
+            while True:
+                stock = simpledialog.askstring(
+                "Input",
+                "What's the name of the stock you want to add?\n If you don't wanna add more stocks just type 'stop'",
+                parent=self.root,
+            )
+                if stock == None and len(self.stock_names_temp) == 0:
+                        return
+                if stock == "stop" and len(self.stock_names_temp) == 0:
+                    return
+                
+                if stock == "stop" and len(self.stock_names_temp) > 0:
+                    return
+                
+                if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
+                    messagebox.showerror("Error", "You need to input a stock name!")
+                    continue
+                
+                if stock != "stop" and stock != None and stock != "":
+                    self.stock_names_temp.append(stock)
+            
+            
 
     def show_loading_bar(self):
         self.view.show_loading_bar()
@@ -661,14 +750,53 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                answer = messagebox.askyesno(
-                    "Input",
-                    "There is no token.json file, but you can still search for a stock. Do you want to continue?",
-                    parent=self.root,
-                )
-                if answer == True:
+                if len(self.stock_names_temp) == 0:
+                    while True:
+                        stock_name = simpledialog.askstring(
+                            "Input",
+                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            parent=self.root,
+                        )
 
-                    if len(self.stock_names_temp) == 0:
+                        if stock_name == None and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) > 0:
+                            self.show_loading_bar()
+                            threading.Thread(
+                                target=self.search_all_data_thread
+                            ).start()
+                            self.root.after(100, self.check_completion)
+                            break
+
+                        if stock_name == "stop" and len(self.stock_names_temp) == 0:
+
+                            return
+
+                        if stock_name == "" or stock_name == None:
+                            messagebox.showerror(
+                                "Error", "You need to input a stock name!"
+                            )
+                            continue
+                        else:
+                            self.stock_names_temp.append(stock_name)
+
+                else:
+                    search_last_stocks = messagebox.askyesno(
+                        "Input",
+                        "There is a temporary list of stocks, do you want to search by that?",
+                        parent=self.root,
+                    )
+
+                    if search_last_stocks == True:
+                        # it is used to empty the stocks that has other attributes
+                        self.show_loading_bar()
+                        threading.Thread(
+                            target=self.search_all_data_thread).start()
+                        self.root.after(100, self.check_completion)
+
+                    else:
+                        self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
                                 "Input",
@@ -679,6 +807,9 @@ class Controller:
                             if stock_name == None and len(self.stock_names_temp) == 0:
                                 return
 
+                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                                return
+
                             if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
                                 threading.Thread(
@@ -687,10 +818,6 @@ class Controller:
                                 self.root.after(100, self.check_completion)
                                 break
 
-                            if stock_name == "stop" and len(self.stock_names_temp) == 0:
-
-                                return
-
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
                                     "Error", "You need to input a stock name!"
@@ -698,51 +825,6 @@ class Controller:
                                 continue
                             else:
                                 self.stock_names_temp.append(stock_name)
-
-                    else:
-                        search_last_stocks = messagebox.askyesno(
-                            "Input",
-                            "There is a temporary list of stocks, do you want to search by that?",
-                            parent=self.root,
-                        )
-
-                        if search_last_stocks == True:
-                            # it is used to empty the stocks that has other attributes
-                            self.show_loading_bar()
-                            threading.Thread(
-                                target=self.search_all_data_thread).start()
-                            self.root.after(100, self.check_completion)
-
-                        else:
-                            self.stock_names_temp = []
-                            while True:
-                                stock_name = simpledialog.askstring(
-                                    "Input",
-                                    "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
-                                    parent=self.root,
-                                )
-
-                                if stock_name == None and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
-                                    self.show_loading_bar()
-                                    threading.Thread(
-                                        target=self.search_all_data_thread
-                                    ).start()
-                                    self.root.after(100, self.check_completion)
-                                    break
-
-                                if stock_name == "" or stock_name == None:
-                                    messagebox.showerror(
-                                        "Error", "You need to input a stock name!"
-                                    )
-                                    continue
-                                else:
-                                    self.stock_names_temp.append(stock_name)
 
                 return
 
@@ -834,13 +916,54 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                answer = messagebox.askyesno(
-                    "Input",
-                    "There is no token.json file, but you can still search for a stock. Do you want to continue?",
-                    parent=self.root,
-                )
-                if answer == True:
-                    if len(self.stock_names_temp) == 0:
+                
+                if len(self.stock_names_temp) == 0:
+                    while True:
+                        stock_name = simpledialog.askstring(
+                            "Input",
+                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            parent=self.root,
+                        )
+
+                        if stock_name == None and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) > 0:
+                            self.show_loading_bar()
+                            threading.Thread(
+                                target=self.get_price_to_earnings_thread
+                            ).start()
+                            self.root.after(100, self.check_completion)
+                            break
+
+                        if stock_name == "" or stock_name == None:
+                            messagebox.showerror(
+                                "Error", "You need to input a stock name!"
+                            )
+                            continue
+                        else:
+                            self.stock_names_temp.append(stock_name)
+
+                else:
+                    search_last_stocks = messagebox.askyesno(
+                        "Input",
+                        "There is a temporary list of stocks, do you want to search by that?",
+                        parent=self.root,
+                    )
+
+                    if search_last_stocks == True:
+                        # it is used to empty the stocks that has other attributes
+                        self.show_loading_bar()
+                        threading.Thread(
+                            target=self.get_price_to_earnings_thread
+                        ).start()
+                        self.root.after(100, self.check_completion)
+
+                    else:
+                        self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
                                 "Input",
@@ -869,52 +992,6 @@ class Controller:
                                 continue
                             else:
                                 self.stock_names_temp.append(stock_name)
-
-                    else:
-                        search_last_stocks = messagebox.askyesno(
-                            "Input",
-                            "There is a temporary list of stocks, do you want to search by that?",
-                            parent=self.root,
-                        )
-
-                        if search_last_stocks == True:
-                            # it is used to empty the stocks that has other attributes
-                            self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_price_to_earnings_thread
-                            ).start()
-                            self.root.after(100, self.check_completion)
-
-                        else:
-                            self.stock_names_temp = []
-                            while True:
-                                stock_name = simpledialog.askstring(
-                                    "Input",
-                                    "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
-                                    parent=self.root,
-                                )
-
-                                if stock_name == None and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
-                                    self.show_loading_bar()
-                                    threading.Thread(
-                                        target=self.get_price_to_earnings_thread
-                                    ).start()
-                                    self.root.after(100, self.check_completion)
-                                    break
-
-                                if stock_name == "" or stock_name == None:
-                                    messagebox.showerror(
-                                        "Error", "You need to input a stock name!"
-                                    )
-                                    continue
-                                else:
-                                    self.stock_names_temp.append(stock_name)
 
                 return
 
@@ -965,13 +1042,53 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                answer = messagebox.askyesno(
-                    "Input",
-                    "There is no token.json file, but you can still search for a stock. Do you want to continue?",
-                    parent=self.root,
-                )
-                if answer == True:
-                    if len(self.stock_names_temp) == 0:
+                
+                if len(self.stock_names_temp) == 0:
+                    while True:
+                        stock_name = simpledialog.askstring(
+                            "Input",
+                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            parent=self.root,
+                        )
+
+                        if stock_name == None and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) > 0:
+                            self.show_loading_bar()
+                            threading.Thread(
+                                target=self.get_price_to_book_thread
+                            ).start()
+                            self.root.after(100, self.check_completion)
+                            break
+
+                        if stock_name == "" or stock_name == None:
+                            messagebox.showerror(
+                                "Error", "You need to input a stock name!"
+                            )
+                            continue
+                        else:
+                            self.stock_names_temp.append(stock_name)
+
+                else:
+                    search_last_stocks = messagebox.askyesno(
+                        "Input",
+                        "There is a temporary list of stocks, do you want to search by that?",
+                        parent=self.root,
+                    )
+
+                    if search_last_stocks == True:
+                        self.show_loading_bar()
+                        threading.Thread(
+                            target=self.get_price_to_book_thread
+                        ).start()
+                        self.root.after(100, self.check_completion)
+
+                    else:
+                        self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
                                 "Input",
@@ -1000,51 +1117,6 @@ class Controller:
                                 continue
                             else:
                                 self.stock_names_temp.append(stock_name)
-
-                    else:
-                        search_last_stocks = messagebox.askyesno(
-                            "Input",
-                            "There is a temporary list of stocks, do you want to search by that?",
-                            parent=self.root,
-                        )
-
-                        if search_last_stocks == True:
-                            self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_price_to_book_thread
-                            ).start()
-                            self.root.after(100, self.check_completion)
-
-                        else:
-                            self.stock_names_temp = []
-                            while True:
-                                stock_name = simpledialog.askstring(
-                                    "Input",
-                                    "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
-                                    parent=self.root,
-                                )
-
-                                if stock_name == None and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
-                                    self.show_loading_bar()
-                                    threading.Thread(
-                                        target=self.get_price_to_book_thread
-                                    ).start()
-                                    self.root.after(100, self.check_completion)
-                                    break
-
-                                if stock_name == "" or stock_name == None:
-                                    messagebox.showerror(
-                                        "Error", "You need to input a stock name!"
-                                    )
-                                    continue
-                                else:
-                                    self.stock_names_temp.append(stock_name)
 
                 return
 
@@ -1096,13 +1168,53 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                answer = messagebox.askyesno(
-                    "Input",
-                    "There is no token.json file, but you can still search for a stock. Do you want to continue?",
-                    parent=self.root,
-                )
-                if answer == True:
-                    if len(self.stock_names_temp) == 0:
+                
+                if len(self.stock_names_temp) == 0:
+                    while True:
+                        stock_name = simpledialog.askstring(
+                            "Input",
+                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            parent=self.root,
+                        )
+
+                        if stock_name == None and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) > 0:
+                            self.show_loading_bar()
+                            threading.Thread(
+                                target=self.get_invest10_dividends_thread
+                            ).start()
+                            self.root.after(100, self.check_completion)
+                            break
+
+                        if stock_name == "" or stock_name == None:
+                            messagebox.showerror(
+                                "Error", "You need to input a stock name!"
+                            )
+                            continue
+                        else:
+                            self.stock_names_temp.append(stock_name)
+
+                else:
+                    search_last_stocks = messagebox.askyesno(
+                        "Input",
+                        "There is a temporary list of stocks, do you want to search by that?",
+                        parent=self.root,
+                    )
+
+                    if search_last_stocks == True:
+                        self.show_loading_bar()
+                        threading.Thread(
+                            target=self.get_invest10_dividends_thread
+                        ).start()
+                        self.root.after(100, self.check_completion)
+
+                    else:
+                        self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
                                 "Input",
@@ -1132,51 +1244,6 @@ class Controller:
                             else:
                                 self.stock_names_temp.append(stock_name)
 
-                    else:
-                        search_last_stocks = messagebox.askyesno(
-                            "Input",
-                            "There is a temporary list of stocks, do you want to search by that?",
-                            parent=self.root,
-                        )
-
-                        if search_last_stocks == True:
-                            self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_invest10_dividends_thread
-                            ).start()
-                            self.root.after(100, self.check_completion)
-
-                        else:
-                            self.stock_names_temp = []
-                            while True:
-                                stock_name = simpledialog.askstring(
-                                    "Input",
-                                    "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
-                                    parent=self.root,
-                                )
-
-                                if stock_name == None and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
-                                    self.show_loading_bar()
-                                    threading.Thread(
-                                        target=self.get_invest10_dividends_thread
-                                    ).start()
-                                    self.root.after(100, self.check_completion)
-                                    break
-
-                                if stock_name == "" or stock_name == None:
-                                    messagebox.showerror(
-                                        "Error", "You need to input a stock name!"
-                                    )
-                                    continue
-                                else:
-                                    self.stock_names_temp.append(stock_name)
-
                 return
 
             threading.Thread(target=self.get_invest10_dividends_thread).start()
@@ -1198,7 +1265,7 @@ class Controller:
                         )
                     )
 
-            # self.search_results.append(SearchResult(self.temporary_stocks))
+
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
@@ -1228,13 +1295,53 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                answer = messagebox.askyesno(
-                    "Input",
-                    "There is no token.json file, but you can still search for a stock. Do you want to continue?",
-                    parent=self.root,
-                )
-                if answer == True:
-                    if len(self.stock_names_temp) == 0:
+                
+                if len(self.stock_names_temp) == 0:
+                    while True:
+                        stock_name = simpledialog.askstring(
+                            "Input",
+                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            parent=self.root,
+                        )
+
+                        if stock_name == None and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) == 0:
+                            return
+
+                        if stock_name == "stop" and len(self.stock_names_temp) > 0:
+                            self.show_loading_bar()
+                            threading.Thread(
+                                target=self.get_google_dividends_thread
+                            ).start()
+                            self.root.after(100, self.check_completion)
+                            break
+
+                        if stock_name == "" or stock_name == None:
+                            messagebox.showerror(
+                                "Error", "You need to input a stock name!"
+                            )
+                            continue
+                        else:
+                            self.stock_names_temp.append(stock_name)
+
+                else:
+                    search_last_stocks = messagebox.askyesno(
+                        "Input",
+                        "There is a temporary list of stocks, do you want to search by that?",
+                        parent=self.root,
+                    )
+
+                    if search_last_stocks == True:
+                        self.show_loading_bar()
+                        threading.Thread(
+                            target=self.get_google_dividends_thread
+                        ).start()
+                        self.root.after(100, self.check_completion)
+
+                    else:
+                        self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
                                 "Input",
@@ -1263,51 +1370,6 @@ class Controller:
                                 continue
                             else:
                                 self.stock_names_temp.append(stock_name)
-
-                    else:
-                        search_last_stocks = messagebox.askyesno(
-                            "Input",
-                            "There is a temporary list of stocks, do you want to search by that?",
-                            parent=self.root,
-                        )
-
-                        if search_last_stocks == True:
-                            self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_google_dividends_thread
-                            ).start()
-                            self.root.after(100, self.check_completion)
-
-                        else:
-                            self.stock_names_temp = []
-                            while True:
-                                stock_name = simpledialog.askstring(
-                                    "Input",
-                                    "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
-                                    parent=self.root,
-                                )
-
-                                if stock_name == None and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) == 0:
-                                    return
-
-                                if stock_name == "stop" and len(self.stock_names_temp) > 0:
-                                    self.show_loading_bar()
-                                    threading.Thread(
-                                        target=self.get_google_dividends_thread
-                                    ).start()
-                                    self.root.after(100, self.check_completion)
-                                    break
-
-                                if stock_name == "" or stock_name == None:
-                                    messagebox.showerror(
-                                        "Error", "You need to input a stock name!"
-                                    )
-                                    continue
-                                else:
-                                    self.stock_names_temp.append(stock_name)
 
                 return
 
@@ -1588,6 +1650,9 @@ class Controller:
 
     def exit_window(self):
         print("exit")
+        if not os.path.exists("token.json") and len(self.stock_names_temp) > 0:
+            self.save_stock_list()
+            
         self.root.destroy()
         self.exit_event.set()
 
