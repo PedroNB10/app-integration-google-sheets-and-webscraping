@@ -207,6 +207,42 @@ class ShowResultsView(tk.Toplevel):
                 f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
+        
+class ShowUserGuideView(tk.Toplevel):
+    def __init__(self, root, controller):
+        tk.Toplevel.__init__(self, root)
+        self.controller = controller
+
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
+
+        self.frame_height = 400
+        self.frame_width = 600
+        x_cordinate = int((self.screen_width / 2) - (self.frame_width / 2))
+        y_cordinate = int((self.screen_height / 2) - (self.frame_height / 2))
+        self.geometry(
+            "{}x{}+{}+{}".format(
+                self.frame_width, self.frame_height, x_cordinate, y_cordinate
+            )
+        )
+        self.title("User Guide")
+        self.logo = tk.PhotoImage(file="./img/logo.ppm")
+        self.wm_iconphoto(False, self.logo)
+        self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=22)
+        self.text_widget.pack(side=tk.LEFT, fill=tk.Y, expand=True)
+        self.scrollbar = tk.Scrollbar(self, command=self.text_widget.yview)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.text_widget.config(yscrollcommand=self.scrollbar.set)
+
+    def add_centered_text(self, text):
+        # Configure a tag for centering
+        self.text_widget.tag_configure("center", justify="center")
+        # Insert the text with the "center" tag at the end of the widget
+        self.text_widget.config(state=tk.NORMAL)
+        self.text_widget.insert(tk.END, text, "center")
+        # Disable further editing
+        self.text_widget.config(state=tk.DISABLED)
+
 
 
 class SearchResultsView(tk.Toplevel):
@@ -366,10 +402,17 @@ class mainView:
         self.root.wm_iconphoto(False, self.logo)
 
     
-
-        self.buttons_frame = tk.Frame(
-            self.root, bg="yellow", height=0, width=0)
-        self.buttons_frame.pack()
+        self.guide_button = tk.Button(
+            text="User Guide",
+            width=20,
+            bg="#C62068",
+            fg="white",
+            cursor="hand2",
+            activebackground="#C62068",
+            font=("Roboto", 11, "bold"),
+            command=controller.show_user_guide,
+            
+        ).place(relx=0.8, rely=0.1, anchor="center")
 
         self.search_button = tk.Button(
 
@@ -582,6 +625,26 @@ class Controller:
         if len(self.potential_stocks_to_buy) != 0:
             with open("potential-stocks-to-buy.pickle", "wb") as f:
                 pickle.dump(self.potential_stocks_to_buy, f)
+                
+    def show_user_guide(self):
+        user_guide = (
+        "Welcome to the Data Watcher App!\n\n"
+        "This app is designed with the primary goal of assisting investors in making informed decisions "
+        "about stock investments. It leverages various parameters provided by the Stock Exchange to offer strategic insights "
+        "into potential investment opportunities. Users can access key information through functionalities such as:\n\n"
+        "1. Dividend Yield Search: Obtain dividend yield data from two distinct sources—Google and Investidor10.\n"
+        "2. Price-to-Earnings Ratio Search: Evaluate the stock's value by searching its Price divided by Earnings.\n"
+        "3. Price-to-Assets Ratio Search: Assess the financial health of the company by searching its Price divided by the total assets.\n\n"
+        "In addition to these features, users can conveniently track their search history for comparison purposes. "
+        "The app also enables the generation of an Excel file containing all the searched information.\n\n"
+        "Another noteworthy functionality is the seamless integration with Google Sheets. When logged into your Google account, "
+        "you can update a cloud-based Google Sheets file and retrieve parameters stored within it. If not logged in, "
+        "the app allows you to create and store your personalized stock list for future reference."
+    )
+        self.show_user_guide_view = ShowUserGuideView(self.root, self)
+        self.show_user_guide_view.add_centered_text(user_guide)
+        
+        
 
     def show_last_result(self):
         if len(self.search_results) == 0:
@@ -901,7 +964,7 @@ class Controller:
     def search_prices_to_earnings(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search prices to earnings ?"
+            "Form", "Are you sure you want to search (Share Price / Earnings per Share) ?"
         )
 
         if result == "yes":
@@ -1027,7 +1090,7 @@ class Controller:
         self.temporary_stocks = []
 
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search prices to book ?"
+            "Form", "Are you sure you want to search (Share Price / Book Value per Share) ?"
         )
 
         if result == "yes":
@@ -1153,7 +1216,7 @@ class Controller:
         self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search dividends ?"
+            "Form", "Are you sure you want to search Dividend Yield from Invest10 ?"
         )
 
         if result == "yes":
@@ -1280,7 +1343,7 @@ class Controller:
         self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search dividends ?"
+            "Form", "Are you sure you want to search Dividend Yield from Google ?"
         )
 
         if result == "yes":
