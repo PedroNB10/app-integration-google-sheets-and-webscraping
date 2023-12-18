@@ -164,7 +164,7 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Dividend: {stock.dividend_google}\n")
+            self.add_centered_text(f"Dividend Yield {stock.dividend_google}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -176,7 +176,7 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Dividend: {stock.dividend_invest10}\n")
+            self.add_centered_text(f"Dividend Yield {stock.dividend_invest10}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -597,7 +597,7 @@ class Controller:
     def repeating_function(self):
         print("Checking time to search stock's new prices!")
         if (
-            (datetime.now().minute) % 10 == 0
+            (datetime.now().minute) % 10 == 0 # every 10 minutes
             and not self.exit_event.is_set()
             and not self.loading_event.is_set()
             and not self.already_check_stock_prices
@@ -1451,7 +1451,7 @@ class Controller:
         self.get_colum_data_from_sheets(
             self.real_time_prices_list, f"Página1!D3:D{last_row}"
         )
-
+        
         for i in range(len(self.real_time_prices_list)):
             self.real_time_prices_list[i] = float(
                 self.real_time_prices_list[i]
