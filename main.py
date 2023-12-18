@@ -137,21 +137,21 @@ class ShowResultsView(tk.Toplevel):
 
             if stock.dividend_google != None:
                 self.add_centered_text(
-                    f"Dividend Data From Google: {stock.dividend_google} \n")
+                    f"Dividend Yield From Google: {stock.dividend_google} \n")
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
-                    f"Dividend Data from Invest10: {stock.dividend_invest10}\n"
+                    f"Dividend Yield from Invest10: {stock.dividend_invest10}\n"
                 )
 
             if stock.price_to_earnings != None:
                 self.add_centered_text(
-                    f"Price to Earnings:  {stock.price_to_earnings}\n"
+                    f"Share Price / Earnings per Share:  {stock.price_to_earnings}\n"
                 )
 
             if stock.price_to_book != None:
                 self.add_centered_text(
-                    f"Price to Book:  {stock.price_to_book}\n")
+                    f"Share Price / Book Value per Share:  {stock.price_to_book}\n")
 
             self.add_centered_text(
                 f"----------------------------------------\n")
@@ -189,7 +189,7 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(
-                f"Price to Book:  {stock.price_to_book}\n")
+                f"Share Price / Book Value per Share:  {stock.price_to_book}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -202,7 +202,7 @@ class ShowResultsView(tk.Toplevel):
         for stock in last_result.stocks:
             self.add_centered_text(f"Stock Name: {stock.name}\n")
             self.add_centered_text(
-                f"Price to Earnings:  {stock.price_to_earnings}\n")
+                f"Share Price / Earnings per Share:  {stock.price_to_earnings}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -373,7 +373,7 @@ class mainView:
 
         self.search_button = tk.Button(
 
-            text="Search Dividends",
+            text="Search DY",
             width=20,
             bg="#1c1830",
             fg="white",
@@ -384,7 +384,7 @@ class mainView:
         ).place(relx=0.2, rely=0.25, anchor="center")
 
         self.search_price_to_earnings_button = tk.Button(
-            text="Search price to Earnings",
+            text="Search P / E",
             width=20,
             bg="#14182C",
             fg="white",
@@ -396,7 +396,7 @@ class mainView:
 
         self.search_price_to_book_button = tk.Button(
 
-            text="Search price to Book",
+            text="Search P / B",
             width=20,
             bg="#1c1830",
             fg="white",
@@ -1627,8 +1627,8 @@ class Controller:
 
         # Google dividends
         # Invest10 Dividends
-        # Price to Earnings
-        # Price to Book
+        # Share Price / Earnings per Share
+        # Share Price / Book Value per Share
 
         post_success = self.post_data_list(self.all_data_list[0], "AA")
         post_success = self.post_data_list(self.all_data_list[1], "AB")
