@@ -724,12 +724,11 @@ class Controller:
 
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
-            # self.search_results.append(SearchResult(self.temporary_stocks))
             self.show_results_view = ShowResultsView(self.root, self)
             self.show_results_view.show_all_data(self.search_results[0])
 
         else:
-            messagebox.showerror("Error", "There is no dividends !")
+            messagebox.showerror("Error", "There is no Data Searched!")
 
         self.hide_loading_bar()
 
@@ -895,7 +894,7 @@ class Controller:
                 self.search_results[0])
 
         else:
-            messagebox.showerror("Error", "There is no dividends !")
+            messagebox.showerror("Error", "There is no P / E !")
 
         self.hide_loading_bar()
 
@@ -1020,7 +1019,7 @@ class Controller:
             self.show_results_view.show_prices_to_book(self.search_results[0])
 
         else:
-            messagebox.showerror("Error", "There is no dividends !")
+            messagebox.showerror("Error", "There is no P / B !")
 
         self.hide_loading_bar()
 
