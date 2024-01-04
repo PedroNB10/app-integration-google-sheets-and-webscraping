@@ -35,6 +35,9 @@ def get_all_data_from_all_stocks(stock_list):
     list_invest10_dividends = []
     list_price_to_earnings = []
     list_price_to_book = []
+    list_roe = []
+    list_net_margin = []
+    
     
     
     options = webdriver.ChromeOptions()
@@ -126,6 +129,46 @@ def get_all_data_from_all_stocks(stock_list):
             
             
         list_price_to_book.append(price)
+        
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'ROE')]").find_element(By.XPATH, "..")
+        
+            
+            other_parent_element = element.find_element(By.XPATH,".//div[1]")
+            span = other_parent_element.find_element(By.XPATH,".//span")
+            roe = span.text
+            list_roe.append(roe)
+            
+            if '%' not in roe:
+              print(f"Failed to find the ROE from {stock}")
+              roe = "0%"
+              
+            print(f'ROE from {stock}: {roe}')
+        except:
+            print(f"Failed to get the ROE from {stock}")
+            list_roe.append("0%")
+            continue
+        
+        try:
+            
+                element = driver.find_element(By.XPATH, "//span[contains(text(), 'MARGEM LÍQUIDA')]").find_element(By.XPATH, "..")
+            
+                
+                other_parent_element = element.find_element(By.XPATH,".//div[1]")
+                span = other_parent_element.find_element(By.XPATH,".//span")
+                net_margin = span.text
+                list_net_margin.append(net_margin)
+                if '%' not in net_margin:
+                    print(f"Failed to find the Net Margin from {stock}")
+                    net_margin = "0%"
+              
+                print(f'Net Margin from {stock}: {net_margin}')
+        except:
+                print(f"Failed to get the Net Margin from {stock}")
+                list_net_margin.append("0%")
+                continue
+            
+            
         print("\n")
   
     
@@ -133,7 +176,8 @@ def get_all_data_from_all_stocks(stock_list):
     list_all_data.append(list_invest10_dividends)
     list_all_data.append(list_price_to_earnings)
     list_all_data.append(list_price_to_book)
-    
+    list_all_data.append(list_roe)
+    list_all_data.append(list_net_margin)
     
     driver.quit()     
     return list_all_data
@@ -211,6 +255,39 @@ def get_data_from_a_stock(stock_symbol):
         price = "0"
         
     list_data.append(price)
+    
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'ROE')]").find_element(By.XPATH, "..")
+    
+        
+        other_parent_element = element.find_element(By.XPATH,".//div[1]")
+        span = other_parent_element.find_element(By.XPATH,".//span")
+        roe = span.text
+        
+        print(f'ROE from {stock_symbol}: {roe}')
+    
+    except:
+        print(f"Failed to get the ROE from {stock_symbol}")
+        roe = "0%"
+        
+    list_data.append(roe)
+    
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'MARGEM LÍQUIDA')]").find_element(By.XPATH, "..")
+        
+        
+        other_parent_element = element.find_element(By.XPATH,".//div[1]")
+        span = other_parent_element.find_element(By.XPATH,".//span")
+        net_margin = span.text
+        
+        print(f'Net Margin from {stock_symbol}: {net_margin}')
+    except:
+        print(f"Failed to get the Net Margin from {stock_symbol}")
+        net_margin = "0%"
+    list_data.append(net_margin)
+        
+        
+    
         
 
     driver.quit()
@@ -279,6 +356,83 @@ def generate_excel_file(list1, list2, list3, list4, list5, output_file='stockinf
     print(f"Excel file '{output_path}' created successfully.")  
     
 
+def get_roes_from_invest10(list_names):
+    if (list_names == []):
+      return list_names
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    roes = []
+    driver.maximize_window()
+    
+    for  name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+    
+        try:
+        
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'ROE')]").find_element(By.XPATH, "..")
+        
+            
+            other_parent_element = element.find_element(By.XPATH,".//div[1]")
+            span = other_parent_element.find_element(By.XPATH,".//span")
+            roe = span.text
+            if '%' not in roe:
+                print(f"Failed to find the ROE from {name}")
+                roe = "0%"
+            roes.append(roe)
+            
+            
+            print(f'ROE from {name}: {roe}')
+        except:
+            print(f"Failed to get the ROE from {name}")
+            roes.append("0%")
+            continue
+               
+    driver.quit()
+
+    return roes
+
+
+def get_net_margins(list_names):
+    if (list_names == []):
+      return list_names
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    net_margins = []
+    driver.maximize_window()
+    
+    for name in list_names:
+        url = f'https://investidor10.com.br/acoes/{name}/'
+        driver.get(url)
+    
+        try:
+        
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'MARGEM LÍQUIDA')]").find_element(By.XPATH, "..")
+        
+            
+            other_parent_element = element.find_element(By.XPATH,".//div[1]")
+            span = other_parent_element.find_element(By.XPATH,".//span")
+            net_margin = span.text
+            if '%' not in net_margin:
+                print(f"Failed to find the Net Margin from {name}")
+                net_margin = "0%"
+                
+            net_margins.append(net_margin)
+            
+            
+            print(f'Net Margin from {name}: {net_margin}')
+        except:
+            print(f"Failed to get the Net Margin from {name}")
+            net_margin.append("0%")
+            continue
+               
+    driver.quit()
+
+    return net_margins
 
 
 def get_price_to_book_from_invest10(list_names):
@@ -296,13 +450,18 @@ def get_price_to_book_from_invest10(list_names):
         url = f'https://investidor10.com.br/acoes/{name}/'
         driver.get(url)
         
-      
-        element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
-        parent_element = element.find_element(By.XPATH, "..")
-        grand_parent_element = parent_element.find_element(By.XPATH, "..")
-        other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
-        price = other_parent_element.text
-        prices.append(price)
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/VP')]").find_element(By.XPATH, "..")
+            parent_element = element.find_element(By.XPATH, "..")
+            grand_parent_element = parent_element.find_element(By.XPATH, "..")
+            other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
+            price = other_parent_element.text
+            prices.append(price)
+            
+        except:
+            print(f"Failed to get the Price to Book from {name}")
+            prices.append("0")
+            continue
                
     driver.quit()
 
@@ -635,8 +794,7 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
 
 
 if __name__ == "__main__":
-    
-    stock_symbols = ["BMGB4","KLBN4","CMIN3","USIM5","MRFG3","TAEE4","BRSR6","AURE3","SANB4","VBBR3","GGBR3","TRPL4"]
+    stock_symbols = ["BMGB4","KLBN4"]
     print(get_all_data_from_all_stocks(stock_symbols))
 
 
