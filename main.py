@@ -24,6 +24,11 @@ class Stock:
         price_to_book=None,
         roe=None,
         net_margin=None,
+        real_time_price=None,
+        target_price=None,
+        net_debt=None,
+        cagr=None,
+        payout=None,
     ):
         self.name = name
         self.dividend_google = dividend_google
@@ -32,6 +37,12 @@ class Stock:
         self.price_to_book = price_to_book
         self.roe = roe
         self.net_margin = net_margin
+        self.real_time_price = real_time_price
+        self.target_price = target_price
+        self.net_debt = net_debt
+        self.cagr = cagr
+        self.payout = payout
+        
 
     def __str__(self):
         return f"{self.name} : {self.dividend_google} : {self.dividend_invest10} : {self.price_to_earnings}"
@@ -138,6 +149,14 @@ class ShowResultsView(tk.Toplevel):
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
+            
+            if stock.real_time_price != None:
+                self.add_centered_text(
+                    f"Preço Atual: {stock.real_time_price}\n")
+                
+            if stock.target_price != None:
+                self.add_centered_text(
+                    f"Preço Alvo: {stock.target_price}\n")
 
             if stock.dividend_google != None:
                 self.add_centered_text(
@@ -159,12 +178,24 @@ class ShowResultsView(tk.Toplevel):
             
             if stock.roe != None:
                 self.add_centered_text(
-                    f"ROE:  {stock.roe}\n")
+                    f"ROE: {stock.roe}\n")
                 
             
             if stock.net_margin != None:
                 self.add_centered_text(
-                    f"Margem Líquida:  {stock.net_margin}\n")
+                    f"Margem Líquida: {stock.net_margin}\n")
+                
+            if stock.net_debt != None:
+                self.add_centered_text(
+                    f"Dívida Líquida / EBITDA: {stock.net_debt}\n")
+                
+            if stock.cagr != None:
+                self.add_centered_text(
+                    f"CAGR LUCROS 5 ANOS: {stock.cagr}\n")
+            
+            if stock.payout != None:
+                self.add_centered_text(
+                    f"PAYOUT: {stock.payout}\n")
                 
             self.add_centered_text(
                 f"----------------------------------------\n")
@@ -426,7 +457,7 @@ class mainView:
         )
 
         self.label = tk.Label(
-            text="Seja Bem-Vindo ao \n Rastreamento de Ações ",
+            text="Seja Bem-Vindo ao \n Rastreador de Ações ",
             bg="#1c1830",
             height=0,
             font=("Roboto", 17, "bold"),
@@ -603,7 +634,7 @@ class Controller:
         self.root = tk.Tk()
 
         self.view = mainView(self.root, self)
-        self.root.title("Rastreamento de Ações")
+        self.root.title("Rastreador de Ações")
         self.icon = tk.PhotoImage(file="./img/logo.ppm")
         if not os.path.exists("results.pickle"):
             # instances of SearchResult, creates one instance of SearchResult if it doesn't exist
@@ -688,21 +719,40 @@ class Controller:
                 
     def show_user_guide(self):
         user_guide = (
-        "Welcome to the Data Watcher App!\n\n"
-        "This app is designed with the primary goal of assisting investors in making informed decisions "
-        "about stock investments. It leverages various parameters provided by the Stock Exchange to offer strategic insights "
-        "into potential investment opportunities. Users can access key information through functionalities such as:\n\n"
-        "1. Dividend Yield Search: Obtain dividend yield data from two distinct sources—Google and Investidor10.\n"
-        "2. Price-to-Earnings Ratio Search: Evaluate the stock's value by searching its Price divided by Earnings.\n"
-        "3. Price-to-Assets Ratio Search: Assess the financial health of the company by searching its Price divided by the total assets.\n\n"
-        "In addition to these features, users can conveniently track their search history for comparison purposes. "
-        "The app also enables the generation of an Excel file containing all the searched information.\n\n"
-        "Another noteworthy functionality is the seamless integration with Google Sheets. When logged into your Google account, "
-        "you can update a cloud-based Google Sheets file and retrieve parameters stored within it. If not logged in, "
-        "the app allows you to create and store your personalized stock list for future reference."
-    )
+            "Bem-vindo ao aplicativo Rastreador de Ações!\n\n"
+            "Desenvolvido para apoiar investidores em decisões informadas sobre ações, este aplicativo utiliza diversos parâmetros da Bolsa de Valores "
+            "para proporcionar insights estratégicos sobre oportunidades de investimento. Usuários acessam informações essenciais por meio de funcionalidades como:\n\n"
+            "1. Busca por Rendimento de Dividendos: Obtenha dados de duas fontes distintas - Google e Investidor10.\n"
+            "2. Busca por Índice Preço/Lucro: Avalie o valor da ação pelo preço dividido pelos lucros.\n"
+            "3. Busca por Índice Preço/Ativos: Avalie a saúde financeira pela relação preço/ativos.\n\n"
+            "Além dessas funcionalidades, usuários acompanham o histórico de pesquisas e geram um arquivo Excel com as informações buscadas.\n\n"
+            "Outra funcionalidade notável é a integração ao Google Sheets. Com login, atualize e recupere parâmetros em um arquivo na nuvem. "
+            "Sem login, crie e armazene sua lista personalizada de ações.\n\n"
+            "O aplicativo também oferece análises detalhadas de ações, fornecendo informações valiosas para apoiar decisões de investimento. "
+            "Características adicionais incluem:\n\n"
+            "1. Visualização Detalhada de Ações:\n"
+            "   - Nome da Ação\n"
+            "   - Preço Atual\n"
+            "   - Preço Alvo\n\n"
+            "2. Dividendos:\n"
+            "   - Dividendo do Google\n"
+            "   - Dividendo do Investidor10\n"
+            "   - PAYOUT\n\n"
+            "3. Indicadores Financeiros:\n"
+            "   - Preço / Lucro\n"
+            "   - Preço / Valor Patrimonial\n"
+            "   - ROE (Return on Equity)\n"
+            "   - Margem Líquida\n"
+            "   - Dívida Líquida / EBITDA\n\n"
+            "4. Crescimento e Desempenho:\n"
+            "   - CAGR LUCROS 5 ANOS\n\n"
+            "Essas informações são fundamentais para análises abrangentes das ações, permitindo decisões informadas ao avaliar potencial de retorno "
+            "e fundamentos das ações."
+        )
+
         self.show_user_guide_view = ShowUserGuideView(self.root, self)
         self.show_user_guide_view.add_centered_text(user_guide)
+
         
         
 
@@ -834,6 +884,16 @@ class Controller:
 
     def search_all_data_thread(self):
         self.all_data_list = []
+        
+        target_prices = []
+        success = self.get_colum_data_from_sheets(target_prices, "Página1!B3:B")
+        if not success:
+            messagebox.showerror("Erro", "Não há dados!")
+            return
+        
+        print(target_prices)
+        
+        
         # it will append the stocks thats why it starts empty
         self.all_data_list = self.get_all_data_from_all_stocks(
             self.stock_names_temp)
@@ -850,6 +910,12 @@ class Controller:
                             price_to_book=self.all_data_list[3][i],
                             roe=self.all_data_list[4][i],
                             net_margin=self.all_data_list[5][i],
+                            real_time_price=self.all_data_list[6][i],
+                            target_price=target_prices[i],
+                            net_debt=self.all_data_list[7][i],
+                            cagr=self.all_data_list[8][i],
+                            payout=self.all_data_list[9][i],
+                            
                         )
                     )
 
@@ -973,11 +1039,15 @@ class Controller:
                     Stock(
                         stock_name,
                         dividend_google=list_data[0],
-                        dividend_invest10=list_data[1],
-                        price_to_earnings=list_data[2],
-                        price_to_book=list_data[3],
-                        roe=list_data[4],
-                        net_margin=list_data[5],
+                        real_time_price=list_data[1],
+                        dividend_invest10=list_data[2],
+                        price_to_earnings=list_data[3],
+                        price_to_book=list_data[4],
+                        roe=list_data[5],
+                        net_margin=list_data[6],
+                        net_debt=list_data[7],
+                        cagr=list_data[8],
+                        payout=list_data[9],
                     )
                 ]
             ),
@@ -2043,6 +2113,10 @@ class Controller:
         post_success = self.post_data_list(self.all_data_list[3], "Z")
         post_success = self.post_data_list(self.all_data_list[4], "AC")
         post_success = self.post_data_list(self.all_data_list[5], "AD")
+        
+        post_success = self.post_data_list(self.all_data_list[7], "AE")
+        post_success = self.post_data_list(self.all_data_list[8], "AF")
+        post_success = self.post_data_list(self.all_data_list[9], "AG")
 
         if post_success:
             messagebox.showinfo(

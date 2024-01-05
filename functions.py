@@ -37,6 +37,10 @@ def get_all_data_from_all_stocks(stock_list):
     list_price_to_book = []
     list_roe = []
     list_net_margin = []
+    real_time_prices = []
+    list_payout = []
+    list_net_debts = []
+    list_cagr = []
     
     
     
@@ -45,33 +49,9 @@ def get_all_data_from_all_stocks(stock_list):
     driver = webdriver.Chrome(options=options)
     driver.maximize_window()
     
+    # getting data from investidor10
     for stock in stock_list:
-        
-    
-
-        # getting the dividend
-        url = f'https://www.google.com/search?q=dividendos+{stock}'
-        driver.get(url)
-        try:
-            element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
-
-            dividend = element.text
-            if '%' not in dividend:
-              print(f"Failed to find the dividend from {stock}")
-              dividend = "0%"
-            
-            if len(dividend) > 6:
-                dividend = "0%"    
-            
-            
-            print(f'Google Dividend from {stock}: {dividend}')
-        except:
-            print(f"Failed to find the dividend from {stock}")
-            dividend = "0%"
-            print(f'Google Dividend from {stock}: {dividend}')
-        list_google_dividends.append(dividend)
-        
-        
+                
         # getting the didivend yield from invest10
         url = f'https://investidor10.com.br/acoes/{stock}/'
         driver.get(url)
@@ -84,13 +64,13 @@ def get_all_data_from_all_stocks(stock_list):
             
             if '%' not in dividend_yield:
               print(f"Failed to find the dividend from {stock}")
-              dividend_yield = "0%"
+              dividend_yield = "--"
             
             
             print(f'Invest10 Dividend from {stock}: {dividend_yield}')
         except:
             print(f"Failed to find the dividend from {stock}")
-            dividend_yield = "0%"
+            dividend_yield = "--"
             print(f'Invest10 Dividend from {stock}: {dividend_yield}')
             
         list_invest10_dividends.append(dividend_yield)
@@ -105,11 +85,11 @@ def get_all_data_from_all_stocks(stock_list):
             grand_parent_element = parent_element.find_element(By.XPATH, "..")
             other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
             price = other_parent_element.text
-            print(f'Price to earnings from {stock}: {price}')
+            
         except:
             print(f"Failed to get the Price to Earnings from {stock}")
-            price = "0"
-            
+            price = "--"
+        print(f'Price to earnings from {stock}: {price}')
         list_price_to_earnings.append(price)
             
         # getting the price per value
@@ -121,13 +101,11 @@ def get_all_data_from_all_stocks(stock_list):
             grand_parent_element = parent_element.find_element(By.XPATH, "..")
             other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
             price = other_parent_element.text
-            print(f"Price to Book from: {stock}: {price}")
+            
         except:
             print(f"Failed to get the Price to Book from {stock}")
-            price = "0"
-            
-            
-            
+            price = "--"
+        print(f"Price to Book from: {stock}: {price}")    
         list_price_to_book.append(price)
         
         try:
@@ -137,17 +115,18 @@ def get_all_data_from_all_stocks(stock_list):
             other_parent_element = element.find_element(By.XPATH,".//div[1]")
             span = other_parent_element.find_element(By.XPATH,".//span")
             roe = span.text
-            list_roe.append(roe)
+            
             
             if '%' not in roe:
               print(f"Failed to find the ROE from {stock}")
-              roe = "0%"
+              roe = "--"
               
-            print(f'ROE from {stock}: {roe}')
+            
         except:
             print(f"Failed to get the ROE from {stock}")
-            list_roe.append("0%")
-            continue
+            roe = "--"
+        print(f'ROE from {stock}: {roe}')    
+        list_roe.append(roe)
         
         try:
             
@@ -157,20 +136,136 @@ def get_all_data_from_all_stocks(stock_list):
                 other_parent_element = element.find_element(By.XPATH,".//div[1]")
                 span = other_parent_element.find_element(By.XPATH,".//span")
                 net_margin = span.text
-                list_net_margin.append(net_margin)
+    
                 if '%' not in net_margin:
                     print(f"Failed to find the Net Margin from {stock}")
-                    net_margin = "0%"
+                    net_margin = "--"
               
-                print(f'Net Margin from {stock}: {net_margin}')
+                
         except:
                 print(f"Failed to get the Net Margin from {stock}")
-                list_net_margin.append("0%")
-                continue
+                net_margin = "--"
+                
+        print(f'Net Margin from {stock}: {net_margin}')        
+        list_net_margin.append(net_margin)
+                
+        
+        try:
             
+                element = driver.find_element(By.XPATH, "//span[contains(text(), 'DÍVIDA LÍQUIDA / EBITDA')]").find_element(By.XPATH, "..")
             
+                
+                other_parent_element = element.find_element(By.XPATH,".//div[1]")
+                span = other_parent_element.find_element(By.XPATH,".//span")
+                net_debt = span.text
+                
+
+              
+                
+        except:
+                print(f"Failed to get the DÍVIDA LÍQUIDA / EBITDA  from {stock}")
+                net_debt = "--"
+        print(f'Net Debt from {stock}: {net_debt}')        
+        list_net_debts.append(net_debt)
+        
+        
+        try:
+            
+                element = driver.find_element(By.XPATH, "//span[contains(text(), 'CAGR RECEITAS 5 ANOS')]").find_element(By.XPATH, "..")
+            
+                
+                other_parent_element = element.find_element(By.XPATH,".//div[1]")
+                span = other_parent_element.find_element(By.XPATH,".//span")
+                cagr = span.text
+            
+                
+        except:
+                print(f"Failed to get the CAGR RECEITAS 5 ANOS  from {stock}")
+                cagr = "--"
+        print(f'CAGR RECEITAS 5 ANOS: from {stock}: {cagr}')        
+        list_cagr.append(cagr)
+        
+        try:
+            
+                element = driver.find_element(By.XPATH, "//span[contains(text(), 'PAYOUT')]").find_element(By.XPATH, "..")
+            
+                
+                other_parent_element = element.find_element(By.XPATH,".//div[1]")
+                span = other_parent_element.find_element(By.XPATH,".//span")
+                payout = span.text
+                
+                if '%' not in payout:
+                    print(f"Failed to find the PAYOUT from {stock}")
+                    payout = "--"
+              
+                
+        except:
+                print(f"Failed to get the PAYOUT from {stock}")
+                payout = "--"
+        print(f'PAYOUT from {stock}: {payout}')        
+        list_payout.append(payout)
+        
+        
+        
+                   
         print("\n")
-  
+    
+    # getting data from google
+    for stock in stock_list:
+         # getting the dividend
+        url = f'https://www.google.com/search?q=dividendos+{stock}'
+        driver.get(url)
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
+
+            dividend = element.text
+            if '%' not in dividend:
+              print(f"Failed to find the dividend from {stock}")
+              dividend = "--"
+            
+            if len(dividend) > 6:
+                dividend = "--"    
+            
+            
+            
+        except:
+            print(f"Failed to find the dividend from {stock}")
+            dividend = "--"
+            
+        print(f'Google Dividend from {stock}: {dividend}')
+        list_google_dividends.append(dividend)
+        
+        try:
+            if dividend != "--":
+                element_list = driver.find_elements(By.XPATH, "//span[contains(text(), 'BRL')]")
+                if len(element_list) > 1:
+                    element = element_list[1]
+             
+                    
+                parent_element = element.find_element(By.XPATH, "..")
+                
+                price = parent_element.text
+                price_float = "R$ " + (price.replace("BRL",""))
+            else:
+                url = f'https://www.google.com/search?q={stock}'
+                driver.get(url)
+
+
+                element = driver.find_element(By.XPATH, "//span[contains(text(), 'BRL')]")
+                parent_element = element.find_element(By.XPATH, "..")
+                
+                price = parent_element.text
+                price_float = "R$ " + (price.replace("BRL",""))
+            
+            
+                
+            
+
+        except:
+            print(f"Failed to find the price from {stock}")
+            price = "R$ 0,00"
+        print(f'Google Real Time Price from {stock}: {price_float}')    
+        real_time_prices.append(price_float)
     
     list_all_data.append(list_google_dividends)
     list_all_data.append(list_invest10_dividends)
@@ -178,6 +273,10 @@ def get_all_data_from_all_stocks(stock_list):
     list_all_data.append(list_price_to_book)
     list_all_data.append(list_roe)
     list_all_data.append(list_net_margin)
+    list_all_data.append(real_time_prices)
+    list_all_data.append(list_net_debts)
+    list_all_data.append(list_payout)
+    list_all_data.append(list_cagr)
     
     driver.quit()     
     return list_all_data
@@ -199,12 +298,44 @@ def get_data_from_a_stock(stock_symbol):
         element = driver.find_element(By.XPATH, "//span[contains(text(), '%')]")
 
         dividend = element.text
-        print(f'Google Dividend from {stock_symbol}: {dividend}')
+        
     except:
         print(f"Failed to find the dividend from {stock_symbol}")
-        dividend = "0%"
-        
+        dividend = "--"
+    print(f'Google Dividend from {stock_symbol}: {dividend}')    
     list_data.append(dividend)
+    
+    try:
+        if dividend != "--":
+            element_list = driver.find_elements(By.XPATH, "//span[contains(text(), 'BRL')]")
+            if len(element_list) > 1:
+                element = element_list[1]
+         
+                
+            parent_element = element.find_element(By.XPATH, "..")
+            
+            price = parent_element.text
+            price_float = "R$ " + (price.replace("BRL",""))
+        else:
+            url = f'https://www.google.com/search?q={stock_symbol}'
+            driver.get(url)
+
+
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'BRL')]")
+            parent_element = element.find_element(By.XPATH, "..")
+            
+            price = parent_element.text
+            price_float = "R$ " + (price.replace("BRL",""))
+            
+            
+    except:
+        print(f"Failed to find the price from {stock_symbol}")
+        price = "--"
+    
+    print(f'Google Real Time Price from {stock_symbol}: {price_float}')
+    list_data.append(price_float)
+    
+    
     
     
     # getting the didivend yield from invest10
@@ -216,28 +347,28 @@ def get_data_from_a_stock(stock_symbol):
         grand_parent_element = parent_element.find_element(By.XPATH, "..")
         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
         dividend_yield = other_parent_element.text
-        print(f'Invest10 Dividend from {stock_symbol}: {dividend_yield}')
+        
     except:
         print(f"Failed to find the dividend from {stock_symbol}")
-        dividend_yield = "0%"
-        
+        dividend_yield = "--"
+    print(f'Invest10 Dividend from {stock_symbol}: {dividend_yield}')    
     list_data.append(dividend_yield)
     
     
     # getting the price per profit
     url = f'https://investidor10.com.br/acoes/{stock_symbol}/'
- 
+    
     try:
         element = driver.find_element(By.XPATH, "//span[contains(text(), 'P/L')]").find_element(By.XPATH, "..")
         parent_element = element.find_element(By.XPATH, "..")
         grand_parent_element = parent_element.find_element(By.XPATH, "..")
         other_parent_element = grand_parent_element.find_element(By.XPATH,".//div[2]")
         price = other_parent_element.text
-        print(f'Price to earnings from {stock_symbol}: {price}')
+        
     except:
         print(f"Failed to get the Price to Earnings from {stock_symbol}")
-        price = "0"
-        
+        price = "--"
+    print(f'Price to earnings from {stock_symbol}: {price}')    
     list_data.append(price)
         
     # getting the price per value
@@ -252,7 +383,7 @@ def get_data_from_a_stock(stock_symbol):
         print(f"Price to Book from: {stock_symbol}: {price}")
     except:
         print(f"Failed to get the Price to Book from {stock_symbol}")
-        price = "0"
+        price = "--"
         
     list_data.append(price)
     
@@ -264,13 +395,14 @@ def get_data_from_a_stock(stock_symbol):
         span = other_parent_element.find_element(By.XPATH,".//span")
         roe = span.text
         
-        print(f'ROE from {stock_symbol}: {roe}')
+        
     
     except:
         print(f"Failed to get the ROE from {stock_symbol}")
-        roe = "0%"
+        roe = "--"
         
     list_data.append(roe)
+    print(f'ROE from {stock_symbol}: {roe}')
     
     try:
         element = driver.find_element(By.XPATH, "//span[contains(text(), 'MARGEM LÍQUIDA')]").find_element(By.XPATH, "..")
@@ -280,14 +412,60 @@ def get_data_from_a_stock(stock_symbol):
         span = other_parent_element.find_element(By.XPATH,".//span")
         net_margin = span.text
         
-        print(f'Net Margin from {stock_symbol}: {net_margin}')
+        
     except:
         print(f"Failed to get the Net Margin from {stock_symbol}")
-        net_margin = "0%"
+        net_margin = "--"
+    print(f'Net Margin from {stock_symbol}: {net_margin}')
     list_data.append(net_margin)
+    
+    
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'DÍVIDA LÍQUIDA / EBITDA')]").find_element(By.XPATH, "..")
         
+        
+        other_parent_element = element.find_element(By.XPATH,".//div[1]")
+        span = other_parent_element.find_element(By.XPATH,".//span")
+        net_debt = span.text
+        
+    except:
+        print(f"Failed to get the DÍVIDA LÍQUIDA / EBITDA  from {stock_symbol}")
+        net_debt = "--"
+        
+    list_data.append(net_debt)
+    print(f'Net Debt from {stock_symbol}: {net_debt}')
+    
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'CAGR RECEITAS 5 ANOS')]").find_element(By.XPATH, "..")
+        
+        
+        other_parent_element = element.find_element(By.XPATH,".//div[1]")
+        span = other_parent_element.find_element(By.XPATH,".//span")
+        cagr = span.text
         
     
+    except:
+        print(f"Failed to get the CAGR RECEITAS 5 ANOS  from {stock_symbol}")
+        cagr = "--"
+        
+    list_data.append(cagr)
+    print(f'CAGR RECEITAS 5 ANOS: from {stock_symbol}: {cagr}')
+    
+    try:
+        element = driver.find_element(By.XPATH, "//span[contains(text(), 'PAYOUT')]").find_element(By.XPATH, "..")
+        
+        
+        other_parent_element = element.find_element(By.XPATH,".//div[1]")
+        span = other_parent_element.find_element(By.XPATH,".//span")
+        payout = span.text
+        
+    except:
+        print(f"Failed to get the PAYOUT from {stock_symbol}")
+        payout = "--"
+        
+    list_data.append(payout)
+    print(f'PAYOUT from {stock_symbol}: {payout}')
+        
         
 
     driver.quit()
@@ -608,6 +786,39 @@ def get_dividends_google_data(list_names):
     driver.quit()
     return dividends
 
+def get_real_time_prices(list_names):
+    if (list_names == []):
+      return list_names
+  
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    prices = []
+    driver.maximize_window()
+    for  name in list_names:
+        url = f'https://www.google.com/search?q={name}'
+        driver.get(url)
+
+        try:
+            element = driver.find_element(By.XPATH, "//span[contains(text(), 'BRL')]")
+            parent_element = element.find_element(By.XPATH, "..")
+            
+            price = parent_element.text
+            price_float = "R$ " + (price.replace("BRL",""))
+            
+            
+        except:
+            print(f"Failed to find the price from {name}")
+            prices.append("0")
+            continue
+          
+        print(f'Google Real Time Price from {name}: {price}')
+
+        prices.append(price_float)
+        
+    driver.quit()
+    return prices
+
 def get_stock_names(list_names):
   creds = None
 
@@ -771,14 +982,14 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
                                        valueInputOption="USER_ENTERED", body={"values": formated_list_dividends}).execute()
 
         # Calculate the average and update the last value
-        range_name = f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{last_row}"
-        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=range_name).execute()
-        values = result.get("values", [])
+        # range_name = f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{last_row}"
+        # result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=range_name).execute()
+        # values = result.get("values", [])
 
-        if values:
+        # if values:
 
-            sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) + 1}",
-                                  valueInputOption="USER_ENTERED", body={"values": [[f'=ARRED(AVERAGE({DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) -1}); 2)']]}).execute()
+        #     sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) + 1}",
+        #                           valueInputOption="USER_ENTERED", body={"values": [[f'=ARRED(AVERAGE({DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}{int(last_row) -1}); 2)']]}).execute()
 
             
     
@@ -794,8 +1005,8 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
 
 
 if __name__ == "__main__":
-    stock_symbols = ["BMGB4","KLBN4"]
-    print(get_all_data_from_all_stocks(stock_symbols))
+    stock_symbols = ["BMGB4","KLBN4", "SLAEUMANO", "VALE3"]
+    print(get_data_from_a_stock(stock_symbols[0]))
 
 
   
