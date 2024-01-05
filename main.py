@@ -55,7 +55,7 @@ class LoadingView(tk.Toplevel):
         tk.Toplevel.__init__(self, root)
         self.controller = controller
         self.root = root
-        self.title("Loading")
+        self.title("Pesquisando")
         self.root_height = 150
         self.root_width = 300
         self.screen_width = self.winfo_screenwidth()
@@ -74,7 +74,7 @@ class LoadingView(tk.Toplevel):
         self.wm_iconphoto(False, self.logo)
 
         self.loading_label = tk.Label(
-            self, text="Searching Data...", font=("Roboto", 12), fg="white", bg="#1c1830"
+            self, text="Pesquisando...", font=("Roboto", 12), fg="white", bg="#1c1830"
         )
         self.loading_label.pack(pady=10)
 
@@ -113,7 +113,7 @@ class ShowResultsView(tk.Toplevel):
                 self.frame_width, self.frame_height, x_cordinate, y_cordinate
             )
         )
-        self.title("Results of Search")
+        self.title("Resultados da Pesquisa")
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
         self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=22)
@@ -134,37 +134,37 @@ class ShowResultsView(tk.Toplevel):
 
     def show_all_data(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
 
             if stock.dividend_google != None:
                 self.add_centered_text(
-                    f"Dividend Yield From Google: {stock.dividend_google} \n")
+                    f"Dividendo do Google: {stock.dividend_google}\n")
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
-                    f"Dividend Yield from Invest10: {stock.dividend_invest10}\n"
+                    f"Dividendo do Investidor10: {stock.dividend_invest10}\n"
                 )
 
             if stock.price_to_earnings != None:
                 self.add_centered_text(
-                    f"Share Price / Earnings per Share:  {stock.price_to_earnings}\n"
+                    f"Preço / Lucro: {stock.price_to_earnings}\n"
                 )
 
             if stock.price_to_book != None:
                 self.add_centered_text(
-                    f"Share Price / Book Value per Share:  {stock.price_to_book}\n")
+                    f"Preço / Valor Patrimonial: {stock.price_to_book}\n")
             
             if stock.roe != None:
                 self.add_centered_text(
-                    f"Return on Equity:  {stock.roe}\n")
+                    f"ROE:  {stock.roe}\n")
                 
             
             if stock.net_margin != None:
                 self.add_centered_text(
-                    f"Net Margin:  {stock.net_margin}\n")
+                    f"Margem Líquida:  {stock.net_margin}\n")
                 
             self.add_centered_text(
                 f"----------------------------------------\n")
@@ -173,11 +173,11 @@ class ShowResultsView(tk.Toplevel):
 
     def show_google_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Dividend Yield {stock.dividend_google}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
+            self.add_centered_text(f"Dividendo do Google: {stock.dividend_google}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -185,11 +185,11 @@ class ShowResultsView(tk.Toplevel):
 
     def show_invest10_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
-            self.add_centered_text(f"Dividend Yield {stock.dividend_invest10}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
+            self.add_centered_text(f"Dividendo do Investidor10: {stock.dividend_invest10}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -197,12 +197,12 @@ class ShowResultsView(tk.Toplevel):
 
     def show_prices_to_book(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
             self.add_centered_text(
-                f"Share Price / Book Value per Share:  {stock.price_to_book}\n")
+                f"Preço / Valor Patrimonial: {stock.price_to_book}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -210,12 +210,12 @@ class ShowResultsView(tk.Toplevel):
 
     def show_price_to_earnings(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
             self.add_centered_text(
-                f"Share Price / Earnings per Share:  {stock.price_to_earnings}\n")
+                f"Preço / Lucro: {stock.price_to_earnings}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -223,12 +223,12 @@ class ShowResultsView(tk.Toplevel):
         
     def show_roes(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
             self.add_centered_text(
-                f"Return on Equity:  {stock.roe}\n")
+                f"ROE: {stock.roe}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -236,12 +236,12 @@ class ShowResultsView(tk.Toplevel):
         
     def show_net_margins(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Results from {last_result.date_of_search}\n")
+        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
-            self.add_centered_text(f"Stock Name: {stock.name}\n")
+            self.add_centered_text(f"Nome da Ação: {stock.name}\n")
             self.add_centered_text(
-                f"Net Margin:  {stock.net_margin}\n")
+                f"Margem Líquida: {stock.net_margin}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -264,7 +264,7 @@ class ShowUserGuideView(tk.Toplevel):
                 self.frame_width, self.frame_height, x_cordinate, y_cordinate
             )
         )
-        self.title("User Guide")
+        self.title("Guia de Uso")
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
         self.text_widget = tk.Text(self, wrap=tk.WORD, width=70, height=22)
@@ -365,7 +365,7 @@ class ChooseSearchDataView(tk.Toplevel):
                 self.frame_width, self.frame_height, x_cordinate, y_cordinate
             )
         )
-        self.title("Search Data")
+        self.title("Pesquisar Dividendos")
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
 
@@ -375,7 +375,7 @@ class ChooseSearchDataView(tk.Toplevel):
 
         self.button_01 = tk.Button(
             self,
-            text="Search From Google",
+            text="Pesquisar no Google",
             width=20,
             bg="#456990",
             fg="white",
@@ -388,8 +388,8 @@ class ChooseSearchDataView(tk.Toplevel):
 
         self.button_02 = tk.Button(
             self,
-            text="Search From Invest10",
-            width=20,
+            text="Pesquisar no Investidor10",
+            width=30,
             cursor="hand2",
             fg="white",
             bg="#9A2C5D",
@@ -426,10 +426,10 @@ class mainView:
         )
 
         self.label = tk.Label(
-            text="Welcome to \nStock Data Watcher App",
+            text="Seja Bem-Vindo ao \n Rastreamento de Ações ",
             bg="#1c1830",
             height=0,
-            font=("Roboto", 20, "bold"),
+            font=("Roboto", 17, "bold"),
             fg="#2BABE2",
 
         )
@@ -442,7 +442,7 @@ class mainView:
 
     
         self.guide_button = tk.Button(
-            text="User Guide",
+            text="Guia de Uso",
             width=20,
             bg="#C62068",
             fg="white",
@@ -455,7 +455,7 @@ class mainView:
 
         self.search_button = tk.Button(
 
-            text="Search DY",
+            text="Pesquisar Dividendos",
             width=20,
             bg="#1c1830",
             fg="white",
@@ -466,7 +466,7 @@ class mainView:
         ).place(relx=0.2, rely=0.25, anchor="center")
 
         self.search_price_to_earnings_button = tk.Button(
-            text="Search P / E",
+            text="Pesquisar P / L",
             width=20,
             bg="#14182C",
             fg="white",
@@ -478,7 +478,7 @@ class mainView:
 
         self.search_price_to_book_button = tk.Button(
 
-            text="Search P / B",
+            text="Pesquisar P / VP",
             width=20,
             bg="#1c1830",
             fg="white",
@@ -490,7 +490,7 @@ class mainView:
 
         self.stock_search_button = tk.Button(
 
-            text="Search a Stock",
+            text="Pesquisar uma ação",
             width=20,
             bg="#293B57",
             fg="white",
@@ -502,8 +502,8 @@ class mainView:
 
         self.search_all_data_button = tk.Button(
 
-            text="Search All Data",
-            width=20,
+            text="Pesquisar Todos Indicadores",
+            width=30,
             bg="#293B57",
             fg="white",
             activebackground="#293B57",
@@ -513,8 +513,8 @@ class mainView:
         ).place(relx=0.65, rely=0.4, anchor="center")
 
         self.last_search_button = tk.Button(
-            text="Search Results",
-            width=20,
+            text="Resultados das Últimas Pesquisas",
+            width=30,
             bg="#456990",
             fg="white",
             cursor="hand2",
@@ -524,8 +524,8 @@ class mainView:
         ).place(relx=0.5, rely=0.55, anchor="center")
 
         self.generate_button = tk.Button(
-            text="Generate Excel file",
-            width=20,
+            text="Gerar Uma Tabela Excel",
+            width=30,
             bg="#9A2C5D",
             fg="white",
             cursor="hand2",
@@ -535,8 +535,8 @@ class mainView:
         ).place(relx=0.5, rely=0.65, anchor="center")
 
         self.save_data_sheets_button = tk.Button(
-            text="Save All Data On Sheets",
-            width=20,
+            text="Salvar Dados no Google Sheets",
+            width=30,
             bg="#b6174b",
             fg="white",
             cursor="hand2",
@@ -547,7 +547,7 @@ class mainView:
         
         
         self.create_a_stock_list_button = tk.Button(
-            text="Create a Stock List",
+            text="Criar uma lista de ações",
             width=20,
             bg="#b6174b",
             fg="white",
@@ -555,10 +555,10 @@ class mainView:
             activebackground="#b6174b",
             font=("Roboto", 11, "bold"),
             command=self.controller.create_stock_list,
-        ).place(relx=0.5, rely=0.85, anchor="center")
+        ).place(relx=0.20, rely=0.1, anchor="center")
         
         self.search_roes_button = tk.Button(
-            text="Search ROE",
+            text="Pesquisar ROE",
             width=20,
             bg="#b6174b",
             fg="white",
@@ -566,18 +566,18 @@ class mainView:
             activebackground="#b6174b",
             font=("Roboto", 11, "bold"),
             command=self.controller.search_roes_from_invest10,
-        ).place(relx=0.2, rely=0.55, anchor="center")
+        ).place(relx=0.2, rely=0.65, anchor="center")
         
         self.search_net_margins_button = tk.Button(
-            text="Search Net Margin",
-            width=20,
+            text="Pesquisar Margem Líquida",
+            width=24,
             bg="#b6174b",
             fg="white",
             cursor="hand2",
             activebackground="#b6174b",
             font=("Roboto", 11, "bold"),
             command=self.controller.search_net_margins,
-        ).place(relx=0.8, rely=0.55, anchor="center")
+        ).place(relx=0.8, rely=0.65, anchor="center")
 
         self.loading_view = LoadingView(self.root, controller)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
@@ -603,7 +603,7 @@ class Controller:
         self.root = tk.Tk()
 
         self.view = mainView(self.root, self)
-        self.root.title("Stock Data Watcher App")
+        self.root.title("Rastreamento de Ações")
         self.icon = tk.PhotoImage(file="./img/logo.ppm")
         if not os.path.exists("results.pickle"):
             # instances of SearchResult, creates one instance of SearchResult if it doesn't exist
@@ -638,6 +638,7 @@ class Controller:
         self.prices_to_book_list = []
         self.price_to_earnings_list = []
         self.roe_list = []
+        self.net_margin_list = []
 
        
 
@@ -708,8 +709,8 @@ class Controller:
     def show_last_result(self):
         if len(self.search_results) == 0:
             messagebox.showinfo(
-                "Empty List",
-                "You need to search for at least one time to get the last results!"
+                "Lista de Resultados Vazia",
+                "Você precisa pesquisar pelo menos uma vez para obter os últimos resultados!",
             )
             return
 
@@ -720,16 +721,16 @@ class Controller:
         print(self.stock_names_temp)
         if len(self.stock_names_temp) > 0 :
             answer = messagebox.askyesno(
-                "Existent List",
-                "You already have a stock list, if you want to create a new one, the last stock list will be deleted!"
+                "Lista Existente",
+                "Você já possui uma lista de ações, deseja criar uma nova? (Observação: a lista antiga será apagada!)"
             )
             
             if answer == True:
                 self.stock_names_temp = []
                 while True:
                     stock = simpledialog.askstring(
-                    "Input",
-                    "What's the name of the stock you want to add?\n If you don't wanna add more stocks just type 'stop'",
+                    "Entrada",
+                    "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                     parent=self.root,
                 )
                     if stock == None and len(self.stock_names_temp) == 0:
@@ -741,7 +742,7 @@ class Controller:
                         return
                     
                     if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
-                        messagebox.showerror("Error", "You need to input a stock name!")
+                        messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
                         continue
                     
                     if stock != "stop" and stock != None and stock != "":
@@ -751,8 +752,8 @@ class Controller:
         else:
             while True:
                 stock = simpledialog.askstring(
-                "Input",
-                "What's the name of the stock you want to add?\n If you don't wanna add more stocks just type 'stop'",
+                "Entrada",
+                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                 parent=self.root,
             )
                 if stock == None and len(self.stock_names_temp) == 0:
@@ -764,7 +765,7 @@ class Controller:
                     return
                 
                 if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
-                    messagebox.showerror("Error", "You need to input a stock name!")
+                    messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
                     continue
                 
                 if stock != "stop" and stock != None and stock != "":
@@ -824,8 +825,8 @@ class Controller:
     def create_search_results_view(self):
         if len(self.search_results) == 0:
             messagebox.showinfo(
-                "Empty List",
-                "You need to search for at least one time to get the last results!",
+                "Lista de Resultados Vazia",
+                "Você precisa pesquisar pelo menos uma vez para obter os últimos resultados!",
             )
             return
 
@@ -858,14 +859,14 @@ class Controller:
             self.show_results_view.show_all_data(self.search_results[0])
 
         else:
-            messagebox.showerror("Error", "There is no Data Searched!")
+            messagebox.showerror("Erro", "Não há dados!")
 
         self.hide_loading_bar()
 
     def search_all_data_from_all_stocks(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search all data ?"
+            "Formulário", "Você tem certeza que deseja pesquisar todos os indicadores?"
         )
 
         if result == "yes":
@@ -882,8 +883,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -904,7 +905,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -912,8 +913,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -928,8 +929,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -949,7 +950,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -986,8 +987,8 @@ class Controller:
 
     def search_a_stock(self):
         answer = simpledialog.askstring(
-            "Input",
-            "What's the name of the stock you want to search?",
+            "Entrada",
+            "Qual o nome da ação que deseja pesquisar?",
             parent=self.root,
         )
         
@@ -995,7 +996,7 @@ class Controller:
             return
 
         if answer == "":
-            messagebox.showerror("Error", "You need to input a stock name!")
+            messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
             return
         self.show_loading_bar()
 
@@ -1026,14 +1027,14 @@ class Controller:
                 self.search_results[0])
 
         else:
-            messagebox.showerror("Error", "There is no P / E !")
+            messagebox.showerror("Erro", "Não há P / L !")
 
         self.hide_loading_bar()
 
     def search_prices_to_earnings(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search (Share Price / Earnings per Share) ?"
+            "Formulário", "Você tem certeza que deseja pesquisar o P / L ?"
         )
 
         if result == "yes":
@@ -1051,8 +1052,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1072,7 +1073,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1080,8 +1081,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1097,8 +1098,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1118,7 +1119,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1159,7 +1160,7 @@ class Controller:
         self.temporary_stocks = []
 
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search (Share Price / Book Value per Share) ?"
+            "Formulário", "Você tem certeza que deseja pesquisar o P / VP ?"
         )
 
         if result == "yes":
@@ -1177,8 +1178,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1198,7 +1199,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1206,8 +1207,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1222,8 +1223,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1243,7 +1244,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1285,7 +1286,7 @@ class Controller:
         self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search Dividend Yield from Invest10 ?"
+            "Formulário", "Você tem certeza que deseja pesquisar os dividendos?"
         )
 
         if result == "yes":
@@ -1303,8 +1304,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1324,7 +1325,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1332,8 +1333,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1348,8 +1349,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1369,7 +1370,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1412,7 +1413,7 @@ class Controller:
         self.temporary_stocks = []
         self.choose_search_data_view.destroy()
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search Dividend Yield from Google ?"
+            "Formulário", "Você tem certeza que deseja pesquisar os dividendos?"
         )
 
         if result == "yes":
@@ -1430,8 +1431,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1451,7 +1452,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1459,8 +1460,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1475,8 +1476,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1496,7 +1497,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1510,7 +1511,7 @@ class Controller:
     def search_roes_from_invest10(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search roes from the stocks?"
+            "Formulário", "Você tem certeza que deseja pesquisar os ROEs?"
         )
 
         if result == "yes":
@@ -1528,8 +1529,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1549,7 +1550,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1557,8 +1558,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1573,8 +1574,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1594,7 +1595,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1636,7 +1637,7 @@ class Controller:
     def search_net_margins(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
-            "Form", "Are you sure you want to search roes from the stocks?"
+            "Formulário", "Você tem certeza que deseja pesquisar as margens líquidas?"
         )
 
         if result == "yes":
@@ -1654,8 +1655,8 @@ class Controller:
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
-                            "Input",
-                            "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                            "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1675,7 +1676,7 @@ class Controller:
 
                         if stock_name == "" or stock_name == None:
                             messagebox.showerror(
-                                "Error", "You need to input a stock name!"
+                                "Erro", "Você precisa inserir o nome de uma ação!"
                             )
                             continue
                         else:
@@ -1683,8 +1684,8 @@ class Controller:
 
                 else:
                     search_last_stocks = messagebox.askyesno(
-                        "Input",
-                        "There is a temporary list of stocks, do you want to search by that?",
+                        "Entrada",
+                        "Há uma lista temporária de ações, você deseja pesquisar por ela?",
                         parent=self.root,
                     )
 
@@ -1699,8 +1700,8 @@ class Controller:
                         self.stock_names_temp = []
                         while True:
                             stock_name = simpledialog.askstring(
-                                "Input",
-                                "What's the name of the stock you want to search?\n If you don't wanna add more stocks just type 'stop'",
+                                "Entrada",
+                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                                 parent=self.root,
                             )
 
@@ -1720,7 +1721,7 @@ class Controller:
 
                             if stock_name == "" or stock_name == None:
                                 messagebox.showerror(
-                                    "Error", "You need to input a stock name!"
+                                    "Erro", "Você precisa inserir o nome de uma ação!"
                                 )
                                 continue
                             else:
@@ -1757,7 +1758,7 @@ class Controller:
                 self.search_results[0])
             
         else:
-            messagebox.showerror("Error", "There is no net margins !")
+            messagebox.showerror("Erro", "Não há margens líquidas!")
             
         self.hide_loading_bar()
                 
@@ -1854,8 +1855,8 @@ class Controller:
     def save_dividends_google(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
@@ -1863,18 +1864,18 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "Dividends Registered Successfully ")
+                "Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
-                "Error", "Dividends can't be registered before the search!"
+                "Erro", "Dividendos não podem ser registrados antes da pesquisa!"
             )
 
     def save_dividends_invest10(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
@@ -1882,7 +1883,7 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "Dividends Registered Successfully ")
+                "Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1892,8 +1893,8 @@ class Controller:
     def save_prices_to_book(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
@@ -1901,18 +1902,18 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "Dividends Registered Successfully ")
+                "Successo", "P/VP Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
-                "Error", "Dividends can't be registered before the search!"
+                "Erro", "P/VP não pode ser registrado antes da pesquisa!"
             )
 
     def save_prices_to_earnings(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
@@ -1920,18 +1921,18 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "Dividends Registered Successfully ")
+                "Successo", "P/L Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
-                "Error", "Dividends can't be registered before the search!"
+                "Erro", "P/L não pode ser registrado antes da pesquisa!"
             )
 
     def save_dividends_google(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
@@ -1939,7 +1940,7 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "Dividends Registered Successfully ")
+                "Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1949,8 +1950,8 @@ class Controller:
     def show_last_results(self):
         if len(self.dividends_google_list) == 0:
             messagebox.showinfo(
-                "Empty List",
-                "You need to search for at least one time to get the last results!",
+               "Lista de Resultados Vazia",
+                "Você precisa pesquisar pelo menos uma vez para obter os últimos resultados!",
             )
         else:
             message = ""
@@ -1963,30 +1964,30 @@ class Controller:
             self.generate_excel_file(
                 self.stock_names_temp, self.all_data_list[0], self.all_data_list[1], self.all_data_list[2], self.all_data_list[3])
             messagebox.showinfo(
-                "Success", "The file was created on your downloads !")
+                "Successo", "O arquivo foi criado na sua pasta de downloads !")
             return
 
         elif len(self.dividends_google_list) != 0 and len(self.dividends_invest10_list) != 0 and len(self.prices_to_book_list) != 0 and len(self.price_to_earnings_list) != 0:
             self.generate_excel_file(self.stock_names_temp, self.dividends_google_list,
                                      self.dividends_invest10_list, self.prices_to_book_list, self.price_to_earnings_list)
             messagebox.showinfo(
-                "Success", "The file was created on your downloads !")
+                "Successo", "O arquivo foi criado na sua pasta de downloads !")
             return
 
         else:
             messagebox.showerror(
-                "Error", "There is no sufficient data to generate a excel file!")
+                "Erro", "Você precisa pesquisar todos os indicadores pelo menos uma vez para gerar a tabela!")
             return
 
     def save_all_data_on_sheets(self):
         if not os.path.exists("token.json"):
             messagebox.showerror(
-                "Error",
-                "There is no token.json file, you can't save it to google sheets!",
+                "Erro",
+                "Não há o arquivo token.json, você não pode salvar no google sheets!",
             )
             return
 
-        if (len(self.dividends_google_list) > 0 or len(self.dividends_invest10_list) > 0 or len(self.prices_to_book_list) > 0 or len(self.price_to_earnings_list) > 0) and len(self.all_data_list) == 0:
+        if (len(self.dividends_google_list) > 0 or len(self.dividends_invest10_list) > 0 or len(self.prices_to_book_list) > 0 or len(self.price_to_earnings_list) > 0 or len(self.roe_list) > 0 or len(self.net_margin_list) > 0) and len(self.all_data_list) == 0:
             
             if self.price_to_earnings_list:
                 post_success = self.post_data_list(
@@ -2003,23 +2004,31 @@ class Controller:
             if self.dividends_invest10_list:
                 post_success = self.post_data_list(
                     self.dividends_invest10_list, "AB")
+                
+            if self.roe_list:
+                post_success = self.post_data_list(
+                    self.roe_list, "AC")
+                
+            if self.net_margin_list:
+                post_success = self.post_data_list(
+                    self.net_margin_list, "AD")
 
             
 
         
             if post_success:
                 messagebox.showinfo(
-                    "Success", "All Data was registered Successfully ")
+                    "Sucesso", "Os dados foram registrados com sucesso!")
 
             else:
-                messagebox.showerror("Error", "Failed to save all Data!")
+                messagebox.showerror("Erro", "Falha ao Salvar os Dados!")
 
             return
 
         if len(self.all_data_list) == 0:
             messagebox.showinfo(
-                "Empty List",
-                "You need to search for at least one time to save all data!",
+                "Lista de Resultados Vazia",
+                "Você precisa pesquisar pelo menos uma vez para obter os últimos resultados!",
             )
             return
 
@@ -2037,10 +2046,10 @@ class Controller:
 
         if post_success:
             messagebox.showinfo(
-                "Success", "All Data was registered Successfully ")
+                "Sucesso", "Os dados foram registrados com sucesso!")
 
         else:
-            messagebox.showerror("Error", "Failed to save all Data!")
+            messagebox.showerror("Erro", "Falha ao Salvar os Dados!")
 
     def check_exit_condition(self):
         # Periodically check for the exit condition in the main thread
