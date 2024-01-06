@@ -888,8 +888,8 @@ class Controller:
         target_prices = []
         success = self.get_colum_data_from_sheets(target_prices, "Página1!B3:B")
         if not success:
-            messagebox.showerror("Erro", "Não há dados!")
-            return
+            print("There is no data in the sheets")
+
         
         print(target_prices)
         
@@ -897,10 +897,15 @@ class Controller:
         # it will append the stocks thats why it starts empty
         self.all_data_list = self.get_all_data_from_all_stocks(
             self.stock_names_temp)
-
+        
         if len(self.all_data_list) > 0:
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
+                    
+                    if len(target_prices) == 0: # in this case there is no token.json representing the google sheets to get the target prices
+                        for i in range(len(self.stock_names_temp)):
+                            target_prices.append(None)
+            
                     self.temporary_stocks.append(
                         Stock(
                             self.stock_names_temp[i],
