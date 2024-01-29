@@ -23,14 +23,15 @@ load_dotenv(envars)
 
 
 SAMPLE_SPREADSHEET_ID = os.getenv("SAMPLE_SPREADSHEET_ID")
-data = os.getenv("MY_TOKEN")
-
-dict_data = ast.literal_eval(data)
 
 
 if not os.path.exists("token.json"):
+    data = os.getenv("MY_TOKEN")
+    print(data)
+    print(type(data))
+    data = json.loads(data)
     with open("token.json", 'w') as json_file:
-        json.dump(dict_data, json_file)
+        json.dump(data, json_file)
 
 
 

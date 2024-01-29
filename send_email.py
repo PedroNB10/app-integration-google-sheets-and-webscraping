@@ -7,8 +7,7 @@ import os
 #####
 from pathlib import Path
 from dotenv import load_dotenv
-import ast
-import json
+
 
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 envars = current_dir / ".env"
