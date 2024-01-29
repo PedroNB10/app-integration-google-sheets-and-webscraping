@@ -12,6 +12,30 @@ from googleapiclient.errors import HttpError
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from pathlib import Path
+from dotenv import load_dotenv  # pip install python-dotenv
+import ast
+import json
+
+current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+envars = current_dir / ".env"
+load_dotenv(envars)
+
+
+SAMPLE_SPREADSHEET_ID = os.getenv("SAMPLE_SPREADSHEET_ID")
+data = os.getenv("MY_TOKEN")
+
+dict_data = ast.literal_eval(data)
+
+
+if not os.path.exists("token.json"):
+    with open("token.json", 'w') as json_file:
+        json.dump(dict_data, json_file)
+
+
+
+
+
 
 SHEET_NAME = "Página1"
 DY_COLUMN_UPDATE_GOOGLE = "AF"
@@ -22,7 +46,7 @@ COLUMN_GET_DATA = f"{SHEET_NAME}!A3:A"
 
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "1fIzQZevwQ9UB6ynmRNvGddYf9ITDEuhp5lgM34-VDNs"
+
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 

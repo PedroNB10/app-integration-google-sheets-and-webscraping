@@ -8,9 +8,27 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-# The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "*************************"
-SAMPLE_RANGE_NAME = "Página1!P3:P22"
+
+#####
+from pathlib import Path
+from dotenv import load_dotenv
+import ast
+import json
+
+current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+envars = current_dir / ".env"
+load_dotenv(envars)
+
+
+SAMPLE_SPREADSHEET_ID = os.getenv("SAMPLE_SPREADSHEET_ID")
+data = os.getenv("CLIENT_SECRET_JSON")
+
+dict_data = ast.literal_eval(data)
+
+
+with open("client_secret.json", 'w') as json_file:
+    json.dump(dict_data, json_file)
+#####
 
 
 def main():

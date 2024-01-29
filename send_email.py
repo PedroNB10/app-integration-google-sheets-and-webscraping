@@ -3,6 +3,25 @@
 
 import smtplib
 import email.message
+import os
+#####
+from pathlib import Path
+from dotenv import load_dotenv
+import ast
+import json
+
+current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+envars = current_dir / ".env"
+load_dotenv(envars)
+
+
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+EMAIL_RECIPIENT = os.getenv("EMAIL_RECIPIENT")
+
+#####
+
+
 
 
 def send_email(recipient, list_of_stocks):
@@ -26,8 +45,8 @@ def send_email(recipient, list_of_stocks):
             </style>
         </head>
         <body>
-            <h1>IT'S TIME TO INVEST</h1>
-            <p>Hey I noticed that are some stocks that are on your target prices, check it out !!!</p>
+             <h1>É HORA DE INVESTIR</h1>
+            <p>Olá! Percebi que existem algumas ações que estão nos preços-alvo que você definiu. Confira!</p>
             <ul>
         """
     for stock in list_of_stocks:
@@ -35,8 +54,8 @@ def send_email(recipient, list_of_stocks):
 
     email_body += """
         </ul>
-    <p>Best regards,</p>
-    
+    <p>Atenciosamente,</p>
+
     <p>Pedro Nogueira</p>
     
         </body>
@@ -46,10 +65,11 @@ def send_email(recipient, list_of_stocks):
 
     # Create an Email Message object
     msg = email.message.Message()
-    msg['Subject'] = f"🤑 IT'S TIME TO INVEST {recipient.upper()}"
-    msg['From'] = 'XXXXXXXXXXXXXX'
-    msg['To'] = 'XXXXXXXXXXXXXXX'
-    password = 'XXXXXXXXXXXXXXX'
+    msg['Subject'] = f"🤑 É HORA DE INVESTIR!!! {recipient.upper()}"
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = EMAIL_RECIPIENT
+
+    password = EMAIL_PASSWORD
 
     # Set the content type to HTML
     msg.add_header('Content-Type', 'text/html')
