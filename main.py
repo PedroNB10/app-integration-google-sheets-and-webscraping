@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, simpledialog
+from tkinter import messagebox, simpledialog
 import threading
 import os.path
 import pickle
@@ -1423,6 +1423,8 @@ class Controller:
         self.get_colum_data_from_sheets(
             self.real_time_prices_list, f"Página1!D3:D{last_row}"
         )
+        # print(self.real_time_prices_list)
+        # print(self.target_price_list)
 
         for i in range(len(self.real_time_prices_list)):
             self.real_time_prices_list[i] = float(
@@ -1468,8 +1470,7 @@ class Controller:
             self.temporary_potential_stocks = []
 
         else:
-            pass
-            # print("There is no potential stocks to buy!")
+            print("There is no potential stocks to buy!")
 
         self.save_potential_stocks_to_buy()
 

@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 import smtplib
 import email.message
 import os
-#####
+
 from pathlib import Path
 from dotenv import load_dotenv
 
