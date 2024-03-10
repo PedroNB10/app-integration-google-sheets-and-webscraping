@@ -21,8 +21,6 @@ EMAIL_RECIPIENT = os.getenv("EMAIL_RECIPIENT")
 #####
 
 
-
-
 def send_email(recipient, list_of_stocks):
     # HTML content for the email body with Lorem Ipsum text
     email_body = """
@@ -49,7 +47,8 @@ def send_email(recipient, list_of_stocks):
             <ul>
         """
     for stock in list_of_stocks:
-        email_body += f"<li>Stock Name: <b>{stock.name}</b>  - Target Price: <b>R$ {stock.target_price}</b>  - Real Time Price: <b>R$ {stock.real_time_price}</b> </li>"
+        email_body += f"<li>Stock Name: <b>{stock.name}</b>  - Target Price: <b>R$ {
+            stock.target_price}</b>  - Real Time Price: <b>R$ {stock.real_time_price}</b> </li>"
 
     email_body += """
         </ul>
@@ -88,7 +87,8 @@ def send_email(recipient, list_of_stocks):
     finally:
         # Close the connection
         s.quit()
-        
+
+
 if __name__ == '__main__':
     # Call the function to send the email
     # send_email()

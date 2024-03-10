@@ -42,7 +42,6 @@ class Stock:
         self.net_debt = net_debt
         self.cagr = cagr
         self.payout = payout
-        
 
     def __str__(self):
         return f"{self.name} : {self.dividend_google} : {self.dividend_invest10} : {self.price_to_earnings}"
@@ -133,7 +132,6 @@ class ShowResultsView(tk.Toplevel):
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
 
-
     def add_centered_text(self, text):
         # Configure a tag for centering
         self.text_widget.tag_configure("center", justify="center")
@@ -145,15 +143,16 @@ class ShowResultsView(tk.Toplevel):
 
     def show_all_data(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            
+
             if stock.real_time_price != None:
                 self.add_centered_text(
                     f"Preço Atual: {stock.real_time_price}\n")
-                
+
             if stock.target_price != None:
                 self.add_centered_text(
                     f"Preço Alvo: {stock.target_price}\n")
@@ -175,28 +174,27 @@ class ShowResultsView(tk.Toplevel):
             if stock.price_to_book != None:
                 self.add_centered_text(
                     f"Preço / Valor Patrimonial: {stock.price_to_book}\n")
-            
+
             if stock.roe != None:
                 self.add_centered_text(
                     f"ROE: {stock.roe}\n")
-                
-            
+
             if stock.net_margin != None:
                 self.add_centered_text(
                     f"Margem Líquida: {stock.net_margin}\n")
-                
+
             if stock.net_debt != None:
                 self.add_centered_text(
                     f"Dívida Líquida / EBITDA: {stock.net_debt}\n")
-                
+
             if stock.cagr != None:
                 self.add_centered_text(
                     f"CAGR LUCROS 5 ANOS: {stock.cagr}\n")
-            
+
             if stock.payout != None:
                 self.add_centered_text(
                     f"PAYOUT: {stock.payout}\n")
-                
+
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -204,11 +202,13 @@ class ShowResultsView(tk.Toplevel):
 
     def show_google_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(f"Dividendo do Google: {stock.dividend_google}\n")
+            self.add_centered_text(f"Dividendo do Google: {
+                                   stock.dividend_google}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -216,11 +216,13 @@ class ShowResultsView(tk.Toplevel):
 
     def show_invest10_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(f"Dividendo do Investidor10: {stock.dividend_invest10}\n")
+            self.add_centered_text(f"Dividendo do Investidor10: {
+                                   stock.dividend_invest10}\n")
             self.add_centered_text(
                 f"----------------------------------------\n")
 
@@ -228,7 +230,8 @@ class ShowResultsView(tk.Toplevel):
 
     def show_prices_to_book(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
@@ -241,7 +244,8 @@ class ShowResultsView(tk.Toplevel):
 
     def show_price_to_earnings(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
@@ -251,10 +255,11 @@ class ShowResultsView(tk.Toplevel):
                 f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
-        
+
     def show_roes(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
@@ -264,10 +269,11 @@ class ShowResultsView(tk.Toplevel):
                 f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
-        
+
     def show_net_margins(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(f"Resultados do dia {
+                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
@@ -277,7 +283,8 @@ class ShowResultsView(tk.Toplevel):
                 f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
-        
+
+
 class ShowUserGuideView(tk.Toplevel):
     def __init__(self, root, controller):
         tk.Toplevel.__init__(self, root)
@@ -314,22 +321,17 @@ class ShowUserGuideView(tk.Toplevel):
         self.text_widget.config(state=tk.DISABLED)
 
 
-
 class SearchResultsView(tk.Toplevel):
     def __init__(self, root, controller):
         self.root = root
         self.controller = controller
         tk.Toplevel.__init__(self, root)
-        
-   
-        
+
         self.text_widget = tk.Text(self, wrap=tk.WORD)
         self.scrollbar = tk.Scrollbar(self, command=self.text_widget.yview)
         self.text_widget.config(yscrollcommand=self.scrollbar.set)
         self.text_widget.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-        
 
         self.logo = tk.PhotoImage(file="./img/logo.ppm")
         self.wm_iconphoto(False, self.logo)
@@ -341,7 +343,8 @@ class SearchResultsView(tk.Toplevel):
         for i in range(len(self.controller.search_results)):
             button = ttk.Button(
                 self.text_widget,
-                text=f"{self.controller.search_results[i].date_of_search.strftime('%d/%m/%Y %H:%M')}",
+                text=f"{self.controller.search_results[i].date_of_search.strftime(
+                    '%d/%m/%Y %H:%M')}",
                 command=lambda i=i: self.button_clicked(
                     self.controller.search_results[i]
                 ),
@@ -361,7 +364,6 @@ class SearchResultsView(tk.Toplevel):
 
         self.text_widget.config(state="disabled", background="#1c1830")
 
-
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
 
@@ -374,6 +376,7 @@ class SearchResultsView(tk.Toplevel):
                 self.frame_width, self.frame_height, x_cordinate, y_cordinate
             )
         )
+
     def button_clicked(self, search_result):
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data(search_result)
@@ -466,12 +469,10 @@ class mainView:
         )
         self.label.pack(side="top", pady=20)
 
-
         self.logo = tk.PhotoImage(file="./img/logo-new.ppm")
 
         self.root.wm_iconphoto(False, self.logo)
 
-    
         self.guide_button = tk.Button(
             text="Guia de Uso",
             width=20,
@@ -481,7 +482,7 @@ class mainView:
             activebackground="#C62068",
             font=("Roboto", 11, "bold"),
             command=controller.show_user_guide,
-            
+
         ).place(relx=0.8, rely=0.1, anchor="center")
 
         self.search_button = tk.Button(
@@ -575,8 +576,7 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=self.controller.save_all_data_on_sheets,
         ).place(relx=0.5, rely=0.75, anchor="center")
-        
-        
+
         self.create_a_stock_list_button = tk.Button(
             text="Criar uma lista de ações",
             width=20,
@@ -587,7 +587,7 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=self.controller.create_stock_list,
         ).place(relx=0.20, rely=0.1, anchor="center")
-        
+
         self.search_roes_button = tk.Button(
             text="Pesquisar ROE",
             width=20,
@@ -598,7 +598,7 @@ class mainView:
             font=("Roboto", 11, "bold"),
             command=self.controller.search_roes_from_invest10,
         ).place(relx=0.2, rely=0.65, anchor="center")
-        
+
         self.search_net_margins_button = tk.Button(
             text="Pesquisar Margem Líquida",
             width=24,
@@ -615,8 +615,6 @@ class mainView:
 
     def on_close(self):
         self.controller.exit_window()
-        
-        
 
     def show_loading_bar(self):
         self.loading_view.show()
@@ -643,7 +641,6 @@ class Controller:
         else:
             with open("results.pickle", "rb") as f:
                 self.search_results = pickle.load(f)
-                
 
         if not os.path.exists("potential-stocks-to-buy.pickle"):
             self.potential_stocks_to_buy = []
@@ -651,15 +648,14 @@ class Controller:
         else:
             with open("potential-stocks-to-buy.pickle", "rb") as f:
                 self.potential_stocks_to_buy = pickle.load(f)
-                
+
         if not os.path.exists("stocks-list.pickle"):
             self.stock_names_temp = []
-            
+
         else:
             if not os.path.exists("token.json"):
                 with open("stocks-list.pickle", "rb") as f:
                     self.stock_names_temp = pickle.load(f)
-                    
 
         # instances of Stock, used to store the stocks that has other attributes
         self.temporary_stocks = []
@@ -670,8 +666,6 @@ class Controller:
         self.price_to_earnings_list = []
         self.roe_list = []
         self.net_margin_list = []
-
-       
 
         self.all_data_list = []
 
@@ -690,19 +684,18 @@ class Controller:
     def repeating_function(self):
         print(datetime.now().second)
         if (
-            (datetime.now().second) == 0 # every 1 minute
+            (datetime.now().second) == 0  # every 1 minute
             and not self.exit_event.is_set()
             and not self.loading_event.is_set()
         ):
             self.root.after(0, self.track_daily_prices)
             self.root.after(600000, self.track_daily_prices)
-            
-
 
         # checking time every 1 second
         self.root.after(1000, self.repeating_function)
-        
-    def save_stock_list(self): # only is called in case the user doesnt have a token.json file
+
+    # only is called in case the user doesnt have a token.json file
+    def save_stock_list(self):
         if len(self.stock_names_temp) != 0:
             with open("stocks-list.pickle", "wb") as f:
                 pickle.dump(self.stock_names_temp, f)
@@ -716,7 +709,7 @@ class Controller:
         if len(self.potential_stocks_to_buy) != 0:
             with open("potential-stocks-to-buy.pickle", "wb") as f:
                 pickle.dump(self.potential_stocks_to_buy, f)
-                
+
     def show_user_guide(self):
         user_guide = (
             "Bem-vindo ao aplicativo Rastreador de Ações!\n\n"
@@ -753,9 +746,6 @@ class Controller:
         self.show_user_guide_view = ShowUserGuideView(self.root, self)
         self.show_user_guide_view.add_centered_text(user_guide)
 
-        
-        
-
     def show_last_result(self):
         if len(self.search_results) == 0:
             messagebox.showinfo(
@@ -766,62 +756,61 @@ class Controller:
 
         self.show_results_view = ShowResultsView(self.root, self)
         self.show_results_view.show_all_data()
-        
+
     def create_stock_list(self):
         print(self.stock_names_temp)
-        if len(self.stock_names_temp) > 0 :
+        if len(self.stock_names_temp) > 0:
             answer = messagebox.askyesno(
                 "Lista Existente",
                 "Você já possui uma lista de ações, deseja criar uma nova? (Observação: a lista antiga será apagada!)"
             )
-            
+
             if answer == True:
                 self.stock_names_temp = []
                 while True:
                     stock = simpledialog.askstring(
-                    "Entrada",
-                    "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
-                    parent=self.root,
-                )
+                        "Entrada",
+                        "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                        parent=self.root,
+                    )
                     if stock == None and len(self.stock_names_temp) == 0:
                         return
                     if stock == "stop" and len(self.stock_names_temp) == 0:
                         return
-                    
+
                     if stock == "stop" and len(self.stock_names_temp) > 0:
                         return
-                    
+
                     if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
-                        messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
+                        messagebox.showerror(
+                            "Erro", "Você precisa inserir o nome de uma ação!")
                         continue
-                    
+
                     if stock != "stop" and stock != None and stock != "":
                         self.stock_names_temp.append(stock)
-                        
-                
+
         else:
             while True:
                 stock = simpledialog.askstring(
-                "Entrada",
-                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
-                parent=self.root,
-            )
+                    "Entrada",
+                    "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                    parent=self.root,
+                )
                 if stock == None and len(self.stock_names_temp) == 0:
-                        return
+                    return
                 if stock == "stop" and len(self.stock_names_temp) == 0:
                     return
-                
+
                 if stock == "stop" and len(self.stock_names_temp) > 0:
                     return
-                
+
                 if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
-                    messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
+                    messagebox.showerror(
+                        "Erro", "Você precisa inserir o nome de uma ação!")
                     continue
-                
+
                 if stock != "stop" and stock != None and stock != "":
                     self.stock_names_temp.append(stock)
-            
-            
 
     def show_loading_bar(self):
         self.view.show_loading_bar()
@@ -853,10 +842,10 @@ class Controller:
     def generate_excel_file(self, stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list):
         func.generate_excel_file(stock_names, dividends_google_list,
                                  dividends_invest10_list, prices_to_book_list, price_to_earnings_list)
-        
+
     def get_roes_from_invest10(self, stock_names):
         return func.get_roes_from_invest10(stock_names)
-    
+
     def get_net_margins(self, stock_names):
         return func.get_net_margins(stock_names)
 
@@ -884,28 +873,28 @@ class Controller:
 
     def search_all_data_thread(self):
         self.all_data_list = []
-        
+
         target_prices = []
-        success = self.get_colum_data_from_sheets(target_prices, "Página1!B3:B")
+        success = self.get_colum_data_from_sheets(
+            target_prices, "Página1!B3:B")
         if not success:
             print("There is no data in the sheets")
 
-        
         print(target_prices)
-        
-        
+
         # it will append the stocks thats why it starts empty
         self.all_data_list = self.get_all_data_from_all_stocks(
             self.stock_names_temp)
-        
+
         if len(self.all_data_list) > 0:
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
-                    
-                    if len(target_prices) == 0: # in this case there is no token.json representing the google sheets to get the target prices
+
+                    # in this case there is no token.json representing the google sheets to get the target prices
+                    if len(target_prices) == 0:
                         for i in range(len(self.stock_names_temp)):
                             target_prices.append(None)
-            
+
                     self.temporary_stocks.append(
                         Stock(
                             self.stock_names_temp[i],
@@ -920,7 +909,7 @@ class Controller:
                             net_debt=self.all_data_list[7][i],
                             cagr=self.all_data_list[8][i],
                             payout=self.all_data_list[9][i],
-                            
+
                         )
                     )
 
@@ -955,7 +944,7 @@ class Controller:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1066,12 +1055,13 @@ class Controller:
             "Qual o nome da ação que deseja pesquisar?",
             parent=self.root,
         )
-        
+
         if answer == None:
             return
 
         if answer == "":
-            messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
+            messagebox.showerror(
+                "Erro", "Você precisa inserir o nome de uma ação!")
             return
         self.show_loading_bar()
 
@@ -1123,12 +1113,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1249,12 +1239,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1375,12 +1365,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1472,7 +1462,6 @@ class Controller:
                         )
                     )
 
-
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
@@ -1502,12 +1491,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1582,7 +1571,7 @@ class Controller:
 
             threading.Thread(target=self.get_google_dividends_thread).start()
             self.root.after(100, self.check_completion)
-            
+
     def search_roes_from_invest10(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
@@ -1600,12 +1589,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1680,7 +1669,7 @@ class Controller:
 
             threading.Thread(target=self.get_roe_thread).start()
             self.root.after(100, self.check_completion)
-            
+
     def get_roe_thread(self):
         self.roe_list = []
         self.roe_list = self.get_roes_from_invest10(
@@ -1697,7 +1686,6 @@ class Controller:
                         )
                     )
 
-
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
@@ -1708,7 +1696,7 @@ class Controller:
             messagebox.showerror("Error", "There is no roes !")
 
         self.hide_loading_bar()
-        
+
     def search_net_margins(self):
         self.temporary_stocks = []
         result = messagebox.askquestion(
@@ -1726,12 +1714,12 @@ class Controller:
                 self.stock_names_temp, "Página1!A3:A")
             if not success:
                 self.hide_loading_bar()
-                
+
                 if len(self.stock_names_temp) == 0:
                     while True:
                         stock_name = simpledialog.askstring(
                             "Entrada",
-                                "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
+                            "Qual o nome da ação que deseja pesquisar?\n Se não quiser adicionar mais ações digite 'stop'",
                             parent=self.root,
                         )
 
@@ -1806,15 +1794,13 @@ class Controller:
 
             threading.Thread(target=self.get_net_margins_thread).start()
             self.root.after(100, self.check_completion)
-        
-        
-        
+
     def get_net_margins_thread(self):
         self.net_margin_list = []
         self.net_margin_list = self.get_net_margins(
             self.stock_names_temp
         )
-        
+
         if len(self.net_margin_list) > 0:
             if len(self.temporary_stocks) == 0:
                 for i in range(len(self.stock_names_temp)):
@@ -1825,24 +1811,16 @@ class Controller:
                         )
                     )
 
-
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
             self.show_results_view.show_net_margins(
                 self.search_results[0])
-            
+
         else:
             messagebox.showerror("Erro", "Não há margens líquidas!")
-            
+
         self.hide_loading_bar()
-                
-            
-         
-                                
-                            
-    
-        
 
     def compare_real_time_prices(self):
         print("Comparing real time prices!")
@@ -1858,7 +1836,7 @@ class Controller:
         self.get_colum_data_from_sheets(
             self.real_time_prices_list, f"Página1!D3:D{last_row}"
         )
-        
+
         for i in range(len(self.real_time_prices_list)):
             self.real_time_prices_list[i] = float(
                 self.real_time_prices_list[i]
@@ -2025,13 +2003,14 @@ class Controller:
     def show_last_results(self):
         if len(self.dividends_google_list) == 0:
             messagebox.showinfo(
-               "Lista de Resultados Vazia",
+                "Lista de Resultados Vazia",
                 "Você precisa pesquisar pelo menos uma vez para obter os últimos resultados!",
             )
         else:
             message = ""
             for i in range(len(self.dividends_google_list)):
-                message += f"{i + 1} - {self.stock_names_temp[i]} : {self.dividends_google_list[i]}\n"
+                message += f"{i + 1} - {self.stock_names_temp[i]} : {
+                    self.dividends_google_list[i]}\n"
             messagebox.showinfo("Dividends List", message)
 
     def generate_excel_table(self):
@@ -2063,15 +2042,15 @@ class Controller:
             return
 
         if (len(self.dividends_google_list) > 0 or len(self.dividends_invest10_list) > 0 or len(self.prices_to_book_list) > 0 or len(self.price_to_earnings_list) > 0 or len(self.roe_list) > 0 or len(self.net_margin_list) > 0) and len(self.all_data_list) == 0:
-            
+
             if self.price_to_earnings_list:
                 post_success = self.post_data_list(
                     self.price_to_earnings_list, "Y")
-    
+
             if self.prices_to_book_list:
                 post_success = self.post_data_list(
                     self.prices_to_book_list, "Z")
-                
+
             if self.dividends_google_list:
                 post_success = self.post_data_list(
                     self.dividends_google_list, "AA")
@@ -2079,18 +2058,15 @@ class Controller:
             if self.dividends_invest10_list:
                 post_success = self.post_data_list(
                     self.dividends_invest10_list, "AB")
-                
+
             if self.roe_list:
                 post_success = self.post_data_list(
                     self.roe_list, "AC")
-                
+
             if self.net_margin_list:
                 post_success = self.post_data_list(
                     self.net_margin_list, "AD")
 
-            
-
-        
             if post_success:
                 messagebox.showinfo(
                     "Sucesso", "Os dados foram registrados com sucesso!")
@@ -2118,7 +2094,7 @@ class Controller:
         post_success = self.post_data_list(self.all_data_list[3], "Z")
         post_success = self.post_data_list(self.all_data_list[4], "AC")
         post_success = self.post_data_list(self.all_data_list[5], "AD")
-        
+
         post_success = self.post_data_list(self.all_data_list[7], "AE")
         post_success = self.post_data_list(self.all_data_list[8], "AF")
         post_success = self.post_data_list(self.all_data_list[9], "AG")
@@ -2140,7 +2116,7 @@ class Controller:
         print("exit")
         if not os.path.exists("token.json") and len(self.stock_names_temp) > 0:
             self.save_stock_list()
-            
+
         self.root.destroy()
         self.exit_event.set()
 
