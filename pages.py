@@ -85,23 +85,23 @@ class ShowResultsView(tk.Toplevel):
 
     def show_all_data(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia { last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
 
             if stock.real_time_price != None:
-                self.add_centered_text(
-                    f"Preço Atual: {stock.real_time_price}\n")
+                self.add_centered_text(f"Preço Atual: {stock.real_time_price}\n")
 
             if stock.target_price != None:
-                self.add_centered_text(
-                    f"Preço Alvo: {stock.target_price}\n")
+                self.add_centered_text(f"Preço Alvo: {stock.target_price}\n")
 
             if stock.dividend_google != None:
                 self.add_centered_text(
-                    f"Dividendo do Google: {stock.dividend_google}\n")
+                    f"Dividendo do Google: {stock.dividend_google}\n"
+                )
 
             if stock.dividend_invest10 != None:
                 self.add_centered_text(
@@ -109,120 +109,111 @@ class ShowResultsView(tk.Toplevel):
                 )
 
             if stock.price_to_earnings != None:
-                self.add_centered_text(
-                    f"Preço / Lucro: {stock.price_to_earnings}\n"
-                )
+                self.add_centered_text(f"Preço / Lucro: {stock.price_to_earnings}\n")
 
             if stock.price_to_book != None:
                 self.add_centered_text(
-                    f"Preço / Valor Patrimonial: {stock.price_to_book}\n")
+                    f"Preço / Valor Patrimonial: {stock.price_to_book}\n"
+                )
 
             if stock.roe != None:
-                self.add_centered_text(
-                    f"ROE: {stock.roe}\n")
+                self.add_centered_text(f"ROE: {stock.roe}\n")
 
             if stock.net_margin != None:
-                self.add_centered_text(
-                    f"Margem Líquida: {stock.net_margin}\n")
+                self.add_centered_text(f"Margem Líquida: {stock.net_margin}\n")
 
             if stock.net_debt != None:
-                self.add_centered_text(
-                    f"Dívida Líquida / EBITDA: {stock.net_debt}\n")
+                self.add_centered_text(f"Dívida Líquida / EBITDA: {stock.net_debt}\n")
 
             if stock.cagr != None:
-                self.add_centered_text(
-                    f"CAGR LUCROS 5 ANOS: {stock.cagr}\n")
+                self.add_centered_text(f"CAGR LUCROS 5 ANOS: {stock.cagr}\n")
 
             if stock.payout != None:
-                self.add_centered_text(
-                    f"PAYOUT: {stock.payout}\n")
+                self.add_centered_text(f"PAYOUT: {stock.payout}\n")
 
-            self.add_centered_text(
-                f"----------------------------------------\n")
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_google_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(f"Dividendo do Google: {
-                                   stock.dividend_google}\n")
-            self.add_centered_text(
-                f"----------------------------------------\n")
+            self.add_centered_text(f"Dividendo do Google: {stock.dividend_google}\n")
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_invest10_dividends(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(f"Dividendo do Investidor10: {
-                                   stock.dividend_invest10}\n")
             self.add_centered_text(
-                f"----------------------------------------\n")
+                f"Dividendo do Investidor10: {stock.dividend_invest10}\n"
+            )
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_prices_to_book(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
             self.add_centered_text(
-                f"Preço / Valor Patrimonial: {stock.price_to_book}\n")
-            self.add_centered_text(
-                f"----------------------------------------\n")
+                f"Preço / Valor Patrimonial: {stock.price_to_book}\n"
+            )
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_price_to_earnings(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(
-                f"Preço / Lucro: {stock.price_to_earnings}\n")
-            self.add_centered_text(
-                f"----------------------------------------\n")
+            self.add_centered_text(f"Preço / Lucro: {stock.price_to_earnings}\n")
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_roes(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(
-                f"ROE: {stock.roe}\n")
-            self.add_centered_text(
-                f"----------------------------------------\n")
+            self.add_centered_text(f"ROE: {stock.roe}\n")
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
     def show_net_margins(self, search_result):
         last_result = search_result
-        self.add_centered_text(f"Resultados do dia {
-                               last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n")
+        self.add_centered_text(
+            f"Resultados do dia {last_result.date_of_search.strftime('%d/%m/%Y %H:%M')} \n"
+        )
         self.add_centered_text(f"----------------------------------------\n")
         for stock in last_result.stocks:
             self.add_centered_text(f"Nome da Ação: {stock.name}\n")
-            self.add_centered_text(
-                f"Margem Líquida: {stock.net_margin}\n")
-            self.add_centered_text(
-                f"----------------------------------------\n")
+            self.add_centered_text(f"Margem Líquida: {stock.net_margin}\n")
+            self.add_centered_text(f"----------------------------------------\n")
 
         self.text_widget.config(state="disabled")
 
@@ -285,8 +276,7 @@ class SearchResultsView(tk.Toplevel):
         for i in range(len(self.controller.search_results)):
             button = ttk.Button(
                 self.text_widget,
-                text=f"{self.controller.search_results[i].date_of_search.strftime(
-                    '%d/%m/%Y %H:%M')}",
+                text=f"{self.controller.search_results[i].date_of_search.strftime('%d/%m/%Y %H:%M')}",
                 command=lambda i=i: self.button_clicked(
                     self.controller.search_results[i]
                 ),
@@ -296,12 +286,11 @@ class SearchResultsView(tk.Toplevel):
             self.text_widget.window_create(tk.END, window=button)
             # Add a newline after each button
             self.text_widget.insert(tk.END, "  ")
-            if (i+1) % 5 == 0 and i != 0:
+            if (i + 1) % 5 == 0 and i != 0:
                 self.text_widget.insert(tk.END, "\n\n")
             # Center the entire line containing the button
             line_start = f"{i + 1}.0"
-            self.text_widget.tag_add(
-                f"button_{i+1}", line_start, f"{line_start}+2l")
+            self.text_widget.tag_add(f"button_{i+1}", line_start, f"{line_start}+2l")
             self.text_widget.tag_configure(f"button_{i+1}", justify="center")
 
         self.text_widget.config(state="disabled", background="#1c1830")

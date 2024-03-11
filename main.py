@@ -9,13 +9,8 @@ from datetime import datetime
 
 
 from models import Stock, SearchResult, PotentialStockToBuy
-from pages import (
-    LoadingView,
-    ShowResultsView,
-    ShowUserGuideView,
-    ChooseSearchDataView,
-    SearchResultsView,
-)
+from pages import LoadingView, ShowResultsView, ShowUserGuideView,  ChooseSearchDataView, SearchResultsView
+
 
 import functions as func
 import send_email as sd
@@ -1597,8 +1592,7 @@ class Controller:
         else:
             message = ""
             for i in range(len(self.dividends_google_list)):
-                message += f"{i + 1} - {self.stock_names_temp[i]} : {
-                    self.dividends_google_list[i]}\n"
+                message += f"{i + 1} - {self.stock_names_temp[i]} : {self.dividends_google_list[i]}\n"
             messagebox.showinfo("Dividends List", message)
 
     def generate_excel_table(self):

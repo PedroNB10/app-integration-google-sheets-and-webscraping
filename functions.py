@@ -892,8 +892,7 @@ def update_stock_names_columns_google_sheets(list_names, update_column_letter):
     formated_list_stocks = [[dividend] for dividend in list_names]
     print(f"tamanho da lista: {len(list_names)}")
     last_row = str(len(list_names) + 2)
-    SAMPLE_RANGE_NAME = f"{SHEET_NAME}!{update_column_letter}3:{
-        update_column_letter}" + last_row
+    SAMPLE_RANGE_NAME = f"{SHEET_NAME}!{update_column_letter}3:{update_column_letter}" + last_row
 
     creds = None
 
@@ -956,8 +955,7 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
 
     # 2 for the space between the header and the first row and 1 to return the average
     last_row = str(len(list_dividends) + 3)
-    SAMPLE_RANGE_NAME = f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}3:{
-        DY_COLUMN_UPDATE_GOOGLE}" + last_row
+    SAMPLE_RANGE_NAME = f"{SHEET_NAME}!{DY_COLUMN_UPDATE_GOOGLE}3:{DY_COLUMN_UPDATE_GOOGLE}" + last_row
 
     creds = None
 

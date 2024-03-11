@@ -26,7 +26,7 @@ data = os.getenv("CLIENT_SECRET_JSON")
 dict_data = ast.literal_eval(data)
 
 
-with open("client_secret.json", 'w') as json_file:
+with open("client_secret.json", "w") as json_file:
     json.dump(dict_data, json_file)
 #####
 
@@ -43,7 +43,7 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'client_secret.json', SCOPES
+                "client_secret.json", SCOPES
             )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
