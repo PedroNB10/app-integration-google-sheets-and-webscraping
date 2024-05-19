@@ -1,5 +1,3 @@
-
-
 import smtplib
 import email.message
 import os
@@ -17,7 +15,63 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_RECIPIENT = os.getenv("EMAIL_RECIPIENT")
 
+
 #####
+def send_email_alert(title, message):
+    # HTML content for the email body with Lorem Ipsum text
+    email_body = (
+        """
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    margin: 20px;
+                }
+                h1 {
+                    color: #007BFF;
+                }
+                p {
+                    line-height: 1.6;
+                }
+            </style>
+        </head>
+        <body>
+"""
+        + f"<h1>{title}</h1>"
+        + f"<p>{message}</p>"
+        + f"<p>Atenciosamente,</p>"
+        + f"<p>Pedro Nogueira</p>"
+    )
+
+    # Create an Email Message object
+    msg = email.message.Message()
+    msg["Subject"] = f"⚠️ FALHA NA LEITURA DA PLANILHA DE INVESTIMENTOS!!!"
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECIPIENT
+
+    password = EMAIL_PASSWORD
+
+    # Set the content type to HTML
+    msg.add_header("Content-Type", "text/html")
+    msg.set_payload(email_body)
+
+    # Connect to Gmail's SMTP server
+    s = smtplib.SMTP("smtp.gmail.com: 587")
+    s.starttls()
+
+    try:
+        # Login and send the email
+        s.login(msg["From"], password)
+        s.sendmail(msg["From"], [msg["To"]], msg.as_string().encode("utf-8"))
+        print("Email sent successfully")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+    finally:
+        # Close the connection
+        s.quit()
 
 
 def send_email(recipient, list_of_stocks):
@@ -61,33 +115,33 @@ def send_email(recipient, list_of_stocks):
 
     # Create an Email Message object
     msg = email.message.Message()
-    msg['Subject'] = f"🤑 É HORA DE INVESTIR!!! {recipient.upper()}"
-    msg['From'] = EMAIL_SENDER
-    msg['To'] = EMAIL_RECIPIENT
+    msg["Subject"] = f"🤑 É HORA DE INVESTIR!!! {recipient.upper()}"
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECIPIENT
 
     password = EMAIL_PASSWORD
 
     # Set the content type to HTML
-    msg.add_header('Content-Type', 'text/html')
+    msg.add_header("Content-Type", "text/html")
     msg.set_payload(email_body)
 
     # Connect to Gmail's SMTP server
-    s = smtplib.SMTP('smtp.gmail.com: 587')
+    s = smtplib.SMTP("smtp.gmail.com: 587")
     s.starttls()
 
     try:
         # Login and send the email
-        s.login(msg['From'], password)
-        s.sendmail(msg['From'], [msg['To']], msg.as_string().encode('utf-8'))
-        print('Email sent successfully')
+        s.login(msg["From"], password)
+        s.sendmail(msg["From"], [msg["To"]], msg.as_string().encode("utf-8"))
+        print("Email sent successfully")
     except Exception as e:
-        print(f'Error sending email: {e}')
+        print(f"Error sending email: {e}")
     finally:
         # Close the connection
         s.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Call the function to send the email
     # send_email()
     pass

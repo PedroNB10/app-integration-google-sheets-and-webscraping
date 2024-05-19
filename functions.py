@@ -499,16 +499,19 @@ def get_colum_data_from_sheets(list_names, COLUMN_GET_DATA):
 
         if not values:
             print("No data found.")
-            return
+            return False
 
         # Print columns A and E, which correspond to indices 0 and 4.
         for value in values:
-            list_names.append(value[0])
+            try:
+                list_names.append(value[0])
+            except:
+                return False
 
         return True
 
     except HttpError as err:
-        print(err)
+        print("err")
         return False
 
 
