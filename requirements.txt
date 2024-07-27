@@ -6,3 +6,4 @@ pandas==2.2.1
 python-dotenv==1.0.1
 selenium==4.18.1
 tk==0.1.0
+pyinstaller==6.9.0
