@@ -6,37 +6,29 @@ Welcome to the Data Watcher App! This application is meticulously crafted to emp
 
 ## Requirements
 
-You need to have `python`, `pip` and `tkinter` installed in your machine. Check the documentation and install in this order:
+You have to download the requirements that are on file `requirements.txt` using `pip 24.1.2 `  and have `Python 3.12.4` installed on your machine.
 
-- [Python](https://www.python.org/downloads/)
-- [pip](https://pip.pypa.io/en/stable/installation/):
-- [tkinter](https://docs.python.org/pt-br/3/library/tkinter.html)
-
-Ubuntu : `sudo apt install python3-tk`
-
-Ubuntu : `sudo apt install python3-pip`
-
-## 1. **Clone the Repository:**
+If you are having trouble to install pip, run the file `get-pip.py` using:
 
 ```bash
-git clone https://github.com/PedroNB10/app-integration-google-sheets-and-webscraping.git
-
-cd app-integration-google-sheets-and-webscraping
+$ py get-pip.py
 ```
 
-## 2. **Create and Activate Virtual Environment (Optional but recommended):**
+
+
+## 1. **Create and Activate Virtual Environment (Optional but recommended):**
 
 ```bash
 # On Windows
-python -m venv venv
+py -m venv venv
 venv\Scripts\activate
 
 # On macOS/Linux
-python3 -m venv venv
+py -m venv venv
 source venv/bin/activate
 ```
 
-## 3. **Install Dependencies:**
+## 2. **Install Dependencies:**
 
 **Linux:**
 
@@ -44,16 +36,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Windows**: For each dependency inside requirements.txt use:
+**Windows**
 
 ```bash
-pip install package_name
+py -m pip install -r requirements.txt
 ```
 
-## Usage
+## 3. Usage
 
 Run the main script using the following command:
 
 ```bash
-python3 main.py
+py main.py
 ```
