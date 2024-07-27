@@ -53,3 +53,12 @@ or
 
 python main.py 
 ```
+
+
+## 4. Generate the .exe file for Windows
+
+To generate the .exe file for Windows, you can use the `generate-exe.py` script. Just run the following command:
+
+```bash
+py generate-exe.py
+```

@@ -3,3 +3,6 @@ __pycache__/
 *.pickle
 *.env
 venv/
+main.spec
+dist/
+build/
