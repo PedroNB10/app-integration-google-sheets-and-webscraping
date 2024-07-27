@@ -438,7 +438,11 @@ class Controller:
         return func.get_all_data_from_all_stocks(stock_names)
 
     def get_colum_data_from_sheets(self, list_prices, COLUMN_GET_DATA):
-        return func.get_colum_data_from_sheets(list_prices, COLUMN_GET_DATA)
+        if func.get_colum_data_from_sheets(list_prices, COLUMN_GET_DATA):
+            return True
+        else:
+            return False
+  
 
     def create_search_view(self):
         self.choose_search_data_view = ChooseSearchDataView(self.root, self)
@@ -462,7 +466,7 @@ class Controller:
         if not success:
             print("There is no data in the sheets")
 
-        print(target_prices)
+        # print(target_prices)
 
         # it will append the stocks thats why it starts empty
         self.all_data_list = self.get_all_data_from_all_stocks(
@@ -1407,33 +1411,65 @@ class Controller:
     def compare_real_time_prices(self):
         print("Comparing real time prices!")
         self.stock_names_temp = []
+        # print(self.stock_names_temp)
+        got_data = False
 
-        self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+        got_data = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+
+        if not got_data:
+            print("Deu erro para buscar ações")
+            error_message = "Dê uma olhada na planilha na coluna -- SYMBOL -- de nomes das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as ações!"
+            sd.send_email_alert("Erro ao obter os nomes das ações!",error_message)
+            return
+
+
 
         self.target_price_list = []
-        self.get_colum_data_from_sheets(self.target_price_list, "Página1!B3:B")
+
+        got_data = self.get_colum_data_from_sheets(self.target_price_list, "Página1!B3:B")
+
+        if not got_data:
+            error_message = "Dê uma olhada na planilha na coluna de -- Preço Alvo -- das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
+            sd.send_email_alert("Erro ao obter os preços alvo das ações!",error_message)
+            return
+
+        
 
         last_row = len(self.target_price_list) + 2
         self.real_time_prices_list = []
-        self.get_colum_data_from_sheets(
+
+        got_data = self.get_colum_data_from_sheets(
             self.real_time_prices_list, f"Página1!D3:D{last_row}"
         )
+
+        if not got_data:
+            error_message = "Dê uma olhada na planilha na coluna PRICE que se refere ao preço atual das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
+            sd.send_email_alert("Erro ao obter os preços reais das ações!",error_message)
+            return
+
         # print(self.real_time_prices_list)
         # print(self.target_price_list)
 
         for i in range(len(self.real_time_prices_list)):
-            self.real_time_prices_list[i] = float(
-                self.real_time_prices_list[i]
-                .replace(",", ".")
-                .replace("R$", "")
-                .replace(" ", "")
-            )
-            self.target_price_list[i] = float(
-                self.target_price_list[i]
-                .replace(",", ".")
-                .replace("R$", "")
-                .replace(" ", "")
-            )
+            try:
+
+                self.real_time_prices_list[i] = float(
+                    self.real_time_prices_list[i]
+                    .replace(",", ".")
+                    .replace("R$", "")
+                    .replace(" ", "")
+                )
+                self.target_price_list[i] = float(
+                    self.target_price_list[i]
+                    .replace(",", ".")
+                    .replace("R$", "")
+                    .replace(" ", "")
+                )
+
+            except:
+                print("Erro ao converter os preços das ações!")
+                sd.send_email_alert("Erro ao converter os preços das ações!", "Verifique a coluna -- PRICE -- se os preços estão no formato correto!")
+                return
 
         for i in range(len(self.real_time_prices_list)):
             if self.real_time_prices_list[i] <= self.target_price_list[i]:
