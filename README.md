@@ -8,7 +8,7 @@ Welcome to the Data Watcher App! This application is meticulously crafted to emp
 
 You have to download the requirements that are on file `requirements.txt` using `pip 24.1.2 `  and have `Python 3.12.4` installed on your machine.
 
-If you are having trouble to install pip, run the file `get-pip.py` using:
+If you are having trouble to install pip on windows, run the file `get-pip.py` using:
 
 ```bash
 $ py get-pip.py
@@ -47,5 +47,9 @@ py -m pip install -r requirements.txt
 Run the main script using the following command:
 
 ```bash
-py main.py
+py main.py 
+
+or
+
+python main.py 
 ```
