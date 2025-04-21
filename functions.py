@@ -1,5 +1,7 @@
 import os.path
+from typing import Optional
 import pandas as pd
+import yfinance as yf
 
 # libraries to get and update google sheets
 from google.auth.transport.requests import Request
@@ -1056,6 +1058,66 @@ def post_data_list(list_dividends, DY_COLUMN_UPDATE_GOOGLE):
     return True
 
 
+def get_brazilian_price(symbol: str) -> Optional[float]:
+    symbol = symbol.strip().upper()
+    if not symbol.endswith(".SA"):
+        symbol = symbol + ".SA"
+
+    ticker = yf.Ticker(symbol)
+    # real‑time quote
+    price = ticker.info.get("regularMarketPrice")
+    return price
+
+
+def update_single_cell(
+    cell: str,
+    new_value,
+    value_input_option: str = "USER_ENTERED",
+) -> bool:
+    """
+    Update a single cell in Google Sheets.
+    :param spreadsheet_id: your sheet’s ID (e.g. SAMPLE_SPREADSHEET_ID)
+    :param cell: A1 notation of the cell (e.g. "B2" or "D10")
+    :param new_value: the value to write (string, number, formula…)
+    :param value_input_option: "RAW" or "USER_ENTERED"
+    :return: True on success, False on error
+    """
+    creds = None
+    # load or refresh credentials
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "client_secret.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        # save for next time
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service = build("sheets", "v4", credentials=creds)
+        range_name = f"{SHEET_NAME}!{cell}"
+        body = {"values": [[new_value]]}
+        service.spreadsheets().values().update(
+            spreadsheetId=SAMPLE_SPREADSHEET_ID,
+            range=range_name,
+            valueInputOption=value_input_option,
+            body=body,
+        ).execute()
+        return True
+    except HttpError as err:
+        print(f"Error updating cell {range_name}: {err}")
+        return False
+
+
 if __name__ == "__main__":
     stock_symbols = ["BMGB4", "KLBN4", "SLAEUMANO", "VALE3"]
-    print(get_data_from_a_stock(stock_symbols[0]))
+    # print(get_data_from_a_stock(stock_symbols[0]))
+
+    # update_single_cell("B11", 22)
+
+    print(get_brazilian_price("VALE3"))

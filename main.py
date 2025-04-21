@@ -3,7 +3,8 @@ from tkinter import messagebox, simpledialog
 import threading
 import os.path
 import pickle
-
+from plyer import notification
+from tkinter import messagebox
 import datetime
 from datetime import datetime
 
@@ -20,6 +21,9 @@ from pages import (
 
 import functions as func
 import send_email as sd
+
+ICON_PATH = "./img/logo.ppm"
+ICON_PATH_IMG = "./img/logo.ico"
 
 
 class mainView:
@@ -215,7 +219,7 @@ class Controller:
 
         self.view = mainView(self.root, self)
         self.root.title("Rastreador de Ações")
-        self.icon = tk.PhotoImage(file="./img/logo.ppm")
+        self.icon = tk.PhotoImage(file=ICON_PATH)
         if not os.path.exists("results.pickle"):
             # instances of SearchResult, creates one instance of SearchResult if it doesn't exist
             self.search_results = []
@@ -1415,7 +1419,14 @@ class Controller:
         if not got_data:
             print("Deu erro para buscar ações")
             error_message = "Dê uma olhada na planilha na coluna -- SYMBOL -- de nomes das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as ações!"
-            sd.send_email_alert("Erro ao obter os nomes das ações!", error_message)
+            notification.notify(
+                title="Erro ao obter os nomes das ações!",
+                message=error_message,
+                app_name="Rastreador de Ações",
+                app_icon=ICON_PATH_IMG,
+                timeout=8,
+                toast=False,
+            )
             return
 
         self.target_price_list = []
@@ -1426,8 +1437,13 @@ class Controller:
 
         if not got_data:
             error_message = "Dê uma olhada na planilha na coluna de -- Preço Alvo -- das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
-            sd.send_email_alert(
-                "Erro ao obter os preços alvo das ações!", error_message
+            notification.notify(
+                title="Erro ao obter os nomes das ações!",
+                message=error_message,
+                app_name="Rastreador de Ações",
+                app_icon=ICON_PATH_IMG,
+                timeout=8,
+                toast=False,
             )
             return
 
@@ -1440,39 +1456,119 @@ class Controller:
 
         if not got_data:
             error_message = "Dê uma olhada na planilha na coluna PRICE que se refere ao preço atual das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
-            sd.send_email_alert(
-                "Erro ao obter os preços reais das ações!", error_message
+            notification.notify(
+                title="Erro ao obter os nomes das ações!",
+                message=error_message,
+                app_name="Rastreador de Ações",
+                app_icon=ICON_PATH_IMG,
+                timeout=8,
+                toast=False,
             )
             return
 
         # print(self.real_time_prices_list)
         # print(self.target_price_list)
+        error_converting_prices = False
+        n = len(self.stock_names_temp)  # your “stable” list of stocks
 
-        for i in range(len(self.real_time_prices_list)):
+        # Make sure both price‐lists are the same length
+        assert len(self.real_time_prices_list) == n
+        assert len(self.target_price_list) == n
+
+        for i in range(n):
+            stock = self.stock_names_temp[i]
+
+            # — real‑time price —
+            raw_real = self.real_time_prices_list[i]
             try:
-
-                self.real_time_prices_list[i] = float(
-                    self.real_time_prices_list[i]
-                    .replace(".", "")
+                cleaned = (
+                    raw_real.replace(".", "")
                     .replace(",", ".")
                     .replace("R$", "")
-                    .replace(" ", "")
+                    .strip()
                 )
-                self.target_price_list[i] = float(
-                    self.target_price_list[i]
-                    .replace(".", "")
+                self.real_time_prices_list[i] = float(cleaned)
+
+                if self.real_time_prices_list[i] > 200:
+                    print(f"price is too high: {self.real_time_prices_list[i]}")
+                    price_got = (
+                        func.get_brazilian_price(stock)
+                        if func.get_brazilian_price(stock)
+                        else 0
+                    )
+                    print(f"price got: {price_got}")
+                    func.update_single_cell(f"D{i + 3}", price_got)
+                    self.target_price_list[i] = price_got
+            except Exception as e:
+                error_converting_prices = True
+                print(
+                    f"[Real‑time] error converting '{raw_real}' for {stock} at position {i}: {e}"
+                )
+                price_got = (
+                    func.get_brazilian_price(stock)
+                    if func.get_brazilian_price(stock)
+                    else 0
+                )
+                print(f"price got: {price_got}")
+                func.update_single_cell(f"D{i + 3}", price_got)
+                self.target_price_list[i] = price_got
+
+            # — target price —
+            raw_target = self.target_price_list[i]
+            try:
+                cleaned = (
+                    raw_target.replace(".", "")
                     .replace(",", ".")
                     .replace("R$", "")
-                    .replace(" ", "")
+                    .strip()
                 )
+                self.target_price_list[i] = float(cleaned)
+            except Exception as e:
+                error_converting_prices = True
+                print(
+                    f"[Target]    error converting '{raw_target}' for {stock} at position {i}: {e}"
+                )
+                func.update_single_cell(f"B{i + 3}", 0)
+                self.target_price_list[i] = 0
 
-            except error_message:
-                print("Erro ao converter os preços das ações!")
-                sd.send_email_alert(
-                    "Erro ao converter os preços das ações!",
-                    "Verifique a coluna -- PRICE -- se os preços estão no formato correto!",
+        if error_converting_prices:
+            print("One or more prices failed to convert, but processing continued.")
+
+            # target price
+            raw_target = self.target_price_list[i]
+            try:
+                cleaned = (
+                    raw_target.replace(".", "")
+                    .replace(",", ".")
+                    .replace("R$", "")
+                    .strip()
                 )
-                return
+                self.target_price_list[i] = float(cleaned)
+            except Exception as e:
+                error_converting_prices = True
+                print(
+                    f"[Target]    error converting '{raw_target}' for {stock} at position {i}: {e}"
+                )
+                # fallback if you like:
+                # self.target_price_list[i] = None
+                self.target_price_list[i] = 0
+
+        print(self.target_price_list)
+
+        # after the loop you can still check:
+        if error_converting_prices:
+            print("One or more prices failed to convert.")
+
+        if error_converting_prices:
+            notification.notify(
+                title="Erro ao converter os preços das ações!",
+                message="Verifique a coluna -- PRICE -- se os preços estão no formato correto!",
+                app_name="Rastreador de Ações",  # how your app is labeled in the notification
+                app_icon=ICON_PATH,  # full path to an .ico (Win) or .png (Linux/Mac) file
+                timeout=8,  # seconds before auto‑dismissal
+                ticker="Nova notificação do Rastreador",  # (Android only) brief status text
+                toast=False,  # Android: if True, uses a native toast
+            )
 
         for i in range(len(self.real_time_prices_list)):
             if self.real_time_prices_list[i] <= self.target_price_list[i]:
@@ -1494,7 +1590,12 @@ class Controller:
                     )
 
                 else:
-                    if self.real_time_prices_list[i] < stock.real_time_price:
+                    print(
+                        f"Comparing {self.real_time_prices_list[i]} with {stock.real_time_price}"
+                    )
+                    if float(self.real_time_prices_list[i]) < float(
+                        stock.real_time_price
+                    ):
                         stock.real_time_price = self.real_time_prices_list[i]
                         stock.target_price = self.target_price_list[i]
                         self.temporary_potential_stocks.append(stock)
