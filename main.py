@@ -9,7 +9,13 @@ from datetime import datetime
 
 
 from models import Stock, SearchResult, PotentialStockToBuy
-from pages import LoadingView, ShowResultsView, ShowUserGuideView,  ChooseSearchDataView, SearchResultsView
+from pages import (
+    LoadingView,
+    ShowResultsView,
+    ShowUserGuideView,
+    ChooseSearchDataView,
+    SearchResultsView,
+)
 
 
 import functions as func
@@ -47,7 +53,6 @@ class mainView:
             height=0,
             font=("Roboto", 17, "bold"),
             fg="#2BABE2",
-
         )
         self.label.pack(side="top", pady=20)
 
@@ -64,11 +69,9 @@ class mainView:
             activebackground="#C62068",
             font=("Roboto", 11, "bold"),
             command=controller.show_user_guide,
-
         ).place(relx=0.8, rely=0.1, anchor="center")
 
         self.search_button = tk.Button(
-
             text="Pesquisar Dividendos",
             width=20,
             bg="#1c1830",
@@ -91,7 +94,6 @@ class mainView:
         ).place(relx=0.5, rely=0.25, anchor="center")
 
         self.search_price_to_book_button = tk.Button(
-
             text="Pesquisar P / VP",
             width=20,
             bg="#1c1830",
@@ -103,7 +105,6 @@ class mainView:
         ).place(relx=0.8, rely=0.25, anchor="center")
 
         self.stock_search_button = tk.Button(
-
             text="Pesquisar uma ação",
             width=20,
             bg="#293B57",
@@ -115,7 +116,6 @@ class mainView:
         ).place(relx=0.35, rely=0.4, anchor="center")
 
         self.search_all_data_button = tk.Button(
-
             text="Pesquisar Todos Indicadores",
             width=30,
             bg="#293B57",
@@ -344,7 +344,7 @@ class Controller:
         if len(self.stock_names_temp) > 0:
             answer = messagebox.askyesno(
                 "Lista Existente",
-                "Você já possui uma lista de ações, deseja criar uma nova? (Observação: a lista antiga será apagada!)"
+                "Você já possui uma lista de ações, deseja criar uma nova? (Observação: a lista antiga será apagada!)",
             )
 
             if answer == True:
@@ -363,9 +363,12 @@ class Controller:
                     if stock == "stop" and len(self.stock_names_temp) > 0:
                         return
 
-                    if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
+                    if (stock == "" or stock == None) and len(
+                        self.stock_names_temp
+                    ) == 0:
                         messagebox.showerror(
-                            "Erro", "Você precisa inserir o nome de uma ação!")
+                            "Erro", "Você precisa inserir o nome de uma ação!"
+                        )
                         continue
 
                     if stock != "stop" and stock != None and stock != "":
@@ -388,7 +391,8 @@ class Controller:
 
                 if (stock == "" or stock == None) and len(self.stock_names_temp) == 0:
                     messagebox.showerror(
-                        "Erro", "Você precisa inserir o nome de uma ação!")
+                        "Erro", "Você precisa inserir o nome de uma ação!"
+                    )
                     continue
 
                 if stock != "stop" and stock != None and stock != "":
@@ -421,9 +425,21 @@ class Controller:
     def post_data_list(self, dividends_google_list, DY_COLUMN_UPDATE_GOOGLE):
         return func.post_data_list(dividends_google_list, DY_COLUMN_UPDATE_GOOGLE)
 
-    def generate_excel_file(self, stock_names, dividends_google_list, dividends_invest10_list, prices_to_book_list, price_to_earnings_list):
-        func.generate_excel_file(stock_names, dividends_google_list,
-                                 dividends_invest10_list, prices_to_book_list, price_to_earnings_list)
+    def generate_excel_file(
+        self,
+        stock_names,
+        dividends_google_list,
+        dividends_invest10_list,
+        prices_to_book_list,
+        price_to_earnings_list,
+    ):
+        func.generate_excel_file(
+            stock_names,
+            dividends_google_list,
+            dividends_invest10_list,
+            prices_to_book_list,
+            price_to_earnings_list,
+        )
 
     def get_roes_from_invest10(self, stock_names):
         return func.get_roes_from_invest10(stock_names)
@@ -442,7 +458,6 @@ class Controller:
             return True
         else:
             return False
-  
 
     def create_search_view(self):
         self.choose_search_data_view = ChooseSearchDataView(self.root, self)
@@ -461,16 +476,14 @@ class Controller:
         self.all_data_list = []
 
         target_prices = []
-        success = self.get_colum_data_from_sheets(
-            target_prices, "Página1!B3:B")
+        success = self.get_colum_data_from_sheets(target_prices, "Página1!B3:B")
         if not success:
             print("There is no data in the sheets")
 
         # print(target_prices)
 
         # it will append the stocks thats why it starts empty
-        self.all_data_list = self.get_all_data_from_all_stocks(
-            self.stock_names_temp)
+        self.all_data_list = self.get_all_data_from_all_stocks(self.stock_names_temp)
 
         if len(self.all_data_list) > 0:
             if len(self.temporary_stocks) == 0:
@@ -495,7 +508,6 @@ class Controller:
                             net_debt=self.all_data_list[7][i],
                             cagr=self.all_data_list[8][i],
                             payout=self.all_data_list[9][i],
-
                         )
                     )
 
@@ -523,7 +535,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
                 if len(self.stock_names_temp) == 0:
@@ -539,9 +552,7 @@ class Controller:
 
                         if stock_name == "stop" and len(self.stock_names_temp) > 0:
                             self.show_loading_bar()
-                            threading.Thread(
-                                target=self.search_all_data_thread
-                            ).start()
+                            threading.Thread(target=self.search_all_data_thread).start()
                             self.root.after(100, self.check_completion)
                             break
 
@@ -567,8 +578,7 @@ class Controller:
                     if search_last_stocks == True:
                         # it is used to empty the stocks that has other attributes
                         self.show_loading_bar()
-                        threading.Thread(
-                            target=self.search_all_data_thread).start()
+                        threading.Thread(target=self.search_all_data_thread).start()
                         self.root.after(100, self.check_completion)
 
                     else:
@@ -646,14 +656,12 @@ class Controller:
             return
 
         if answer == "":
-            messagebox.showerror(
-                "Erro", "Você precisa inserir o nome de uma ação!")
+            messagebox.showerror("Erro", "Você precisa inserir o nome de uma ação!")
             return
         self.show_loading_bar()
 
         # Start a new thread for stock search
-        threading.Thread(target=self.search_a_stock_thread,
-                         args=(answer,)).start()
+        threading.Thread(target=self.search_a_stock_thread, args=(answer,)).start()
 
     def get_price_to_earnings_thread(self):
         self.price_to_earnings_list = []
@@ -674,8 +682,7 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_price_to_earnings(
-                self.search_results[0])
+            self.show_results_view.show_price_to_earnings(self.search_results[0])
 
         else:
             messagebox.showerror("Erro", "Não há P / L !")
@@ -696,7 +703,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -784,8 +792,7 @@ class Controller:
     def get_price_to_book_thread(self):
         self.prices_to_book_list = []
         # it will append the stocks thats why it starts empty
-        self.prices_to_book_list = self.get_prices_to_book_data(
-            self.stock_names_temp)
+        self.prices_to_book_list = self.get_prices_to_book_data(self.stock_names_temp)
 
         if len(self.prices_to_book_list) > 0:
             if len(self.temporary_stocks) == 0:
@@ -822,7 +829,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -865,9 +873,7 @@ class Controller:
 
                     if search_last_stocks == True:
                         self.show_loading_bar()
-                        threading.Thread(
-                            target=self.get_price_to_book_thread
-                        ).start()
+                        threading.Thread(target=self.get_price_to_book_thread).start()
                         self.root.after(100, self.check_completion)
 
                     else:
@@ -925,8 +931,7 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_invest10_dividends(
-                self.search_results[0])
+            self.show_results_view.show_invest10_dividends(self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no dividends !")
@@ -948,7 +953,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -1051,8 +1057,7 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_google_dividends(
-                self.search_results[0])
+            self.show_results_view.show_google_dividends(self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no dividends !")
@@ -1074,7 +1079,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -1172,7 +1178,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -1192,9 +1199,7 @@ class Controller:
 
                         if stock_name == "stop" and len(self.stock_names_temp) > 0:
                             self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_roe_thread
-                            ).start()
+                            threading.Thread(target=self.get_roe_thread).start()
                             self.root.after(100, self.check_completion)
                             break
 
@@ -1215,9 +1220,7 @@ class Controller:
 
                     if search_last_stocks == True:
                         self.show_loading_bar()
-                        threading.Thread(
-                            target=self.get_roe_thread
-                        ).start()
+                        threading.Thread(target=self.get_roe_thread).start()
                         self.root.after(100, self.check_completion)
 
                     else:
@@ -1237,9 +1240,7 @@ class Controller:
 
                             if stock_name == "stop" and len(self.stock_names_temp) > 0:
                                 self.show_loading_bar()
-                                threading.Thread(
-                                    target=self.get_roe_thread
-                                ).start()
+                                threading.Thread(target=self.get_roe_thread).start()
                                 self.root.after(100, self.check_completion)
                                 break
 
@@ -1275,8 +1276,7 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_roes(
-                self.search_results[0])
+            self.show_results_view.show_roes(self.search_results[0])
 
         else:
             messagebox.showerror("Error", "There is no roes !")
@@ -1297,7 +1297,8 @@ class Controller:
 
             # it will append the stocks thats why it starts empty
             success = self.get_colum_data_from_sheets(
-                self.stock_names_temp, "Página1!A3:A")
+                self.stock_names_temp, "Página1!A3:A"
+            )
             if not success:
                 self.hide_loading_bar()
 
@@ -1317,9 +1318,7 @@ class Controller:
 
                         if stock_name == "stop" and len(self.stock_names_temp) > 0:
                             self.show_loading_bar()
-                            threading.Thread(
-                                target=self.get_net_margins_thread
-                            ).start()
+                            threading.Thread(target=self.get_net_margins_thread).start()
                             self.root.after(100, self.check_completion)
                             break
 
@@ -1340,9 +1339,7 @@ class Controller:
 
                     if search_last_stocks == True:
                         self.show_loading_bar()
-                        threading.Thread(
-                            target=self.get_net_margins_thread
-                        ).start()
+                        threading.Thread(target=self.get_net_margins_thread).start()
                         self.root.after(100, self.check_completion)
 
                     else:
@@ -1383,9 +1380,7 @@ class Controller:
 
     def get_net_margins_thread(self):
         self.net_margin_list = []
-        self.net_margin_list = self.get_net_margins(
-            self.stock_names_temp
-        )
+        self.net_margin_list = self.get_net_margins(self.stock_names_temp)
 
         if len(self.net_margin_list) > 0:
             if len(self.temporary_stocks) == 0:
@@ -1400,8 +1395,7 @@ class Controller:
             self.search_results.insert(0, SearchResult(self.temporary_stocks))
             self.save_search_results()
             self.show_results_view = ShowResultsView(self.root, self)
-            self.show_results_view.show_net_margins(
-                self.search_results[0])
+            self.show_results_view.show_net_margins(self.search_results[0])
 
         else:
             messagebox.showerror("Erro", "Não há margens líquidas!")
@@ -1414,26 +1408,28 @@ class Controller:
         # print(self.stock_names_temp)
         got_data = False
 
-        got_data = self.get_colum_data_from_sheets(self.stock_names_temp, "Página1!A3:A")
+        got_data = self.get_colum_data_from_sheets(
+            self.stock_names_temp, "Página1!A3:A"
+        )
 
         if not got_data:
             print("Deu erro para buscar ações")
             error_message = "Dê uma olhada na planilha na coluna -- SYMBOL -- de nomes das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as ações!"
-            sd.send_email_alert("Erro ao obter os nomes das ações!",error_message)
+            sd.send_email_alert("Erro ao obter os nomes das ações!", error_message)
             return
-
-
 
         self.target_price_list = []
 
-        got_data = self.get_colum_data_from_sheets(self.target_price_list, "Página1!B3:B")
+        got_data = self.get_colum_data_from_sheets(
+            self.target_price_list, "Página1!B3:B"
+        )
 
         if not got_data:
             error_message = "Dê uma olhada na planilha na coluna de -- Preço Alvo -- das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
-            sd.send_email_alert("Erro ao obter os preços alvo das ações!",error_message)
+            sd.send_email_alert(
+                "Erro ao obter os preços alvo das ações!", error_message
+            )
             return
-
-        
 
         last_row = len(self.target_price_list) + 2
         self.real_time_prices_list = []
@@ -1444,7 +1440,9 @@ class Controller:
 
         if not got_data:
             error_message = "Dê uma olhada na planilha na coluna PRICE que se refere ao preço atual das ações! Pode ser que você tenha colocado algum valor inválido em alguma célula ou esquecido de preencher algum valor entre duas células, lembre-se de que o programa não entende espaços em branco entre as células preenchidas!"
-            sd.send_email_alert("Erro ao obter os preços reais das ações!",error_message)
+            sd.send_email_alert(
+                "Erro ao obter os preços reais das ações!", error_message
+            )
             return
 
         # print(self.real_time_prices_list)
@@ -1455,20 +1453,25 @@ class Controller:
 
                 self.real_time_prices_list[i] = float(
                     self.real_time_prices_list[i]
+                    .replace(".", "")
                     .replace(",", ".")
                     .replace("R$", "")
                     .replace(" ", "")
                 )
                 self.target_price_list[i] = float(
                     self.target_price_list[i]
+                    .replace(".", "")
                     .replace(",", ".")
                     .replace("R$", "")
                     .replace(" ", "")
                 )
 
-            except:
+            except error_message:
                 print("Erro ao converter os preços das ações!")
-                sd.send_email_alert("Erro ao converter os preços das ações!", "Verifique a coluna -- PRICE -- se os preços estão no formato correto!")
+                sd.send_email_alert(
+                    "Erro ao converter os preços das ações!",
+                    "Verifique a coluna -- PRICE -- se os preços estão no formato correto!",
+                )
                 return
 
         for i in range(len(self.real_time_prices_list)):
@@ -1535,8 +1538,7 @@ class Controller:
         post_success = self.post_data_list(self.dividends_google_list, "AA")
 
         if post_success:
-            messagebox.showinfo(
-                "Successo", "Dividendos Registrados com Sucesso ")
+            messagebox.showinfo("Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1554,8 +1556,7 @@ class Controller:
         post_success = self.post_data_list(self.dividends_invest10_list, "AB")
 
         if post_success:
-            messagebox.showinfo(
-                "Successo", "Dividendos Registrados com Sucesso ")
+            messagebox.showinfo("Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1573,8 +1574,7 @@ class Controller:
         post_success = self.post_data_list(self.prices_to_book_list, "Z")
 
         if post_success:
-            messagebox.showinfo(
-                "Successo", "P/VP Registrados com Sucesso ")
+            messagebox.showinfo("Successo", "P/VP Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1592,8 +1592,7 @@ class Controller:
         post_success = self.post_data_list(self.price_to_earnings_list, "Y")
 
         if post_success:
-            messagebox.showinfo(
-                "Successo", "P/L Registrados com Sucesso ")
+            messagebox.showinfo("Successo", "P/L Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1611,8 +1610,7 @@ class Controller:
         post_success = self.post_data_list(self.dividends_google_list, "AF")
 
         if post_success:
-            messagebox.showinfo(
-                "Successo", "Dividendos Registrados com Sucesso ")
+            messagebox.showinfo("Successo", "Dividendos Registrados com Sucesso ")
 
         else:
             messagebox.showerror(
@@ -1634,21 +1632,40 @@ class Controller:
     def generate_excel_table(self):
         if len(self.all_data_list) != 0:
             self.generate_excel_file(
-                self.stock_names_temp, self.all_data_list[0], self.all_data_list[1], self.all_data_list[2], self.all_data_list[3])
+                self.stock_names_temp,
+                self.all_data_list[0],
+                self.all_data_list[1],
+                self.all_data_list[2],
+                self.all_data_list[3],
+            )
             messagebox.showinfo(
-                "Successo", "O arquivo foi criado na sua pasta de downloads !")
+                "Successo", "O arquivo foi criado na sua pasta de downloads !"
+            )
             return
 
-        elif len(self.dividends_google_list) != 0 and len(self.dividends_invest10_list) != 0 and len(self.prices_to_book_list) != 0 and len(self.price_to_earnings_list) != 0:
-            self.generate_excel_file(self.stock_names_temp, self.dividends_google_list,
-                                     self.dividends_invest10_list, self.prices_to_book_list, self.price_to_earnings_list)
+        elif (
+            len(self.dividends_google_list) != 0
+            and len(self.dividends_invest10_list) != 0
+            and len(self.prices_to_book_list) != 0
+            and len(self.price_to_earnings_list) != 0
+        ):
+            self.generate_excel_file(
+                self.stock_names_temp,
+                self.dividends_google_list,
+                self.dividends_invest10_list,
+                self.prices_to_book_list,
+                self.price_to_earnings_list,
+            )
             messagebox.showinfo(
-                "Successo", "O arquivo foi criado na sua pasta de downloads !")
+                "Successo", "O arquivo foi criado na sua pasta de downloads !"
+            )
             return
 
         else:
             messagebox.showerror(
-                "Erro", "Você precisa pesquisar todos os indicadores pelo menos uma vez para gerar a tabela!")
+                "Erro",
+                "Você precisa pesquisar todos os indicadores pelo menos uma vez para gerar a tabela!",
+            )
             return
 
     def save_all_data_on_sheets(self):
@@ -1659,35 +1676,37 @@ class Controller:
             )
             return
 
-        if (len(self.dividends_google_list) > 0 or len(self.dividends_invest10_list) > 0 or len(self.prices_to_book_list) > 0 or len(self.price_to_earnings_list) > 0 or len(self.roe_list) > 0 or len(self.net_margin_list) > 0) and len(self.all_data_list) == 0:
+        if (
+            len(self.dividends_google_list) > 0
+            or len(self.dividends_invest10_list) > 0
+            or len(self.prices_to_book_list) > 0
+            or len(self.price_to_earnings_list) > 0
+            or len(self.roe_list) > 0
+            or len(self.net_margin_list) > 0
+        ) and len(self.all_data_list) == 0:
 
             if self.price_to_earnings_list:
-                post_success = self.post_data_list(
-                    self.price_to_earnings_list, "Y")
+                post_success = self.post_data_list(self.price_to_earnings_list, "Y")
 
             if self.prices_to_book_list:
-                post_success = self.post_data_list(
-                    self.prices_to_book_list, "Z")
+                post_success = self.post_data_list(self.prices_to_book_list, "Z")
 
             if self.dividends_google_list:
-                post_success = self.post_data_list(
-                    self.dividends_google_list, "AA")
+                post_success = self.post_data_list(self.dividends_google_list, "AA")
 
             if self.dividends_invest10_list:
-                post_success = self.post_data_list(
-                    self.dividends_invest10_list, "AB")
+                post_success = self.post_data_list(self.dividends_invest10_list, "AB")
 
             if self.roe_list:
-                post_success = self.post_data_list(
-                    self.roe_list, "AC")
+                post_success = self.post_data_list(self.roe_list, "AC")
 
             if self.net_margin_list:
-                post_success = self.post_data_list(
-                    self.net_margin_list, "AD")
+                post_success = self.post_data_list(self.net_margin_list, "AD")
 
             if post_success:
                 messagebox.showinfo(
-                    "Sucesso", "Os dados foram registrados com sucesso!")
+                    "Sucesso", "Os dados foram registrados com sucesso!"
+                )
 
             else:
                 messagebox.showerror("Erro", "Falha ao Salvar os Dados!")
@@ -1718,8 +1737,7 @@ class Controller:
         post_success = self.post_data_list(self.all_data_list[9], "AG")
 
         if post_success:
-            messagebox.showinfo(
-                "Sucesso", "Os dados foram registrados com sucesso!")
+            messagebox.showinfo("Sucesso", "Os dados foram registrados com sucesso!")
 
         else:
             messagebox.showerror("Erro", "Falha ao Salvar os Dados!")
